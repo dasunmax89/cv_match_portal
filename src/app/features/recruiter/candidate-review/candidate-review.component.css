@@ -1,0 +1,13 @@
+.swipe-left {
+  transform: translateX(-150%) rotate(-15deg);
+  opacity: 0;
+}
+
+.swipe-right {
+  transform: translateX(150%) rotate(15deg);
+  opacity: 0;
+}
+
+.perspective-1000 {
+  perspective: 1000px;
+}

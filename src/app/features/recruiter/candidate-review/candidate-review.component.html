@@ -1,0 +1,208 @@
+<div class="h-full min-h-screen bg-slate-50 flex flex-col items-center py-10 px-4 overflow-hidden relative">
+  <div class="mb-6 text-center z-10 w-full max-w-5xl flex flex-col sm:flex-row justify-between items-center gap-4">
+    <div class="text-left">
+      <h1 class="text-2xl font-bold text-slate-900">Candidate Review</h1>
+      <p class="text-slate-500 text-sm">Job ID: {{ jobId() }}</p>
+    </div>
+
+    <!-- View Toggle -->
+    <div class="bg-slate-200/60 p-1 rounded-lg inline-flex border border-slate-200">
+      <button (click)="viewMode.set('stack')" 
+              [ngClass]="{'bg-white shadow-sm text-indigo-700': viewMode() === 'stack', 'text-slate-500 hover:text-slate-700': viewMode() !== 'stack'}" 
+              class="px-4 py-1.5 rounded-md text-sm font-medium transition-colors focus:outline-none flex items-center gap-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+        Stack
+      </button>
+      <button (click)="viewMode.set('table')" 
+              [ngClass]="{'bg-white shadow-sm text-indigo-700': viewMode() === 'table', 'text-slate-500 hover:text-slate-700': viewMode() !== 'table'}" 
+              class="px-4 py-1.5 rounded-md text-sm font-medium transition-colors focus:outline-none flex items-center gap-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
+        Table
+      </button>
+    </div>
+  </div>
+
+  @if (viewMode() === 'stack') {
+  <div class="relative w-full max-w-md h-[650px] flex-grow perspective-1000">
+    @if (candidates().length === 0) {
+      <div class="absolute inset-0 flex flex-col items-center justify-center bg-white rounded-2xl shadow-sm border border-slate-200">
+        <svg class="w-16 h-16 text-slate-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
+        <h3 class="text-lg font-medium text-slate-700">No more candidates</h3>
+        <p class="text-slate-500 text-sm mt-1">Waiting for new applications...</p>
+      </div>
+    }
+
+    <!-- The Stack -->
+    @for (candidate of candidates(); track candidate.id; let i = $index) {
+      @if (i < 3) {
+        <div class="absolute inset-0 bg-white rounded-2xl shadow-xl border border-slate-100 flex flex-col overflow-hidden transition-all duration-300 ease-out origin-bottom"
+             [ngClass]="{
+               'z-30': i === 0,
+               'z-20 scale-[0.95] translate-y-4 opacity-90': i === 1,
+               'z-10 scale-[0.90] translate-y-8 opacity-70': i === 2,
+               'swipe-left': i === 0 && swipeDirection() === 'left',
+               'swipe-right': i === 0 && swipeDirection() === 'right'
+             }">
+             
+          <!-- Card Header -->
+          <div class="p-6 border-b border-slate-100 bg-slate-50 flex justify-between items-start">
+            <div>
+              <h2 class="text-xl font-bold text-slate-900">{{ candidate.candidateName }}</h2>
+              <p class="text-sm text-slate-500 mt-1">{{ candidate.candidateEmail }}</p>
+            </div>
+            <div class="text-right flex flex-col items-end">
+              <div class="text-3xl font-black" [ngClass]="getScoreColor(candidate.evaluation?.overall_match_score)">
+                {{ candidate.evaluation?.overall_match_score ?? '--' }}<span class="text-lg" *ngIf="candidate.evaluation">%</span>
+              </div>
+              <span class="mt-1 px-2.5 py-0.5 rounded-full text-xs font-semibold border"
+                    [ngClass]="getVerdictBadgeClass(candidate.evaluation?.fit_verdict || candidate.status)">
+                {{ candidate.evaluation?.fit_verdict || candidate.status || 'Pending' }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Card Body - Scrollable -->
+          <div class="flex-grow overflow-y-auto p-6 space-y-6">
+            
+            @if (!candidate.evaluation) {
+              <div class="p-6 bg-indigo-50 border border-indigo-100 rounded-xl text-center">
+                <svg class="animate-spin h-6 w-6 text-indigo-600 mx-auto mb-2" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <p class="text-sm font-semibold text-indigo-900">AI Screening in Progress</p>
+                <p class="text-xs text-indigo-600 mt-1">Evaluating candidate CV against target requirements...</p>
+              </div>
+            } @else {
+              <!-- Sub Scores -->
+              <div class="space-y-4">
+                <div>
+                  <div class="flex justify-between text-sm mb-1">
+                    <span class="font-medium text-slate-700">Skills Match</span>
+                    <span class="font-bold text-slate-900">{{ candidate.evaluation?.skills_score }}%</span>
+                  </div>
+                  <div class="w-full bg-slate-200 rounded-full h-2">
+                    <div class="h-2 rounded-full" [ngClass]="getScoreBg(candidate.evaluation?.skills_score)" [style.width]="(candidate.evaluation?.skills_score || 0) + '%'"></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex justify-between text-sm mb-1">
+                    <span class="font-medium text-slate-700">Experience Match</span>
+                    <span class="font-bold text-slate-900">{{ candidate.evaluation?.experience_score }}%</span>
+                  </div>
+                  <div class="w-full bg-slate-200 rounded-full h-2">
+                    <div class="h-2 rounded-full" [ngClass]="getScoreBg(candidate.evaluation?.experience_score)" [style.width]="(candidate.evaluation?.experience_score || 0) + '%'"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Strengths & Weaknesses -->
+              <div class="grid grid-cols-1 gap-4">
+                <div class="bg-emerald-50 rounded-xl p-4 border border-emerald-100">
+                  <h4 class="text-xs font-bold text-emerald-800 uppercase tracking-wider mb-2 flex items-center">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    Key Strengths
+                  </h4>
+                  <div class="flex flex-wrap gap-2">
+                    @for (strength of candidate.evaluation?.key_strengths; track strength) {
+                      <span class="bg-white text-emerald-700 text-sm px-2.5 py-1 rounded-md border border-emerald-200 shadow-sm">{{ strength }}</span>
+                    }
+                  </div>
+                </div>
+
+                <div class="bg-rose-50 rounded-xl p-4 border border-rose-100">
+                  <h4 class="text-xs font-bold text-rose-800 uppercase tracking-wider mb-2 flex items-center">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    Gaps & Red Flags
+                  </h4>
+                  <div class="flex flex-wrap gap-2">
+                    @for (gap of candidate.evaluation?.gaps_and_red_flags; track gap) {
+                      <span class="bg-white text-rose-700 text-sm px-2.5 py-1 rounded-md border border-rose-200 shadow-sm">{{ gap }}</span>
+                    }
+                  </div>
+                </div>
+              </div>
+
+              <!-- Rationale -->
+              <div>
+                <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">AI Rationale</h4>
+                <blockquote class="border-l-4 border-indigo-500 pl-4 py-1 text-slate-700 italic text-sm">
+                  "{{ candidate.evaluation?.concise_rationale }}"
+                </blockquote>
+              </div>
+            }
+            
+          </div>
+
+          <!-- Actions (Only active on top card) -->
+          @if (i === 0) {
+            <div class="p-6 pt-2 bg-white flex justify-center gap-6">
+              <button (click)="reject()" class="w-16 h-16 rounded-full bg-white border-2 border-rose-100 text-rose-500 shadow-md hover:bg-rose-50 hover:scale-110 transition-all flex items-center justify-center focus:outline-none focus:ring-4 focus:ring-rose-100">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+              </button>
+              <button (click)="shortlist()" class="w-16 h-16 rounded-full bg-white border-2 border-emerald-100 text-emerald-500 shadow-md hover:bg-emerald-50 hover:scale-110 transition-all flex items-center justify-center focus:outline-none focus:ring-4 focus:ring-emerald-100">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.5 12.75l6 6 9-13.5"></path></svg>
+              </button>
+            </div>
+          }
+        </div>
+      }
+    }
+  </div>
+  } @else {
+  <div class="w-full max-w-5xl bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr class="bg-slate-50 border-b border-slate-200 text-sm font-semibold text-slate-600">
+            <th class="p-4">Candidate</th>
+            <th class="p-4 text-center">Score</th>
+            <th class="p-4 text-center">Verdict</th>
+            <th class="p-4">AI Rationale</th>
+            <th class="p-4 text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100 text-sm">
+          @for (candidate of candidates(); track candidate.id) {
+            <tr class="hover:bg-slate-50 transition-colors">
+              <td class="p-4">
+                <div class="font-semibold text-slate-900">{{ candidate.candidateName }}</div>
+                <div class="text-slate-500 text-xs">{{ candidate.candidateEmail }}</div>
+              </td>
+              <td class="p-4 text-center">
+                <span class="inline-flex items-center justify-center w-10 h-10 rounded-full font-bold" [ngClass]="getScoreColor(candidate.evaluation?.overall_match_score)">
+                  {{ candidate.evaluation?.overall_match_score ?? '--' }}
+                </span>
+              </td>
+              <td class="p-4 text-center">
+                <span class="px-2.5 py-1 rounded-full text-xs font-semibold border"
+                      [ngClass]="getVerdictBadgeClass(candidate.evaluation?.fit_verdict || candidate.status)">
+                  {{ candidate.evaluation?.fit_verdict || candidate.status || 'Pending' }}
+                </span>
+              </td>
+              <td class="p-4 max-w-xs truncate text-slate-600" title="{{ candidate.evaluation?.concise_rationale || 'Processing AI Analysis...' }}">
+                {{ candidate.evaluation?.concise_rationale || 'Processing AI Analysis...' }}
+              </td>
+              <td class="p-4 text-center">
+                <div class="flex items-center justify-center gap-2">
+                  <button (click)="apiService.updateMatchStatus(jobId(), candidate.id, 'Rejected').subscribe()" class="p-2 text-rose-500 hover:bg-rose-50 rounded-lg transition-colors" title="Reject">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                  </button>
+                  <button (click)="apiService.updateMatchStatus(jobId(), candidate.id, 'Shortlisted').subscribe()" class="p-2 text-emerald-500 hover:bg-emerald-50 rounded-lg transition-colors" title="Shortlist">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+          @if (candidates().length === 0) {
+            <tr>
+              <td colspan="5" class="p-8 text-center text-slate-500">No candidates available for review.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+  }
+</div>

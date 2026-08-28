@@ -1,0 +1,63 @@
+<div class="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-4xl mx-auto">
+    <div class="mb-10 text-center">
+      <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight mb-3">Open Positions</h1>
+      <p class="text-lg text-gray-500">Find your next opportunity and join our team.</p>
+    </div>
+
+    @if (isLoading()) {
+      <div class="flex justify-center items-center py-20">
+        <svg class="animate-spin h-10 w-10 text-indigo-600" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+      </div>
+    } @else if (error()) {
+      <div class="bg-rose-50 border border-rose-200 text-rose-700 px-4 py-3 rounded-xl text-center">
+        {{ error() }}
+      </div>
+    } @else if (jobs().length === 0) {
+      <div class="text-center py-16 bg-white rounded-2xl shadow-sm border border-gray-100">
+        <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
+        <h3 class="text-lg font-medium text-gray-900">No open positions</h3>
+        <p class="text-gray-500 mt-1">We don't have any openings right now. Check back later!</p>
+      </div>
+    } @else {
+      <div class="space-y-6">
+        @for (job of jobs(); track job.id) {
+          <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              
+              <div>
+                <h2 class="text-2xl font-bold text-gray-900">{{ job.criteria.title }}</h2>
+                <div class="flex items-center gap-3 mt-2">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+                    {{ job.criteria.seniority_level }}
+                  </span>
+                  <span class="text-sm text-gray-500">
+                    {{ job.criteria.minimum_years_experience }}+ Years Exp.
+                  </span>
+                </div>
+              </div>
+
+              <a [routerLink]="['/apply', job.id]" class="inline-flex justify-center items-center px-6 py-2.5 border border-transparent text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors shrink-0">
+                Apply Now
+              </a>
+            </div>
+
+            <div class="mt-6">
+              <h4 class="text-sm font-medium text-gray-900 mb-2">Required Skills</h4>
+              <div class="flex flex-wrap gap-2">
+                @for (skill of job.criteria.required_skills; track skill) {
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-gray-100 text-gray-800 border border-gray-200">
+                    {{ skill }}
+                  </span>
+                }
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>
