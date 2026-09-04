@@ -1,6 +1,6 @@
 export const NL = {
   // Navigation & Shell
-  'APP_TITLE': 'Applicatie Portal',
+  'APP_TITLE': 'CV Match',
   'NAV_DASHBOARD': 'Dashboard',
   'NAV_LOGIN': 'Inloggen',
   'LOGOUT': 'Uitloggen',

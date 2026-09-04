@@ -7,6 +7,41 @@ export interface ParsedCriteria {
   core_responsibilities: string[];
 }
 
+export interface SJTQuestionOption {
+  key: string;
+  text: string;
+}
+
+export interface PublicSJTQuestion {
+  id: string;
+  scenario: string;
+  options: SJTQuestionOption[];
+}
+
+export interface PublicSJTAssessment {
+  job_id: string;
+  title: string;
+  questions: PublicSJTQuestion[];
+}
+
+export interface JobSJTAssessment {
+  questions: PublicSJTQuestion[];
+}
+
+export interface CandidateAnswer {
+  question_id: string;
+  selected_key: string;
+}
+
+export interface CandidateBehavioralEvaluation {
+  candidate_id?: string;
+  score_percentage: number;
+  verdict: string;
+  behavioral_archetype: string;
+  risk_flags: string[];
+  client_interview_probes: string[];
+}
+
 export interface CandidateMatch {
   id: string;
   jobId: string;
@@ -22,12 +57,17 @@ export interface CandidateMatch {
     gaps_and_red_flags: string[];
     concise_rationale: string;
   };
+  behavioral_evaluation?: CandidateBehavioralEvaluation;
+  candidate_answers?: CandidateAnswer[];
   status?: string;
+  resumeUrl?: string;
 }
 
 export interface JobResponse {
   id: string;
   title: string;
   criteria: ParsedCriteria;
+  assessment?: PublicSJTAssessment | JobSJTAssessment;
   createdAt: string;
 }
+

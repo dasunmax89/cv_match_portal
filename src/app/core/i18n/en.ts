@@ -1,6 +1,6 @@
 export const EN = {
   // Navigation & Shell
-  'APP_TITLE': 'Application Portal',
+  'APP_TITLE': 'CV Match',
   'NAV_DASHBOARD': 'Dashboard',
   'NAV_LOGIN': 'Login',
   'LOGOUT': 'Logout',

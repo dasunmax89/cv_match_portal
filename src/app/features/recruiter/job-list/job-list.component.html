@@ -1,0 +1,253 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+  
+  <!-- Header Section -->
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80">
+    <div>
+      <div class="flex items-center space-x-3">
+        <span class="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+          </svg>
+        </span>
+        <div>
+          <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Recruiter Job Postings</h1>
+          <p class="text-sm text-slate-500 mt-0.5">Manage job requisitions, view AI-extracted requirements, and track candidate evaluations.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex items-center space-x-3">
+      <button (click)="createNewJob()" 
+              class="inline-flex items-center justify-center px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white font-semibold rounded-xl shadow-md shadow-indigo-500/20 hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+        Post New Job
+      </button>
+    </div>
+  </div>
+
+  <!-- Search & Stats Bar -->
+  <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div class="relative w-full sm:w-96">
+      <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+        <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+      </div>
+      <input type="text" 
+             [ngModel]="searchQuery()" 
+             (ngModelChange)="searchQuery.set($event)"
+             placeholder="Search by job title or required skill..."
+             class="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm">
+    </div>
+
+    <div class="text-sm font-medium text-slate-500 self-end sm:self-auto">
+      Showing <span class="text-slate-900 font-bold">{{ filteredJobs.length }}</span> {{ filteredJobs.length === 1 ? 'job' : 'jobs' }}
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  @if (isLoading()) {
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      @for (item of [1,2,3,4,5,6]; track item) {
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 animate-pulse space-y-4">
+          <div class="h-6 bg-slate-200 rounded w-3/4"></div>
+          <div class="h-4 bg-slate-150 rounded w-1/2"></div>
+          <div class="flex gap-2 pt-2">
+            <div class="h-6 bg-slate-200 rounded-full w-16"></div>
+            <div class="h-6 bg-slate-200 rounded-full w-20"></div>
+          </div>
+        </div>
+      }
+    </div>
+  } @else if (filteredJobs.length === 0) {
+    <!-- Empty State -->
+    <div class="bg-white border border-slate-200 rounded-2xl p-12 text-center max-w-lg mx-auto my-8">
+      <div class="w-16 h-16 bg-indigo-50 text-indigo-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+        </svg>
+      </div>
+      <h3 class="text-lg font-bold text-slate-900 mb-1">No Jobs Found</h3>
+      <p class="text-slate-500 text-sm mb-6">
+        {{ searchQuery() ? 'No job postings match your search term.' : 'You haven\'t posted any job descriptions yet.' }}
+      </p>
+      <button (click)="createNewJob()" 
+              class="px-5 py-2.5 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition-colors">
+        Upload First Job Description
+      </button>
+    </div>
+  } @else {
+    <!-- Job List Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      @for (job of filteredJobs; track job.id) {
+        <div (click)="openJobDetails(job)" 
+             class="group relative bg-white rounded-2xl border border-slate-200/90 hover:border-indigo-400/80 p-6 shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col justify-between overflow-hidden">
+          
+          <div class="space-y-4">
+            <!-- Header Row -->
+            <div class="flex items-start justify-between gap-3">
+              <h2 class="text-lg font-bold text-slate-900 group-hover:text-indigo-600 transition-colors line-clamp-1">
+                {{ job.title || job.criteria?.title }}
+              </h2>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 shrink-0">
+                Active
+              </span>
+            </div>
+
+            <!-- Experience & Level Subtitle -->
+            <div class="flex items-center text-xs font-medium text-slate-500 space-x-2">
+              <span class="inline-flex items-center">
+                <svg class="w-3.5 h-3.5 mr-1 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                </svg>
+                {{ job.criteria?.seniority_level || 'Mid-Senior' }}
+              </span>
+              <span>•</span>
+              <span>{{ job.criteria?.minimum_years_experience || '1' }}+ Yrs Exp</span>
+            </div>
+
+            <!-- Required Skills Chips -->
+            <div>
+              <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Key Skills</p>
+              <div class="flex flex-wrap gap-1.5">
+                @for (skill of (job.criteria?.required_skills || []).slice(0, 4); track skill) {
+                  <span class="bg-indigo-50/70 text-indigo-700 border border-indigo-100 text-xs px-2.5 py-1 rounded-lg font-medium">
+                    {{ skill }}
+                  </span>
+                }
+                @if ((job.criteria?.required_skills?.length || 0) > 4) {
+                  <span class="bg-slate-100 text-slate-600 text-xs px-2 py-1 rounded-lg font-medium">
+                    +{{ (job.criteria?.required_skills?.length || 0) - 4 }} more
+                  </span>
+                }
+              </div>
+            </div>
+
+            <!-- Responsibilities Teaser -->
+            @if (job.criteria?.core_responsibilities?.length) {
+              <div class="pt-2 border-t border-slate-100">
+                <p class="text-xs text-slate-500 line-clamp-2 italic">
+                  "{{ job.criteria?.core_responsibilities?.[0] }}"
+                </p>
+              </div>
+            }
+          </div>
+
+          <!-- Bottom Footer Action -->
+          <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+            <span class="text-xs text-slate-400 font-medium">
+              Created {{ job.createdAt | date:'shortDate' }}
+            </span>
+            <div class="flex items-center space-x-2">
+              <button (click)="selectForQuickView(job, $event)" 
+                      class="text-xs font-semibold text-slate-600 hover:text-indigo-600 px-2.5 py-1 rounded-lg hover:bg-slate-100 transition-colors">
+                Quick View
+              </button>
+              <span class="inline-flex items-center text-xs font-bold text-indigo-600 group-hover:translate-x-1 transition-transform">
+                Evaluate Candidates
+                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+              </span>
+            </div>
+          </div>
+
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Quick View Modal Drawer -->
+  @if (selectedJob()) {
+    <div class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="bg-white rounded-3xl max-w-2xl w-full shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+        <div class="bg-indigo-600 p-6 text-white flex justify-between items-start">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-indigo-200">Extracted Job Requisition</span>
+            <h2 class="text-2xl font-bold mt-1">{{ selectedJob()?.title || selectedJob()?.criteria?.title }}</h2>
+          </div>
+          <button (click)="selectedJob.set(null)" class="text-indigo-200 hover:text-white p-1">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+          </button>
+        </div>
+
+        <div class="p-6 space-y-6 max-h-[70vh] overflow-y-auto">
+          <div class="grid grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl">
+            <div>
+              <p class="text-xs text-slate-400 font-semibold uppercase">Seniority Level</p>
+              <p class="text-sm font-bold text-slate-800 mt-0.5">{{ selectedJob()?.criteria?.seniority_level }}</p>
+            </div>
+            <div>
+              <p class="text-xs text-slate-400 font-semibold uppercase">Min Experience Required</p>
+              <p class="text-sm font-bold text-slate-800 mt-0.5">{{ selectedJob()?.criteria?.minimum_years_experience }}+ Years</p>
+            </div>
+          </div>
+
+          <div>
+            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Required Skills</h4>
+            <div class="flex flex-wrap gap-2">
+              @for (skill of selectedJob()?.criteria?.required_skills; track skill) {
+                <span class="bg-indigo-50 text-indigo-700 px-3 py-1 rounded-lg text-xs font-semibold border border-indigo-100">
+                  {{ skill }}
+                </span>
+              }
+            </div>
+          </div>
+
+          @if (selectedJob()?.criteria?.core_responsibilities?.length) {
+            <div>
+              <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Core Responsibilities</h4>
+              <ul class="list-disc pl-5 space-y-1.5 text-sm text-slate-700">
+                @for (resp of selectedJob()?.criteria?.core_responsibilities; track resp) {
+                  <li>{{ resp }}</li>
+                }
+              </ul>
+            </div>
+          }
+
+          <!-- 10 SJT Assessment Questions List for Recruiter -->
+          @if (selectedJob()?.assessment; as sjt) {
+            <div class="pt-4 border-t border-slate-200 space-y-4">
+              <div class="flex items-center justify-between">
+                <h4 class="text-xs font-bold text-indigo-900 uppercase tracking-wider flex items-center gap-1.5">
+                  <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                  Generated O*NET SJT Questions List ({{ sjt.questions.length }} Questions)
+                </h4>
+              </div>
+
+              <div class="space-y-3">
+                @for (q of sjt.questions; track q.id; let idx = $index) {
+                  <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2.5 text-xs">
+                    <div class="flex items-start gap-2">
+                      <span class="bg-indigo-600 text-white font-bold px-2 py-0.5 rounded text-[11px] shrink-0">
+                        Q{{ idx + 1 }}
+                      </span>
+                      <p class="font-semibold text-slate-900 leading-snug">
+                        {{ q.scenario }}
+                      </p>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pl-7">
+                      @for (opt of q.options; track opt.key) {
+                        <div class="bg-white p-2 rounded-lg border border-slate-200 text-slate-700">
+                          <strong class="text-indigo-700 mr-1">{{ opt.key }}.</strong> {{ opt.text }}
+                        </div>
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+
+        <div class="p-6 border-t border-slate-100 bg-slate-50 flex justify-end space-x-3">
+          <button (click)="selectedJob.set(null)" class="px-5 py-2 rounded-xl text-slate-600 font-semibold hover:bg-slate-200 text-sm">Close</button>
+          <button (click)="openJobDetails(selectedJob()!); selectedJob.set(null)" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold text-sm">Open Candidate Evaluation Deck</button>
+        </div>
+      </div>
+    </div>
+  }
+
+</div>

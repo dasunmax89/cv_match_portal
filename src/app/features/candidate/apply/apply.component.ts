@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ApiService } from '../../../core/services/api.service';
+import { PublicSJTAssessment, CandidateAnswer } from '../../../core/models/candidate.models';
 
 @Component({
   selector: 'app-apply',
@@ -19,6 +20,12 @@ export class ApplyComponent implements OnInit {
   isDragging = signal(false);
   selectedFile = signal<File | null>(null);
   
+  // Application Stage: 1 = Candidate Info & CV, 2 = Behavioral Readiness SJT Check
+  step = signal<number>(1);
+  loadingAssessment = signal<boolean>(false);
+  assessment = signal<PublicSJTAssessment | null>(null);
+  candidateAnswers = signal<Record<string, string>>({});
+
   // States: 'idle' | 'submitting' | 'success' | 'error'
   submitState = signal<'idle' | 'submitting' | 'success' | 'error'>('idle');
 
@@ -71,19 +78,69 @@ export class ApplyComponent implements OnInit {
     this.selectedFile.set(file);
   }
 
-  submitApplication() {
+  proceedToAssessment() {
     if (this.applyForm.invalid || !this.selectedFile()) {
-      alert('Please fill out all fields and attach your resume.');
+      alert('Please fill out all required fields and attach your resume.');
+      return;
+    }
+
+    this.loadingAssessment.set(true);
+    this.apiService.getJobAssessment(this.jobId()).subscribe({
+      next: (data) => {
+        this.loadingAssessment.set(false);
+        if (data && data.questions && data.questions.length > 0) {
+          this.assessment.set(data);
+          this.step.set(2);
+        } else {
+          this.submitFinalApplication();
+        }
+      },
+      error: () => {
+        // Fallback: If no assessment questions exist for job, directly submit application
+        this.loadingAssessment.set(false);
+        this.submitFinalApplication();
+      }
+    });
+  }
+
+  selectOption(questionId: string, selectedKey: string) {
+    const current = { ...this.candidateAnswers() };
+    current[questionId] = selectedKey;
+    this.candidateAnswers.set(current);
+  }
+
+  isAllQuestionsAnswered(): boolean {
+    const questions = this.assessment()?.questions || [];
+    const answers = this.candidateAnswers();
+    return questions.length > 0 && questions.every(q => !!answers[q.id]);
+  }
+
+  answeredCount(): number {
+    return Object.keys(this.candidateAnswers()).length;
+  }
+
+  submitFinalApplication() {
+    if (this.applyForm.invalid || !this.selectedFile()) {
+      alert('Please complete step 1 profile details.');
       return;
     }
 
     this.submitState.set('submitting');
     const { fullName, email } = this.applyForm.value;
 
-    this.apiService.applyToJob(this.jobId(), fullName!, email!, this.selectedFile()!).subscribe({
+    const answersList: CandidateAnswer[] = Object.entries(this.candidateAnswers()).map(
+      ([question_id, selected_key]) => ({ question_id, selected_key })
+    );
+
+    this.apiService.applyToJob(
+      this.jobId(),
+      fullName!,
+      email!,
+      this.selectedFile()!,
+      answersList
+    ).subscribe({
       next: () => {
-        // Mock a slight delay for the AI analysis animation effect
-        setTimeout(() => this.submitState.set('success'), 1500);
+        setTimeout(() => this.submitState.set('success'), 1200);
       },
       error: (err) => {
         console.error('Application failed', err);
@@ -92,3 +149,4 @@ export class ApplyComponent implements OnInit {
     });
   }
 }
+

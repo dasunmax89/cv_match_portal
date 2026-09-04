@@ -87,7 +87,16 @@ export class JdUploadComponent {
   }
 
   publishJob() {
-    const jobId = this.createdJob()?.id || Math.random().toString(36).substring(7);
-    this.router.navigate(['/recruiter/jobs', jobId]);
+    this.router.navigate(['/recruiter/jobs']);
   }
+
+  viewJobCandidates() {
+    const jobId = this.createdJob()?.id;
+    if (jobId) {
+      this.router.navigate(['/recruiter/jobs', jobId]);
+    } else {
+      this.router.navigate(['/recruiter/jobs']);
+    }
+  }
+
 }

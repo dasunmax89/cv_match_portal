@@ -118,9 +118,10 @@
            </ul>
         </div>
         
-        <div class="pt-6 flex justify-end gap-4">
-          <button class="px-6 py-2 rounded-lg text-gray-600 font-medium hover:bg-gray-50 transition-colors" (click)="parsedCriteria.set(null)">Start Over</button>
-          <button class="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-2 rounded-lg font-medium shadow-sm transition-colors" (click)="publishJob()">Publish Job</button>
+        <div class="pt-6 flex justify-end gap-3">
+          <button class="px-5 py-2.5 rounded-xl text-slate-600 font-medium hover:bg-slate-100 transition-colors text-sm" (click)="parsedCriteria.set(null)">Start Over</button>
+          <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-xl font-semibold shadow-sm transition-colors text-sm" (click)="publishJob()">View All Recruiter Jobs</button>
+          <button class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-xl font-semibold shadow-sm transition-colors text-sm" (click)="viewJobCandidates()">Evaluate Candidates</button>
         </div>
       </div>
     </div>

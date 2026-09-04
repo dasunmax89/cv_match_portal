@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ParsedCriteria, CandidateMatch, JobResponse } from '../models/candidate.models';
+import { ParsedCriteria, CandidateMatch, JobResponse, PublicSJTAssessment, CandidateAnswer } from '../models/candidate.models';
 
 
 @Injectable({
@@ -53,11 +53,32 @@ export class ApiService {
     return this.http.post<JobResponse>(`${this.baseUrl}/recruiter/jobs`, formData);
   }
 
-  applyToJob(jobId: string, candidateName: string, candidateEmail: string, resumeFile: File): Observable<any> {
+  getRecruiterJobs(): Observable<JobResponse[]> {
+    return this.http.get<JobResponse[]>(`${this.baseUrl}/recruiter/jobs`);
+  }
+
+  getRecruiterJob(jobId: string): Observable<JobResponse> {
+    return this.http.get<JobResponse>(`${this.baseUrl}/recruiter/jobs/${jobId}`);
+  }
+
+  getJobAssessment(jobId: string): Observable<PublicSJTAssessment> {
+    return this.http.get<PublicSJTAssessment>(`${this.baseUrl}/apply/jobs/${jobId}/assessment`);
+  }
+
+  applyToJob(
+    jobId: string, 
+    candidateName: string, 
+    candidateEmail: string, 
+    resumeFile: File,
+    answers?: CandidateAnswer[]
+  ): Observable<any> {
     const formData = new FormData();
     formData.append('candidate_name', candidateName);
     formData.append('candidate_email', candidateEmail);
     formData.append('resume_file', resumeFile);
+    if (answers && answers.length > 0) {
+      formData.append('answers_json', JSON.stringify(answers));
+    }
     return this.http.post<any>(`${this.baseUrl}/apply/jobs/${jobId}`, formData);
   }
 
@@ -80,3 +101,4 @@ export class ApiService {
     );
   }
 }
+
