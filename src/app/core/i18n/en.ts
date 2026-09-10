@@ -1,6 +1,6 @@
 export const EN = {
   // Navigation & Shell
-  'APP_TITLE': 'CV Match',
+  'APP_TITLE': 'Magic Match',
   'NAV_DASHBOARD': 'Dashboard',
   'NAV_LOGIN': 'Login',
   'LOGOUT': 'Logout',

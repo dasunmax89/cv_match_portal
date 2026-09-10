@@ -1,0 +1,57 @@
+<div class="min-h-screen bg-slate-50 flex flex-col font-sans text-slate-800">
+  <!-- Minimalist Light Enterprise Recruiter Header -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <div class="flex items-center space-x-3">
+        <a routerLink="/recruiter" class="flex items-center space-x-2 group">
+          <div class="w-9 h-9 rounded-xl bg-sky-600 flex items-center justify-center text-white font-bold text-lg shadow-sm shadow-sky-200 group-hover:scale-105 transition-transform">
+            CV
+          </div>
+          <div class="flex flex-col">
+            <span class="font-bold text-slate-900 leading-none text-lg tracking-tight">Match</span>
+            <span class="text-[10px] font-semibold text-sky-600 uppercase tracking-widest leading-none mt-0.5">Recruiter Workspace</span>
+          </div>
+        </a>
+
+        <!-- Navigation Links -->
+        <nav class="hidden md:flex items-center space-x-1 ml-8">
+          <a routerLink="/recruiter/jobs" routerLinkActive="bg-sky-50 text-sky-700 font-semibold" class="px-3.5 py-2 rounded-lg text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+            Job Listings
+          </a>
+          <a routerLink="/recruiter/create" routerLinkActive="bg-sky-50 text-sky-700 font-semibold" class="px-3.5 py-2 rounded-lg text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+            + Post Job (Upload JD)
+          </a>
+          <a routerLink="/recruiter/onboarding" routerLinkActive="bg-sky-50 text-sky-700 font-semibold" class="px-3.5 py-2 rounded-lg text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+            Company Profile
+          </a>
+        </nav>
+      </div>
+
+      <!-- Right Side Actions -->
+      <div class="flex items-center space-x-4">
+        <a routerLink="/recruiter/login" class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-sky-700 bg-sky-50 hover:bg-sky-100 rounded-lg border border-sky-200 transition-colors">
+          Recruiter Sign In
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <router-outlet></router-outlet>
+  </main>
+
+  <!-- Minimalist Recruiter Footer -->
+  <footer class="bg-white border-t border-slate-200 py-6">
+    <div class="max-w-7xl mx-auto px-4 text-center sm:flex sm:justify-between sm:text-left text-xs text-slate-500">
+      <p>&copy; 2026 CVMatch Inc. Talent Acquisition & Automated Matching Engine.</p>
+      <div class="mt-2 sm:mt-0 space-x-4">
+        <a href="#" class="hover:text-slate-800">Recruiter Docs</a>
+        <a href="#" class="hover:text-slate-800">ATS Integrations</a>
+        <a href="#" class="hover:text-slate-800">Support</a>
+      </div>
+    </div>
+  </footer>
+</div>

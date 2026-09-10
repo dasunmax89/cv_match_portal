@@ -20,11 +20,15 @@ export class ApplyComponent implements OnInit {
   isDragging = signal(false);
   selectedFile = signal<File | null>(null);
   
-  // Application Stage: 1 = Candidate Info & CV, 2 = Behavioral Readiness SJT Check
+  // Stage & Assessment Signals
   step = signal<number>(1);
   loadingAssessment = signal<boolean>(false);
   assessment = signal<PublicSJTAssessment | null>(null);
   candidateAnswers = signal<Record<string, string>>({});
+
+  // Initial AI Assessment Signal
+  loadingInitialAssessment = signal<boolean>(false);
+  initialAssessment = signal<any>(null);
 
   // States: 'idle' | 'submitting' | 'success' | 'error'
   submitState = signal<'idle' | 'submitting' | 'success' | 'error'>('idle');
@@ -76,6 +80,25 @@ export class ApplyComponent implements OnInit {
       return;
     }
     this.selectedFile.set(file);
+
+    // Call apiService.getInitialAssessment() to parse CV & save in Cosmos DB 'initial_assessments'
+    this.loadingInitialAssessment.set(true);
+    this.apiService.getInitialAssessment(file, this.jobId()).subscribe({
+      next: (assessmentData) => {
+        this.loadingInitialAssessment.set(false);
+        this.initialAssessment.set(assessmentData);
+        // Pre-fill extracted details if form is empty
+        if (assessmentData.full_name && assessmentData.full_name !== 'Candidate' && !this.applyForm.value.fullName) {
+          this.applyForm.patchValue({ fullName: assessmentData.full_name });
+        }
+        if (assessmentData.email && !this.applyForm.value.email) {
+          this.applyForm.patchValue({ email: assessmentData.email });
+        }
+      },
+      error: () => {
+        this.loadingInitialAssessment.set(false);
+      }
+    });
   }
 
   proceedToAssessment() {

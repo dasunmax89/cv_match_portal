@@ -1,0 +1,57 @@
+<div class="min-h-screen bg-slate-50 flex flex-col font-sans text-slate-800">
+  <!-- Minimalist Light Vendor Admin Header -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Brand Logo & Super Admin Label -->
+      <div class="flex items-center space-x-3">
+        <a routerLink="/management" class="flex items-center space-x-2 group">
+          <div class="w-9 h-9 rounded-xl bg-emerald-600 flex items-center justify-center text-white font-bold text-lg shadow-sm shadow-emerald-200 group-hover:scale-105 transition-transform">
+            CV
+          </div>
+          <div class="flex flex-col">
+            <span class="font-bold text-slate-900 leading-none text-lg tracking-tight">Match</span>
+            <span class="text-[10px] font-semibold text-emerald-600 uppercase tracking-widest leading-none mt-0.5">Vendor Admin Portal</span>
+          </div>
+        </a>
+
+        <!-- Admin Nav Links -->
+        <nav class="hidden md:flex items-center space-x-1 ml-8">
+          <a routerLink="/management/dashboard" routerLinkActive="bg-emerald-50 text-emerald-700 font-semibold" class="px-3.5 py-2 rounded-lg text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+            Recruiter Accounts
+          </a>
+        </nav>
+      </div>
+
+      <!-- Right Actions & System Status Pill -->
+      <div class="flex items-center space-x-4">
+        <!-- System Health Pill -->
+        <div class="hidden md:flex items-center space-x-2 px-3 py-1 bg-emerald-50 border border-emerald-200 rounded-full text-xs font-semibold text-emerald-700">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>Engine Operational</span>
+        </div>
+
+        <a routerLink="/management/login" class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-lg border border-emerald-200 transition-colors">
+          Admin Login
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <router-outlet></router-outlet>
+  </main>
+
+  <!-- Minimalist Management Footer -->
+  <footer class="bg-white border-t border-slate-200 py-6">
+    <div class="max-w-7xl mx-auto px-4 text-center sm:flex sm:justify-between sm:text-left text-xs text-slate-500">
+      <p>&copy; 2026 CVMatch Inc. Vendor Management Console.</p>
+      <div class="mt-2 sm:mt-0 space-x-4">
+        <a href="#" class="hover:text-slate-800">System Logs</a>
+        <a href="#" class="hover:text-slate-800">Audit Trail</a>
+        <a href="#" class="hover:text-slate-800">Security Policy</a>
+      </div>
+    </div>
+  </footer>
+</div>

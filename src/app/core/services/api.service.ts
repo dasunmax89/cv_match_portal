@@ -65,6 +65,15 @@ export class ApiService {
     return this.http.get<PublicSJTAssessment>(`${this.baseUrl}/apply/jobs/${jobId}/assessment`);
   }
 
+  getInitialAssessment(file: File, jobId?: string): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    if (jobId) {
+      formData.append('job_id', jobId);
+    }
+    return this.http.post<any>(`${this.baseUrl}/apply/initial-assessment`, formData);
+  }
+
   applyToJob(
     jobId: string, 
     candidateName: string, 
@@ -99,6 +108,43 @@ export class ApiService {
       `${this.baseUrl}/recruiter/jobs/${jobId}/matches/${matchId}/status`,
       { status }
     );
+  }
+
+  // --- Candidate Onboarding ---
+  candidateOnboarding(payload: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/apply/onboarding`, payload);
+  }
+
+  parseCandidateCv(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post(`${this.baseUrl}/apply/parse-cv`, formData);
+  }
+
+  // --- Recruiter Onboarding ---
+  recruiterOnboarding(payload: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/recruiter/onboarding`, payload);
+  }
+
+  inviteRecruiterTeam(emails: string[]): Observable<any> {
+    return this.http.post(`${this.baseUrl}/recruiter/invite-team`, { emails });
+  }
+
+  // --- Vendor Admin Management ---
+  getAdminRecruiters(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/admin/recruiters`);
+  }
+
+  provisionRecruiter(payload: { company_name: string; recruiter_email: string; plan?: string }): Observable<any> {
+    return this.http.post(`${this.baseUrl}/admin/recruiters`, payload);
+  }
+
+  updateRecruiterStatus(recruiterId: string, status: string): Observable<any> {
+    return this.http.patch(`${this.baseUrl}/admin/recruiters/${recruiterId}/status`, { status });
+  }
+
+  getAdminMetrics(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/admin/metrics`);
   }
 }
 
