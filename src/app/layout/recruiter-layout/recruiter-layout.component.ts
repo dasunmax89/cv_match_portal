@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-recruiter-layout',
@@ -9,4 +10,6 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
   templateUrl: './recruiter-layout.component.html',
   styleUrl: './recruiter-layout.component.css',
 })
-export class RecruiterLayout {}
+export class RecruiterLayout {
+  public authService = inject(AuthService);
+}

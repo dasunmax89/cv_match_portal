@@ -6,44 +6,45 @@ import { AuthService } from '../../../core/services/auth.service';
 import { ApiService } from '../../../core/services/api.service';
 
 @Component({
-  selector: 'app-management-login',
+  selector: 'app-candidate-signup',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  templateUrl: './signup.component.html',
+  styleUrl: './signup.component.css'
 })
-export class Login {
+export class SignupComponent {
   private authService = inject(AuthService);
   private apiService = inject(ApiService);
   private router = inject(Router);
 
-  adminId = '';
+  fullName = '';
+  email = '';
   password = '';
-  mfaCode = '';
   errorMessage = '';
   isLoading = false;
 
   onSubmit() {
-    if (!this.adminId || !this.password) {
-      this.errorMessage = 'Please enter both your Admin ID and password.';
+    if (!this.email || !this.password || !this.fullName) {
+      this.errorMessage = 'Please fill in all fields (Full Name, Email, and Password).';
       return;
     }
 
     this.isLoading = true;
     this.errorMessage = '';
 
-    this.apiService.login(this.adminId, this.password).subscribe({
+    this.apiService.signup(this.email, this.password, this.fullName).subscribe({
       next: (res) => {
         this.isLoading = false;
-        this.authService.loginManagement({
-          adminId: this.adminId,
+        this.authService.loginCandidate({
+          email: this.email,
+          fullName: this.fullName,
           token: res?.access_token
         });
-        this.router.navigate(['/management/dashboard']);
+        this.router.navigate(['/candidate/onboarding']);
       },
       error: (err) => {
         this.isLoading = false;
-        this.errorMessage = err?.error?.detail || err?.message || 'Admin authentication failed. Please check your credentials and 2FA code.';
+        this.errorMessage = err?.error?.detail || err?.message || 'Registration failed. Please check your information.';
       }
     });
   }

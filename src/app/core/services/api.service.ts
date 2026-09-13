@@ -1,7 +1,9 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, from } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { ParsedCriteria, CandidateMatch, JobResponse, PublicSJTAssessment, CandidateAnswer } from '../models/candidate.models';
+import { hashPasswordClient } from '../utils/crypto.utils';
 
 
 @Injectable({
@@ -23,8 +25,26 @@ export class ApiService {
     return 'http://127.0.0.1:8080/api/v1';
   }
 
-  login(email: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}/auth/login?email=${encodeURIComponent(email)}`, {});
+  login(email: string, password: string): Observable<any> {
+    const rawPass = password || '';
+    return from(hashPasswordClient(rawPass)).pipe(
+      switchMap(passwordHash =>
+        this.http.post(`${this.baseUrl}/auth/login`, { email, password_hash: passwordHash })
+      )
+    );
+  }
+
+  signup(email: string, password: string, fullName?: string): Observable<any> {
+    const rawPass = password || '';
+    return from(hashPasswordClient(rawPass)).pipe(
+      switchMap(passwordHash =>
+        this.http.post(`${this.baseUrl}/auth/signup`, {
+          email,
+          password_hash: passwordHash,
+          full_name: fullName
+        })
+      )
+    );
   }
 
   authenticateUser(payload: { username: string; password_hash: string }): Observable<any> {
@@ -62,7 +82,7 @@ export class ApiService {
   }
 
   getJobAssessment(jobId: string): Observable<PublicSJTAssessment> {
-    return this.http.get<PublicSJTAssessment>(`${this.baseUrl}/apply/jobs/${jobId}/assessment`);
+    return this.http.get<PublicSJTAssessment>(`${this.baseUrl}/candidate/jobs/${jobId}/assessment`);
   }
 
   getInitialAssessment(file: File, jobId?: string): Observable<any> {
@@ -71,7 +91,7 @@ export class ApiService {
     if (jobId) {
       formData.append('job_id', jobId);
     }
-    return this.http.post<any>(`${this.baseUrl}/apply/initial-assessment`, formData);
+    return this.http.post<any>(`${this.baseUrl}/candidate/initial-assessment`, formData);
   }
 
   applyToJob(
@@ -88,7 +108,7 @@ export class ApiService {
     if (answers && answers.length > 0) {
       formData.append('answers_json', JSON.stringify(answers));
     }
-    return this.http.post<any>(`${this.baseUrl}/apply/jobs/${jobId}`, formData);
+    return this.http.post<any>(`${this.baseUrl}/candidate/jobs/${jobId}`, formData);
   }
 
   getJobMatches(jobId: string): Observable<CandidateMatch[]> {
@@ -96,11 +116,11 @@ export class ApiService {
   }
 
   getPublicJobs(): Observable<JobResponse[]> {
-    return this.http.get<JobResponse[]>(`${this.baseUrl}/apply/jobs`);
+    return this.http.get<JobResponse[]>(`${this.baseUrl}/candidate/jobs`);
   }
 
   getPublicJobDetails(jobId: string): Observable<JobResponse> {
-    return this.http.get<JobResponse>(`${this.baseUrl}/apply/jobs/${jobId}/public`);
+    return this.http.get<JobResponse>(`${this.baseUrl}/candidate/jobs/${jobId}/public`);
   }
 
   updateMatchStatus(jobId: string, matchId: string, status: string): Observable<CandidateMatch> {
@@ -110,15 +130,19 @@ export class ApiService {
     );
   }
 
-  // --- Candidate Onboarding ---
+  // --- Candidate Onboarding & Profile Management ---
   candidateOnboarding(payload: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/apply/onboarding`, payload);
+    return this.http.post(`${this.baseUrl}/candidate/onboarding`, payload);
+  }
+
+  updateCandidateProfile(payload: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/candidate/profile`, payload);
   }
 
   parseCandidateCv(file: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
-    return this.http.post(`${this.baseUrl}/apply/parse-cv`, formData);
+    return this.http.post(`${this.baseUrl}/candidate/parse-cv`, formData);
   }
 
   // --- Recruiter Onboarding ---

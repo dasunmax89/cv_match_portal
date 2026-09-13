@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-management-layout',
@@ -9,4 +10,6 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
   templateUrl: './management-layout.component.html',
   styleUrl: './management-layout.component.css',
 })
-export class ManagementLayout {}
+export class ManagementLayout {
+  public authService = inject(AuthService);
+}

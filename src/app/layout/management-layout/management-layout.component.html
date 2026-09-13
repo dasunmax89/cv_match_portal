@@ -31,9 +31,18 @@
           <span>Engine Operational</span>
         </div>
 
-        <a routerLink="/management/login" class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-lg border border-emerald-200 transition-colors">
-          Admin Login
-        </a>
+        @if (authService.isManagementLoggedIn()) {
+          <div class="flex items-center space-x-3">
+            <span class="text-xs font-semibold text-slate-700">{{ authService.managementUser()?.adminId }}</span>
+            <button (click)="authService.logoutManagement()" class="px-3 py-1.5 text-xs font-medium text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors">
+              Sign Out
+            </button>
+          </div>
+        } @else {
+          <a routerLink="/management/login" class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-lg border border-emerald-200 transition-colors">
+            Admin Login
+          </a>
+        }
       </div>
     </div>
   </header>

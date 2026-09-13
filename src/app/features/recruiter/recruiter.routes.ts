@@ -2,11 +2,16 @@ import { Routes } from '@angular/router';
 import { RecruiterLayout } from '../../layout/recruiter-layout/recruiter-layout.component';
 import { Login } from './login/login.component';
 import { Onboarding } from './onboarding/onboarding.component';
+import { recruiterAuthGuard } from '../../core/guards/partition-auth.guard';
 
 export const recruiterRoutes: Routes = [
   {
     path: 'login',
     component: Login
+  },
+  {
+    path: 'signup',
+    loadComponent: () => import('./signup/signup.component').then(m => m.SignupComponent)
   },
   {
     path: 'onboarding',
@@ -15,6 +20,7 @@ export const recruiterRoutes: Routes = [
   {
     path: '',
     component: RecruiterLayout,
+    canActivate: [recruiterAuthGuard],
     children: [
       { path: '', redirectTo: 'jobs', pathMatch: 'full' },
       {

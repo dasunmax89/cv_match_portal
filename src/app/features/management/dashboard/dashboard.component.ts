@@ -70,6 +70,8 @@ export class Dashboard implements OnInit {
     );
   }
 
+  errorMessage = '';
+
   toggleStatus(acc: RecruiterAccount) {
     const newStatus = acc.status === 'Active' ? 'Suspended' : 'Active';
     this.apiService.updateRecruiterStatus(acc.id, newStatus).subscribe({
@@ -80,24 +82,31 @@ export class Dashboard implements OnInit {
           acc.status = newStatus;
         }
       },
-      error: () => {
-        acc.status = newStatus;
+      error: (err) => {
+        alert(err?.error?.detail || 'Failed to update recruiter status.');
       }
     });
   }
 
   openProvisionModal() {
     this.showProvisionModal = true;
+    this.errorMessage = '';
   }
 
   closeProvisionModal() {
     this.showProvisionModal = false;
     this.newCompanyName = '';
     this.newRecruiterEmail = '';
+    this.errorMessage = '';
   }
 
   submitProvisioning() {
-    if (!this.newCompanyName || !this.newRecruiterEmail) return;
+    if (!this.newCompanyName || !this.newRecruiterEmail) {
+      this.errorMessage = 'Company name and recruiter email are required.';
+      return;
+    }
+
+    this.errorMessage = '';
 
     this.apiService.provisionRecruiter({
       company_name: this.newCompanyName,
@@ -109,8 +118,8 @@ export class Dashboard implements OnInit {
         this.metrics.total_recruiters++;
         this.closeProvisionModal();
       },
-      error: () => {
-        this.closeProvisionModal();
+      error: (err) => {
+        this.errorMessage = err?.error?.detail || err?.message || 'Failed to provision recruiter account. Please check details and try again.';
       }
     });
   }
