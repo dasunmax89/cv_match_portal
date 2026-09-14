@@ -1,10 +1,13 @@
 <div class="max-w-4xl mx-auto py-6">
-  
+
   <!-- Header for Onboarding Wizard -->
   <div class="mb-8 text-center">
-    <span class="px-3 py-1 bg-indigo-50 text-indigo-700 text-xs font-semibold rounded-full uppercase tracking-wider">Candidate Setup</span>
+    <span
+      class="px-3 py-1 bg-indigo-50 text-indigo-700 text-xs font-semibold rounded-full uppercase tracking-wider">Candidate
+      Setup</span>
     <h1 class="text-2xl font-bold text-slate-900 mt-2">Complete your Candidate Setup</h1>
-    <p class="text-sm text-slate-500 mt-1">Let our AI parse your CV and match your skills with top tech opportunities</p>
+    <p class="text-sm text-slate-500 mt-1">Let our AI parse your CV and match your skills with top tech opportunities
+    </p>
   </div>
 
   <!-- Wizard Progress Bar (2 Steps) -->
@@ -30,176 +33,223 @@
 
   <!-- Wizard Card Container -->
   <div class="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
-    
+
     @if (errorMessage) {
-      <div class="mb-6 p-4 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-700 flex items-center justify-between">
-        <span class="flex items-center gap-2 font-medium">
-          <svg class="w-4 h-4 text-rose-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          {{ errorMessage }}
-        </span>
-        <button (click)="errorMessage = ''" class="text-rose-500 hover:text-rose-700 font-bold ml-4">✕</button>
-      </div>
+    <div
+      class="mb-6 p-4 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-700 flex items-center justify-between">
+      <span class="flex items-center gap-2 font-medium">
+        <svg class="w-4 h-4 text-rose-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        {{ errorMessage }}
+      </span>
+      <button (click)="errorMessage = ''" class="text-rose-500 hover:text-rose-700 font-bold ml-4">✕</button>
+    </div>
     }
 
     <!-- STEP 1 (Resume Upload & Auto Parsing) -->
     @if (currentStep === 1) {
-      <div class="space-y-6">
-        <h2 class="text-lg font-semibold text-slate-800 border-b border-slate-100 pb-3">Step 1: Upload Resume & Auto-Populate Profile</h2>
-        
-        <!-- File Upload Area -->
-        <div>
-          <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">Upload Resume (PDF/DOCX)</label>
-          <div class="border-2 border-dashed border-slate-200 hover:border-indigo-400 rounded-xl p-6 text-center cursor-pointer transition-colors bg-slate-50 relative">
-            <input type="file" (change)="onFileSelected($event)" accept=".pdf,.docx" class="absolute inset-0 opacity-0 cursor-pointer" />
-            <svg class="w-10 h-10 text-indigo-500 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
-            @if (isParsing) {
-              <div class="text-sm font-semibold text-indigo-600 animate-pulse flex items-center justify-center gap-2">
-                <svg class="animate-spin h-4 w-4 text-indigo-600" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                AI is running Initial Assessment & auto-populating your profile...
-              </div>
-            } @else if (fileName) {
-              <p class="text-sm font-semibold text-indigo-600">{{ fileName }} uploaded & parsed successfully!</p>
-            } @else {
-              <p class="text-sm font-medium text-slate-700">Drag and drop your CV here, or <span class="text-indigo-600">browse files</span></p>
-              <p class="text-xs text-slate-400 mt-1">AI will automatically parse name, skills, experience, education, and work history</p>
-            }
-          </div>
-        </div>
+    <div class="space-y-6">
+      <h2 class="text-lg font-semibold text-slate-800 border-b border-slate-100 pb-3">Step 1: Upload Resume &
+        Auto-Populate Profile</h2>
 
-        <!-- Initial AI Assessment Summary Box -->
-        @if (initialAssessment) {
-          <div class="bg-indigo-50/50 border border-indigo-200 rounded-xl p-4 space-y-2">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-bold text-indigo-900 uppercase tracking-wider">AI Assessment Summary</span>
-              <span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[11px] font-bold rounded-full">Fit Score: {{ initialAssessment.initial_fit_rating }}/100</span>
-            </div>
-            <p class="text-xs text-slate-700 italic">"{{ initialAssessment.executive_summary }}"</p>
-            @if (initialAssessment.key_strengths?.length) {
-              <div class="flex flex-wrap gap-1 mt-1">
-                @for (str of initialAssessment.key_strengths; track str) {
-                  <span class="px-2 py-0.5 bg-white text-indigo-700 border border-indigo-200 text-[10px] font-medium rounded-md">✓ {{ str }}</span>
-                }
-              </div>
-            }
+      <!-- File Upload Area -->
+      <div>
+        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">Upload Resume
+          (PDF/DOCX)</label>
+        <div
+          class="border-2 border-dashed border-slate-200 hover:border-indigo-400 rounded-xl p-6 text-center cursor-pointer transition-colors bg-slate-50 relative">
+          <input type="file" (change)="onFileSelected($event)" accept=".pdf,.docx"
+            class="absolute inset-0 opacity-0 cursor-pointer" />
+          <svg class="w-10 h-10 text-indigo-500 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+          </svg>
+          @if (isParsing) {
+          <div class="text-sm font-semibold text-indigo-600 animate-pulse flex items-center justify-center gap-2">
+            <svg class="animate-spin h-4 w-4 text-indigo-600" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+              </path>
+            </svg>
+            AI is running Initial Assessment & auto-populating your profile...
           </div>
-        }
-
-        <!-- Auto-Populated Basic Information -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">First Name</label>
-            <input type="text" [(ngModel)]="firstName" placeholder="Jane" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all" />
-          </div>
-
-          <div>
-            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Last Name</label>
-            <input type="text" [(ngModel)]="lastName" placeholder="Doe" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all" />
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Email Address</label>
-            <input type="email" [(ngModel)]="email" placeholder="jane@example.com" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all" />
-          </div>
-
-          <div>
-            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Target Job Title</label>
-            <input type="text" [(ngModel)]="jobTitle" placeholder="e.g. Senior Fullstack Engineer" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all" />
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Education Background</label>
-          <input type="text" [(ngModel)]="education" placeholder="e.g. B.S. Computer Science" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all" />
-        </div>
-
-        <!-- Skills Matrix from AI Analysis Feed -->
-        <div>
-          <div class="flex items-center justify-between mb-2">
-            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider">AI Extracted Key Skills</label>
-            @if (availableSkills.length > 0) {
-              <span class="px-2 py-0.5 bg-indigo-50 text-indigo-700 text-[11px] font-semibold rounded-full border border-indigo-100 flex items-center gap-1">
-                <svg class="w-3 h-3 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                {{ availableSkills.length }} Skills Extracted
-              </span>
-            }
-          </div>
-          @if (availableSkills.length > 0) {
-            <div class="flex flex-wrap gap-2">
-              @for (skill of availableSkills; track skill) {
-                <button type="button" (click)="toggleSkill(skill)" [ngClass]="selectedSkills.includes(skill) ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'" class="px-3 py-1.5 rounded-full text-xs font-medium transition-colors cursor-pointer">
-                  {{ skill }}
-                </button>
-              }
-            </div>
+          } @else if (fileName) {
+          <p class="text-sm font-semibold text-indigo-600">{{ fileName }} uploaded & parsed successfully!</p>
           } @else {
-            <div class="p-4 border border-dashed border-slate-200 rounded-xl text-center bg-slate-50">
-              <p class="text-xs text-slate-500 font-medium">No skills extracted yet. Upload your resume above to extract skills using AI analysis.</p>
-            </div>
+          <p class="text-sm font-medium text-slate-700">Drag and drop your CV here, or <span
+              class="text-indigo-600">browse files</span></p>
+          <p class="text-xs text-slate-400 mt-1">AI will automatically parse name, skills, experience, education, and
+            work history</p>
           }
         </div>
       </div>
+
+      <!-- Initial AI Assessment Summary Box -->
+      @if (initialAssessment) {
+      <div class="bg-indigo-50/50 border border-indigo-200 rounded-xl p-4 space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-indigo-900 uppercase tracking-wider">AI Assessment Summary</span>
+          <span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[11px] font-bold rounded-full">Fit Score: {{
+            initialAssessment.initial_fit_rating }}/100</span>
+        </div>
+        <p class="text-xs text-slate-700 italic">"{{ initialAssessment.executive_summary }}"</p>
+        @if (initialAssessment.key_strengths?.length) {
+        <div class="flex flex-wrap gap-1 mt-1">
+          @for (str of initialAssessment.key_strengths; track str) {
+          <span
+            class="px-2 py-0.5 bg-white text-indigo-700 border border-indigo-200 text-[10px] font-medium rounded-md">✓
+            {{ str }}</span>
+          }
+        </div>
+        }
+      </div>
+      }
+
+      <!-- Auto-Populated Basic Information -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">First Name</label>
+          <input type="text" [(ngModel)]="firstName" placeholder="Jane"
+            class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Last Name</label>
+          <input type="text" [(ngModel)]="lastName" placeholder="Doe"
+            class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all" />
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Email Address</label>
+          <input type="email" [(ngModel)]="email" placeholder="jane@example.com"
+            class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Job Title</label>
+          <input type="text" [(ngModel)]="jobTitle" placeholder="e.g. Senior Fullstack Engineer"
+            class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all" />
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Education
+          Background</label>
+        <input type="text" [(ngModel)]="education" placeholder="e.g. B.S. Computer Science"
+          class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all" />
+      </div>
+
+      <!-- Skills Matrix from AI Analysis Feed -->
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider">AI Extracted Key
+            Skills</label>
+          @if (availableSkills.length > 0) {
+          <span
+            class="px-2 py-0.5 bg-indigo-50 text-indigo-700 text-[11px] font-semibold rounded-full border border-indigo-100 flex items-center gap-1">
+            <svg class="w-3 h-3 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            {{ availableSkills.length }} Skills Extracted
+          </span>
+          }
+        </div>
+        @if (availableSkills.length > 0) {
+        <div class="flex flex-wrap gap-2">
+          @for (skill of availableSkills; track skill) {
+          <button type="button" (click)="toggleSkill(skill)"
+            [ngClass]="selectedSkills.includes(skill) ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'"
+            class="px-3 py-1.5 rounded-full text-xs font-medium transition-colors cursor-pointer">
+            {{ skill }}
+          </button>
+          }
+        </div>
+        } @else {
+        <div class="p-4 border border-dashed border-slate-200 rounded-xl text-center bg-slate-50">
+          <p class="text-xs text-slate-500 font-medium">No skills extracted yet. Upload your resume above to extract
+            skills using AI analysis.</p>
+        </div>
+        }
+      </div>
+    </div>
     }
 
     <!-- STEP 2 (Job Preferences Wizard Step) -->
     @if (currentStep === 2) {
-      <div class="space-y-6">
-        <h2 class="text-lg font-semibold text-slate-800 border-b border-slate-100 pb-3">Step 2: Career & Work Preferences</h2>
-        
+    <div class="space-y-6">
+      <h2 class="text-lg font-semibold text-slate-800 border-b border-slate-100 pb-3">Step 2: Career & Work Preferences
+      </h2>
+
+      <div>
+        <div class="flex justify-between items-center mb-2">
+          <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider">Years of Experience: <span
+              class="text-indigo-600 font-bold">{{ experienceYears }} Years</span></label>
+        </div>
+        <input type="range" min="0" max="20" [(ngModel)]="experienceYears"
+          class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600" />
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <div class="flex justify-between items-center mb-2">
-            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider">Years of Experience: <span class="text-indigo-600 font-bold">{{ experienceYears }} Years</span></label>
-          </div>
-          <input type="range" min="0" max="20" [(ngModel)]="experienceYears" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600" />
+          <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Work
+            Arrangement</label>
+          <select [(ngModel)]="workArrangement"
+            class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all cursor-pointer">
+            <option value="Remote Preferred">Remote Preferred</option>
+            <option value="Hybrid">Hybrid</option>
+            <option value="On-site">On-site</option>
+            <option value="Flexible">Flexible / Open to Any</option>
+          </select>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Work Arrangement</label>
-            <select [(ngModel)]="workArrangement" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all cursor-pointer">
-              <option value="Remote Preferred">Remote Preferred</option>
-              <option value="Hybrid">Hybrid</option>
-              <option value="On-site">On-site</option>
-              <option value="Flexible">Flexible / Open to Any</option>
-            </select>
-          </div>
-
-          <div>
-            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Minimum Desired Salary (USD)</label>
-            <input type="text" [(ngModel)]="minSalary" placeholder="$120,000 / year" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all" />
-          </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Minimum Desired
+            Salary (USD)</label>
+          <input type="text" [(ngModel)]="minSalary" placeholder="$120,000 / year"
+            class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all" />
         </div>
       </div>
+    </div>
     }
 
     <!-- Footer Controls -->
     <div class="mt-8 pt-4 border-t border-slate-100 flex items-center justify-between">
       @if (currentStep === 2) {
-        <button (click)="prevStep()" type="button" class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer">
-          ← Back
-        </button>
+      <button (click)="prevStep()" type="button"
+        class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer">
+        ← Back
+      </button>
       } @else {
-        <div></div>
+      <div></div>
       }
 
       @if (currentStep === 1) {
-        <button (click)="nextStep()" type="button" class="px-5 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-sm cursor-pointer">
-          Next Step: Job Preferences →
-        </button>
+      <button (click)="nextStep()" type="button"
+        class="px-5 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-sm cursor-pointer">
+        Next Step: Job Preferences →
+      </button>
       } @else {
-        <button (click)="finishOnboarding()" type="button" [disabled]="isSubmitting" class="px-6 py-2.5 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-sm transition-colors flex items-center gap-2 cursor-pointer disabled:opacity-50">
-          @if (isSubmitting) {
-            <svg class="animate-spin h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-            Saving Setup...
-          } @else {
-            Complete Setup & View Profile →
-          }
-        </button>
+      <button (click)="finishOnboarding()" type="button" [disabled]="isSubmitting"
+        class="px-6 py-2.5 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-sm transition-colors flex items-center gap-2 cursor-pointer disabled:opacity-50">
+        @if (isSubmitting) {
+        <svg class="animate-spin h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+          </path>
+        </svg>
+        Saving Setup...
+        } @else {
+        Complete Setup & View Profile →
+        }
+      </button>
       }
     </div>
 
   </div>
 </div>
-
-

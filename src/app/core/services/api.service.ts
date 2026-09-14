@@ -170,5 +170,10 @@ export class ApiService {
   getAdminMetrics(): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/admin/metrics`);
   }
+
+  // --- Master Data ---
+  searchMasterSkills(query: string, limit: number = 50): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/master-data/skills?q=${encodeURIComponent(query)}&limit=${limit}`);
+  }
 }
 

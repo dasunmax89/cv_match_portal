@@ -4,11 +4,15 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink, Router } from '@angular/router';
 import { ApiService } from '../../../core/services/api.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+
+import { AutoGrowDirective } from '../../../shared/directives/auto-grow.directive';
 
 @Component({
   selector: 'app-candidate-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, AutoGrowDirective],
   templateUrl: './profile.component.html'
 })
 export class ProfileComponent implements OnInit {
@@ -29,6 +33,8 @@ export class ProfileComponent implements OnInit {
   selectedSkills: string[] = [];
   availableSkills: string[] = [];
   newSkillInput = '';
+  suggestedMasterSkills: any[] = [];
+  private skillSearchSubject = new Subject<string>();
 
   // Work Experience History State
   workHistory: any[] = [];
@@ -76,6 +82,25 @@ export class ProfileComponent implements OnInit {
     } else {
       this.router.navigate(['/candidate/onboarding']);
     }
+
+    this.skillSearchSubject.pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ).subscribe(query => {
+      if (query.trim().length > 0) {
+        this.apiService.searchMasterSkills(query).subscribe({
+          next: (res) => {
+            this.suggestedMasterSkills = res;
+          },
+          error: (err) => {
+            console.error('Error fetching skills taxonomy', err);
+            this.suggestedMasterSkills = [];
+          }
+        });
+      } else {
+        this.suggestedMasterSkills = [];
+      }
+    });
   }
 
   selectTab(tab: 'personal' | 'skills' | 'preferences') {
@@ -92,7 +117,17 @@ export class ProfileComponent implements OnInit {
         this.availableSkills.push(val);
       }
       this.newSkillInput = '';
+      this.suggestedMasterSkills = [];
     }
+  }
+
+  onSkillInputChanged() {
+    this.skillSearchSubject.next(this.newSkillInput);
+  }
+
+  selectSuggestedSkill(skill: any) {
+    this.newSkillInput = skill.name;
+    this.addCustomSkill();
   }
 
   removeSkill(skill: string) {
@@ -120,8 +155,102 @@ export class ProfileComponent implements OnInit {
     this.workHistory.splice(index, 1);
   }
 
+  // Re-upload CV Modal & AI Analysis State
+  showCvUploadModal = false;
+  isParsingCv = false;
+  uploadFileName = '';
+  cvUploadError = '';
+  cvUploadSuccess = '';
+
   reuploadCv() {
-    this.router.navigate(['/candidate/onboarding']);
+    this.showCvUploadModal = true;
+    this.uploadFileName = '';
+    this.cvUploadError = '';
+    this.cvUploadSuccess = '';
+    this.isParsingCv = false;
+  }
+
+  closeCvModal() {
+    this.showCvUploadModal = false;
+    this.cvUploadError = '';
+    this.cvUploadSuccess = '';
+  }
+
+  onCvFileSelected(event: any) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    this.uploadFileName = file.name;
+    this.isParsingCv = true;
+    this.cvUploadError = '';
+    this.cvUploadSuccess = '';
+
+    this.apiService.getInitialAssessment(file).subscribe({
+      next: (data) => {
+        this.isParsingCv = false;
+        if (data) {
+          this.applyParsedCvData(data);
+          this.cvUploadSuccess = 'CV re-analyzed by AI successfully! Profile updated.';
+        }
+      },
+      error: () => {
+        // Fallback to parseCandidateCv endpoint
+        this.apiService.parseCandidateCv(file).subscribe({
+          next: (data) => {
+            this.isParsingCv = false;
+            if (data) {
+              this.applyParsedCvData(data);
+              this.cvUploadSuccess = 'CV parsed successfully! Profile updated.';
+            }
+          },
+          error: (parseErr) => {
+            this.isParsingCv = false;
+            this.cvUploadError = parseErr?.error?.detail || 'Failed to analyze CV. Please try again.';
+          }
+        });
+      }
+    });
+  }
+
+  private applyParsedCvData(data: any) {
+    this.initialAssessment = data;
+    if (data.first_name) this.firstName = data.first_name;
+    if (data.last_name) this.lastName = data.last_name;
+    if ((!this.firstName || !this.lastName) && data.full_name && data.full_name !== 'Candidate') {
+      const parts = data.full_name.trim().split(' ');
+      if (!this.firstName) this.firstName = parts[0] || '';
+      if (!this.lastName) this.lastName = parts.slice(1).join(' ') || '';
+    }
+    if (data.email) this.email = data.email;
+    if (data.phone) this.phone = data.phone;
+    if (data.suggested_title) this.jobTitle = data.suggested_title;
+    if (data.experience_years) this.experienceYears = data.experience_years;
+    if (data.education) this.education = data.education;
+
+    const skills = data.skills || data.extracted_skills || [];
+    if (skills.length) {
+      this.availableSkills = [...skills];
+      this.selectedSkills = [...skills];
+    }
+    if (data.work_history && Array.isArray(data.work_history)) {
+      this.workHistory = data.work_history;
+    }
+
+    this.authService.loginCandidate({
+      ...this.authService.candidateUser(),
+      email: this.email,
+      firstName: this.firstName,
+      lastName: this.lastName,
+      fullName: `${this.firstName} ${this.lastName}`.trim(),
+      jobTitle: this.jobTitle,
+      education: this.education,
+      experienceYears: this.experienceYears,
+      skills: this.selectedSkills,
+      availableSkills: this.availableSkills,
+      workHistory: this.workHistory,
+      hasSetupProfile: true,
+      initialAssessment: this.initialAssessment
+    });
   }
 
   exploreJobs() {
