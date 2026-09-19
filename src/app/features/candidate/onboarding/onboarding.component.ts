@@ -95,6 +95,22 @@ export class Onboarding implements OnInit {
     this.saveSuccessMessage = '';
 
     const fullName = `${this.firstName} ${this.lastName}`.trim();
+
+    if (this.initialAssessment) {
+      this.initialAssessment = {
+        ...this.initialAssessment,
+        skills: [...this.selectedSkills],
+        first_name: this.firstName,
+        last_name: this.lastName,
+        full_name: fullName,
+        suggested_title: this.jobTitle,
+        experience_years: this.experienceYears,
+        education: this.education
+      };
+    }
+
+    this.availableSkills = Array.from(new Set([...this.availableSkills, ...this.selectedSkills]));
+
     const payload = {
       first_name: this.firstName,
       last_name: this.lastName,
@@ -110,22 +126,31 @@ export class Onboarding implements OnInit {
     };
 
     this.apiService.updateCandidateProfile(payload).subscribe({
-      next: (res) => {
+      next: (res: any) => {
         this.isSubmitting = false;
         this.saveSuccessMessage = 'Candidate Profile updated successfully!';
+
+        const updatedSkills = res.skills || payload.skills;
+        this.selectedSkills = [...updatedSkills];
+        this.availableSkills = Array.from(new Set([...this.availableSkills, ...updatedSkills]));
+        if (res.background) {
+          this.initialAssessment = res.background;
+        }
+
         this.authService.loginCandidate({
-          email: payload.email,
-          firstName: payload.first_name,
-          lastName: payload.last_name,
-          fullName: payload.full_name,
-          jobTitle: payload.job_title,
+          ...this.authService.candidateUser(),
+          email: res.email || payload.email,
+          firstName: res.first_name || payload.first_name,
+          lastName: res.last_name || payload.last_name,
+          fullName: res.full_name || payload.full_name,
+          jobTitle: res.job_title || payload.job_title,
           education: payload.education,
-          experienceYears: payload.experience_years,
-          skills: payload.skills,
+          experienceYears: res.experience_years ?? payload.experience_years,
+          skills: updatedSkills,
           availableSkills: this.availableSkills,
           workHistory: this.workHistory,
-          workArrangement: this.workArrangement,
-          minSalary: this.minSalary,
+          workArrangement: res.work_arrangement || payload.work_arrangement,
+          minSalary: payload.min_salary,
           hasSetupProfile: true,
           initialAssessment: this.initialAssessment
         });
@@ -311,6 +336,22 @@ export class Onboarding implements OnInit {
     this.errorMessage = '';
 
     const fullName = `${this.firstName} ${this.lastName}`.trim();
+
+    if (this.initialAssessment) {
+      this.initialAssessment = {
+        ...this.initialAssessment,
+        skills: [...this.selectedSkills],
+        first_name: this.firstName,
+        last_name: this.lastName,
+        full_name: fullName,
+        suggested_title: this.jobTitle,
+        experience_years: this.experienceYears,
+        education: this.education
+      };
+    }
+
+    this.availableSkills = Array.from(new Set([...this.availableSkills, ...this.selectedSkills]));
+
     const payload = {
       first_name: this.firstName,
       last_name: this.lastName,
@@ -326,21 +367,27 @@ export class Onboarding implements OnInit {
     };
 
     this.apiService.candidateOnboarding(payload).subscribe({
-      next: () => {
+      next: (res: any) => {
         this.isSubmitting = false;
+        const updatedSkills = res?.skills || payload.skills;
+        if (res?.background) {
+          this.initialAssessment = res.background;
+        }
+
         this.authService.loginCandidate({
-          email: payload.email,
-          firstName: payload.first_name,
-          lastName: payload.last_name,
-          fullName: payload.full_name,
-          jobTitle: payload.job_title,
+          ...this.authService.candidateUser(),
+          email: res?.email || payload.email,
+          firstName: res?.first_name || payload.first_name,
+          lastName: res?.last_name || payload.last_name,
+          fullName: res?.full_name || payload.full_name,
+          jobTitle: res?.job_title || payload.job_title,
           education: payload.education,
-          experienceYears: payload.experience_years,
-          skills: payload.skills,
+          experienceYears: res?.experience_years ?? payload.experience_years,
+          skills: updatedSkills,
           availableSkills: this.availableSkills,
           workHistory: this.workHistory,
-          workArrangement: this.workArrangement,
-          minSalary: this.minSalary,
+          workArrangement: res?.work_arrangement || payload.work_arrangement,
+          minSalary: payload.min_salary,
           hasSetupProfile: true,
           initialAssessment: this.initialAssessment
         });

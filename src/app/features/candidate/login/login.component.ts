@@ -36,9 +36,23 @@ export class Login {
     this.apiService.login(this.email, this.password).subscribe({
       next: (res) => {
         this.isLoading = false;
+        const u = res?.user || {};
+        const fullName = u.full_name || u.fullName || (this.email.includes('@') ? this.email.split('@')[0] : 'Candidate');
         this.authService.loginCandidate({
-          email: this.email,
-          fullName: name,
+          ...u,
+          email: u.email || this.email,
+          firstName: u.first_name || u.firstName || (fullName.split(' ')[0]),
+          lastName: u.last_name || u.lastName || (fullName.split(' ').slice(1).join(' ')),
+          fullName: fullName,
+          jobTitle: u.job_title || u.jobTitle || '',
+          education: u.education || '',
+          skills: u.skills || [],
+          availableSkills: u.skills || [],
+          experienceYears: u.experience_years ?? u.experienceYears ?? 3,
+          workArrangement: u.work_arrangement || u.workArrangement || 'Remote Preferred',
+          minSalary: u.min_salary || u.minSalary || '',
+          initialAssessment: u.background || u.initialAssessment || null,
+          hasSetupProfile: true,
           token: res?.access_token
         });
         this.router.navigate(['/candidate/dashboard']);

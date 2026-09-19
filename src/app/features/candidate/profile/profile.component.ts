@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink, Router } from '@angular/router';
+import { RouterLink, Router, ActivatedRoute } from '@angular/router';
 import { ApiService } from '../../../core/services/api.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { Subject } from 'rxjs';
@@ -19,6 +19,7 @@ export class ProfileComponent implements OnInit {
   private apiService = inject(ApiService);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   // Profile Basic Information
   firstName = '';
@@ -28,6 +29,7 @@ export class ProfileComponent implements OnInit {
   jobTitle = '';
   experienceYears = 3;
   education = '';
+  profileImage = '';
 
   // Technical Skills State
   selectedSkills: string[] = [];
@@ -53,6 +55,12 @@ export class ProfileComponent implements OnInit {
   saveSuccessMessage = '';
 
   ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      if (params['tab'] === 'preferences' || params['tab'] === 'skills' || params['tab'] === 'personal') {
+        this.activeTab = params['tab'];
+      }
+    });
+
     const user = this.authService.candidateUser();
     if (user) {
       if (user.email) this.email = user.email;
@@ -68,6 +76,9 @@ export class ProfileComponent implements OnInit {
       if (user.experienceYears) this.experienceYears = user.experienceYears;
       if (user.workArrangement) this.workArrangement = user.workArrangement;
       if (user.minSalary) this.minSalary = user.minSalary;
+      if (user.profileImage || user.profile_image) {
+        this.profileImage = user.profileImage || user.profile_image;
+      }
 
       if (user.skills && Array.isArray(user.skills)) {
         this.selectedSkills = [...user.skills];
@@ -253,6 +264,69 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  onProfileImageSelected(event: any) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      this.errorMessage = 'Please select a valid image file (PNG, JPG, JPEG, WEBP).';
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const img = new Image();
+      img.onload = () => {
+        try {
+          const canvas = document.createElement('canvas');
+          const maxDim = 400;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > maxDim) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            }
+          } else {
+            if (height > maxDim) {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          if (ctx) {
+            ctx.drawImage(img, 0, 0, width, height);
+            // Compress canvas to compact JPEG data URL (~30KB-50KB)
+            this.profileImage = canvas.toDataURL('image/jpeg', 0.82);
+            this.saveSuccessMessage = 'Profile photo preview updated! Save changes below to persist.';
+            setTimeout(() => {
+              if (this.saveSuccessMessage.includes('preview')) {
+                this.saveSuccessMessage = '';
+              }
+            }, 4000);
+          } else {
+            this.profileImage = e.target.result;
+          }
+        } catch {
+          this.profileImage = e.target.result;
+        }
+      };
+      img.onerror = () => {
+        this.errorMessage = 'Failed to process selected image file.';
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  removeProfileImage() {
+    this.profileImage = '';
+  }
+
   exploreJobs() {
     this.router.navigate(['/candidate/dashboard']);
   }
@@ -268,6 +342,24 @@ export class ProfileComponent implements OnInit {
     this.saveSuccessMessage = '';
 
     const fullName = `${this.firstName} ${this.lastName}`.trim();
+
+    // Ensure initialAssessment.skills is updated with selectedSkills if initialAssessment exists
+    if (this.initialAssessment) {
+      this.initialAssessment = {
+        ...this.initialAssessment,
+        skills: [...this.selectedSkills],
+        first_name: this.firstName,
+        last_name: this.lastName,
+        full_name: fullName,
+        suggested_title: this.jobTitle,
+        experience_years: this.experienceYears,
+        education: this.education
+      };
+    }
+
+    // Keep availableSkills synced with selectedSkills
+    this.availableSkills = Array.from(new Set([...this.availableSkills, ...this.selectedSkills]));
+
     const payload = {
       first_name: this.firstName,
       last_name: this.lastName,
@@ -279,26 +371,39 @@ export class ProfileComponent implements OnInit {
       experience_years: this.experienceYears,
       work_arrangement: this.workArrangement,
       min_salary: this.minSalary,
+      profile_image: this.profileImage,
       background: this.initialAssessment
     };
 
     this.apiService.updateCandidateProfile(payload).subscribe({
-      next: (res) => {
+      next: (res: any) => {
         this.isSubmitting = false;
         this.saveSuccessMessage = 'Candidate Profile updated successfully!';
+        
+        const updatedSkills = res.skills || payload.skills;
+        this.selectedSkills = [...updatedSkills];
+        this.availableSkills = Array.from(new Set([...this.availableSkills, ...updatedSkills]));
+        if (res.background) {
+          this.initialAssessment = res.background;
+        }
+
+        this.profileImage = res.profile_image || payload.profile_image || '';
+
         this.authService.loginCandidate({
-          email: payload.email,
-          firstName: payload.first_name,
-          lastName: payload.last_name,
-          fullName: payload.full_name,
-          jobTitle: payload.job_title,
+          ...this.authService.candidateUser(),
+          email: res.email || payload.email,
+          firstName: res.first_name || payload.first_name,
+          lastName: res.last_name || payload.last_name,
+          fullName: res.full_name || payload.full_name,
+          jobTitle: res.job_title || payload.job_title,
           education: payload.education,
-          experienceYears: payload.experience_years,
-          skills: payload.skills,
+          experienceYears: res.experience_years ?? payload.experience_years,
+          skills: updatedSkills,
           availableSkills: this.availableSkills,
           workHistory: this.workHistory,
-          workArrangement: this.workArrangement,
-          minSalary: this.minSalary,
+          workArrangement: res.work_arrangement || payload.work_arrangement,
+          minSalary: payload.min_salary,
+          profileImage: this.profileImage,
           hasSetupProfile: true,
           initialAssessment: this.initialAssessment
         });

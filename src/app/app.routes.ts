@@ -22,7 +22,16 @@ export const routes: Routes = [
     loadChildren: () => import('./features/management/management.routes').then(m => m.managementRoutes)
   },
   {
+    path: 'payment-success',
+    loadComponent: () => import('./features/payment/payment-success/payment-success.component').then(m => m.PaymentSuccessComponent)
+  },
+  {
+    path: 'payment-failed',
+    loadComponent: () => import('./features/payment/payment-failed/payment-failed.component').then(m => m.PaymentFailedComponent)
+  },
+  {
     path: '**',
     redirectTo: ''
   }
+
 ];

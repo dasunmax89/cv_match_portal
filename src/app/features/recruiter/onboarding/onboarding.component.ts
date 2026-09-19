@@ -5,10 +5,24 @@ import { RouterLink, Router } from '@angular/router';
 import { ApiService } from '../../../core/services/api.service';
 import { AuthService } from '../../../core/services/auth.service';
 
-interface TeamInvite {
+export interface TeamInvite {
   email: string;
   role: 'Recruiter' | 'Hiring Manager' | 'Admin';
+  status?: 'idle' | 'sending' | 'sent' | 'error';
+  errorMessage?: string;
 }
+
+export interface SentTeamInvite {
+  id: string;
+  companyId: string;
+  companyName: string;
+  email: string;
+  role: string;
+  status: 'PendingPayment' | 'Completed' | string;
+  createdAt: string;
+  updatedAt?: string;
+}
+
 
 @Component({
   selector: 'app-recruiter-onboarding',
@@ -22,23 +36,19 @@ export class Onboarding implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
 
-  currentStep = 1;
+  currentTab: 'persona' | 'invites' = 'persona';
+  isSoloRecruiter = false;
   isSubmitting = false;
 
-  // Step 1: Company & Domain
   recruiterEmail = '';
   companyName = '';
-  companyWebsite = '';
-  companySize = '50-200 employees';
-  industry = 'Software & Technology';
-  isPublicEmail = false;
+  accountType = 'solo';
 
-  // Step 2: Persona & AI Rules
+  // Persona & AI Rules
   recruiterRole = 'Technical Recruiter';
   hiringFocus = 'Engineering & Tech';
   aiSensitivity = 'Balanced (65%+)';
 
-  // Role Options
   roleOptions = [
     'Technical Recruiter',
     'Talent Acquisition Lead',
@@ -47,7 +57,6 @@ export class Onboarding implements OnInit {
     'HR Generalist'
   ];
 
-  // Focus Options
   focusOptions = [
     'Engineering & Tech',
     'Sales & Business Development',
@@ -56,91 +65,118 @@ export class Onboarding implements OnInit {
     'All Departments'
   ];
 
-  // AI Sensitivity Options
   sensitivityOptions = [
     { label: 'Strict (80%+ match)', desc: 'Only highlight top tier candidates with exact skill overlaps' },
     { label: 'Balanced (65%+ match)', desc: 'Optimal blend of hard skills, experience & growth potential (Recommended)' },
     { label: 'Flexible (50%+ match)', desc: 'Broad filter to view wider candidate pools & transferable skills' }
   ];
 
-  // Step 3: Team Invites
+  // Team Invites
+
   teamInvites: TeamInvite[] = [
-    { email: '', role: 'Hiring Manager' }
+    { email: '', role: 'Hiring Manager', status: 'idle' }
   ];
+
+  sentInvites: SentTeamInvite[] = [];
+  isLoadingInvites = false;
 
   ngOnInit() {
     const user = this.authService.recruiterUser();
     if (user) {
-      if (user.workEmail) {
-        this.recruiterEmail = user.workEmail;
-        this.onEmailChange();
-      }
-      if (user.companyName) {
-        this.companyName = user.companyName;
+      this.recruiterEmail = user.workEmail || user.email || '';
+      this.companyName = user.companyName || user.fullName || 'Recruiter Workspace';
+      this.accountType = user.accountType || user.account_type || (user.companyName ? 'company' : 'solo');
+      this.isSoloRecruiter = (this.accountType === 'solo');
+      if (!this.isSoloRecruiter) {
+        this.loadSentInvites();
       }
     }
   }
 
-  onEmailChange() {
-    if (!this.recruiterEmail) return;
-    const parts = this.recruiterEmail.split('@');
-    if (parts.length === 2) {
-      const domain = parts[1].toLowerCase().trim();
-      const publicDomains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'icloud.com', 'aol.com'];
-      this.isPublicEmail = publicDomains.includes(domain);
-      
-      if (!this.isPublicEmail && !this.companyWebsite && domain.includes('.')) {
-        this.companyWebsite = `https://${domain}`;
+  loadSentInvites() {
+    const user = this.authService.recruiterUser() || {};
+    const companyId = user.id || user.company_id || user.companyId;
+    if (!companyId) return;
+
+    this.isLoadingInvites = true;
+    this.apiService.getTeamInvites(companyId).subscribe({
+      next: (invites) => {
+        this.sentInvites = invites || [];
+        this.isLoadingInvites = false;
+      },
+      error: () => {
+        this.isLoadingInvites = false;
       }
-      if (!this.companyName && !this.isPublicEmail && domain.includes('.')) {
-        const namePart = domain.split('.')[0];
-        this.companyName = namePart.charAt(0).toUpperCase() + namePart.slice(1);
-      }
+    });
+  }
+
+  setTab(tab: 'persona' | 'invites') {
+    if (tab === 'invites' && this.isSoloRecruiter) {
+      return; // Hide invites tab for solo recruiter
+    }
+    this.currentTab = tab;
+    if (tab === 'invites' && !this.isSoloRecruiter) {
+      this.loadSentInvites();
     }
   }
 
   addInviteRow() {
-    this.teamInvites.push({ email: '', role: 'Recruiter' });
+    this.teamInvites.push({ email: '', role: 'Recruiter', status: 'idle' });
   }
 
   removeInviteRow(index: number) {
     if (this.teamInvites.length > 1) {
       this.teamInvites.splice(index, 1);
     } else {
-      this.teamInvites[0] = { email: '', role: 'Recruiter' };
+      this.teamInvites[0] = { email: '', role: 'Recruiter', status: 'idle' };
     }
   }
 
-  nextStep() {
-    if (this.currentStep < 3) {
-      this.currentStep++;
+  sendSingleInvite(invite: TeamInvite) {
+    if (!invite.email || !invite.email.trim()) {
+      invite.status = 'error';
+      invite.errorMessage = 'Please enter a valid email address.';
+      return;
     }
+
+    invite.status = 'sending';
+    invite.errorMessage = '';
+
+    const user = this.authService.recruiterUser() || {};
+    const companyId = user.id || user.company_id || user.companyId || 'COMP-DEFAULT';
+    const companyName = this.companyName || user.companyName || 'Recruiter Workspace';
+
+    this.apiService.inviteRecruiterTeam({
+      emails: [invite.email.trim()],
+      company_id: companyId,
+      company_name: companyName
+    }).subscribe({
+      next: () => {
+        invite.status = 'sent';
+        invite.errorMessage = '';
+        this.loadSentInvites();
+      },
+      error: (err) => {
+        invite.status = 'error';
+        invite.errorMessage = err?.error?.detail || err?.message || 'Failed to send invite.';
+      }
+    });
   }
 
-  prevStep() {
-    if (this.currentStep > 1) {
-      this.currentStep--;
-    }
-  }
 
   errorMessage = '';
 
   finishOnboarding(action: 'create-jd' | 'dashboard') {
-    if (!this.companyName || !this.recruiterEmail) {
-      this.errorMessage = 'Please complete your Company Name and Work Email before finishing onboarding.';
-      return;
-    }
-
     this.isSubmitting = true;
     this.errorMessage = '';
 
-    const validInvites = this.teamInvites.filter(i => i.email && i.email.trim());
+    const validInvites = this.isSoloRecruiter ? [] : this.teamInvites.filter(i => i.email && i.email.trim());
 
     const payload = {
-      company_name: this.companyName,
-      company_website: this.companyWebsite,
-      company_size: this.companySize,
-      industry: this.industry,
+      company_name: this.companyName || 'Recruiter Workspace',
+      company_website: '',
+      company_size: this.isSoloRecruiter ? 'Solo Recruiter' : '11-50 employees',
+      industry: 'Recruitment & Staffing',
       recruiter_email: this.recruiterEmail,
       recruiter_role: this.recruiterRole,
       hiring_focus: this.hiringFocus,
@@ -149,23 +185,61 @@ export class Onboarding implements OnInit {
     };
 
     this.apiService.recruiterOnboarding(payload).subscribe({
-      next: () => {
-        this.isSubmitting = false;
-        this.authService.loginRecruiter({
-          workEmail: payload.recruiter_email,
-          companyName: payload.company_name,
-          recruiterRole: payload.recruiter_role,
-          aiSensitivity: payload.ai_sensitivity
-        });
-        if (action === 'create-jd') {
-          this.router.navigate(['/recruiter/create']);
+      next: (res) => {
+        const currentUser = this.authService.recruiterUser() || {};
+        const companyId = res?.id || currentUser.id || currentUser.company_id || 'COMP-DEFAULT';
+        const companyName = res?.company_name || payload.company_name;
+
+        // Collect unsent team invite emails
+        const unsentEmails = this.isSoloRecruiter
+          ? []
+          : this.teamInvites
+              .filter(i => i.email && i.email.trim() && i.status !== 'sent')
+              .map(i => i.email.trim());
+
+        const completeAuthAndNavigate = () => {
+          this.isSubmitting = false;
+          this.authService.loginRecruiter({
+            ...currentUser,
+            workEmail: payload.recruiter_email,
+            companyName: payload.company_name,
+            recruiterRole: payload.recruiter_role,
+            aiSensitivity: payload.ai_sensitivity,
+            hasCompletedOnboarding: true
+          });
+
+          if (action === 'create-jd') {
+            this.router.navigate(['/recruiter/create']);
+          } else {
+            this.router.navigate(['/recruiter/jobs']);
+          }
+        };
+
+        if (unsentEmails.length > 0) {
+          this.apiService.inviteRecruiterTeam({
+            emails: unsentEmails,
+            company_id: companyId,
+            company_name: companyName
+          }).subscribe({
+            next: () => {
+              this.teamInvites.forEach(i => {
+                if (unsentEmails.includes(i.email.trim())) {
+                  i.status = 'sent';
+                }
+              });
+              completeAuthAndNavigate();
+            },
+            error: () => {
+              completeAuthAndNavigate();
+            }
+          });
         } else {
-          this.router.navigate(['/recruiter/jobs']);
+          completeAuthAndNavigate();
         }
       },
       error: (err) => {
         this.isSubmitting = false;
-        this.errorMessage = err?.error?.detail || err?.message || 'Failed to save recruiter workspace details. Please check inputs and try again.';
+        this.errorMessage = err?.error?.detail || err?.message || 'Failed to save workspace configuration. Please try again.';
       }
     });
   }

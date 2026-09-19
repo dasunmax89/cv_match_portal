@@ -34,17 +34,74 @@ export class ApiService {
     );
   }
 
-  signup(email: string, password: string, fullName?: string): Observable<any> {
+  signup(email: string, password: string, fullName?: string, extraData?: any): Observable<any> {
     const rawPass = password || '';
     return from(hashPasswordClient(rawPass)).pipe(
       switchMap(passwordHash =>
         this.http.post(`${this.baseUrl}/auth/signup`, {
           email,
           password_hash: passwordHash,
-          full_name: fullName
+          full_name: fullName,
+          ...(extraData || {})
         })
       )
     );
+  }
+
+  signupRecruiter(data: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    password: string;
+    designation?: string;
+  }): Observable<any> {
+    const rawPass = data.password || '';
+    return from(hashPasswordClient(rawPass)).pipe(
+      switchMap(passwordHash =>
+        this.http.post(`${this.baseUrl}/auth/signup/recruiter`, {
+          first_name: data.firstName,
+          last_name: data.lastName,
+          email: data.email,
+          phone: data.phone,
+          password_hash: passwordHash,
+          designation: data.designation
+        })
+      )
+    );
+  }
+
+  signupCompany(data: {
+    companyName: string;
+    website: string;
+    industry: string;
+    tagline: string;
+    email: string;
+    password: string;
+    logoData?: string | null;
+  }): Observable<any> {
+    const rawPass = data.password || '';
+    return from(hashPasswordClient(rawPass)).pipe(
+      switchMap(passwordHash =>
+        this.http.post(`${this.baseUrl}/auth/signup/company`, {
+          company_name: data.companyName,
+          website: data.website,
+          industry: data.industry,
+          tagline: data.tagline,
+          email: data.email,
+          password_hash: passwordHash,
+          logo_data: data.logoData
+        })
+      )
+    );
+  }
+
+  verifyOtp(email: string, code: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/auth/verify-otp`, { email, code });
+  }
+
+  resendOtp(email: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/auth/resend-otp`, { email });
   }
 
   authenticateUser(payload: { username: string; password_hash: string }): Observable<any> {
@@ -150,9 +207,14 @@ export class ApiService {
     return this.http.post(`${this.baseUrl}/recruiter/onboarding`, payload);
   }
 
-  inviteRecruiterTeam(emails: string[]): Observable<any> {
-    return this.http.post(`${this.baseUrl}/recruiter/invite-team`, { emails });
+  inviteRecruiterTeam(payload: { emails: string[]; company_id: string; company_name: string }): Observable<any> {
+    return this.http.post(`${this.baseUrl}/recruiter/invite-team`, payload);
   }
+
+  getTeamInvites(companyId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/recruiter/team-invites?company_id=${encodeURIComponent(companyId)}`);
+  }
+
 
   // --- Vendor Admin Management ---
   getAdminRecruiters(): Observable<any[]> {
