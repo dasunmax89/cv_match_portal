@@ -36,16 +36,23 @@ export class Onboarding implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
 
-  currentTab: 'persona' | 'invites' = 'persona';
+  currentTab: 'details' | 'persona' | 'invites' = 'details';
   isSoloRecruiter = false;
   isSubmitting = false;
 
+  fullName = '';
   recruiterEmail = '';
+  phone = '';
   companyName = '';
+  companyWebsite = '';
   accountType = 'solo';
+  profileImage = '';
+  companyLogo = '';
 
   // Persona & AI Rules
   recruiterRole = 'Technical Recruiter';
+  industry = 'Technology & Software';
+  companySize = '11-50 employees';
   hiringFocus = 'Engineering & Tech';
   aiSensitivity = 'Balanced (65%+)';
 
@@ -55,6 +62,25 @@ export class Onboarding implements OnInit {
     'Hiring Manager',
     'Founder / Executive',
     'HR Generalist'
+  ];
+
+  industryOptions = [
+    'Technology & Software',
+    'Finance & Fintech',
+    'Healthcare & Biotech',
+    'E-commerce & Retail',
+    'Consulting & Professional Services',
+    'Recruitment & Staffing',
+    'Other'
+  ];
+
+  sizeOptions = [
+    'Solo Recruiter (1)',
+    '2-10 employees',
+    '11-50 employees',
+    '51-200 employees',
+    '201-500 employees',
+    '500+ employees'
   ];
 
   focusOptions = [
@@ -72,25 +98,147 @@ export class Onboarding implements OnInit {
   ];
 
   // Team Invites
-
   teamInvites: TeamInvite[] = [
     { email: '', role: 'Hiring Manager', status: 'idle' }
   ];
 
   sentInvites: SentTeamInvite[] = [];
   isLoadingInvites = false;
+  errorMessage = '';
 
   ngOnInit() {
     const user = this.authService.recruiterUser();
     if (user) {
-      this.recruiterEmail = user.workEmail || user.email || '';
-      this.companyName = user.companyName || user.fullName || 'Recruiter Workspace';
+      this.fullName = user.fullName || user.full_name || '';
+      this.recruiterEmail = user.workEmail || user.work_email || user.email || '';
+      this.phone = user.phone || '';
+      this.companyName = user.companyName || user.company_name || user.fullName || 'Recruiter Workspace';
+      this.companyWebsite = user.companyWebsite || user.company_website || '';
+      this.industry = user.industry || 'Technology & Software';
+      this.companySize = user.companySize || user.company_size || '11-50 employees';
+      this.recruiterRole = user.recruiterRole || user.recruiter_role || 'Technical Recruiter';
+      this.hiringFocus = user.hiringFocus || user.hiring_focus || 'Engineering & Tech';
+      this.aiSensitivity = user.aiSensitivity || user.ai_sensitivity || 'Balanced (65%+)';
+      this.profileImage = user.profileImage || user.profile_image || '';
+      this.companyLogo = user.companyLogo || user.company_logo || '';
       this.accountType = user.accountType || user.account_type || (user.companyName ? 'company' : 'solo');
       this.isSoloRecruiter = (this.accountType === 'solo');
       if (!this.isSoloRecruiter) {
         this.loadSentInvites();
       }
     }
+  }
+
+  onProfileImageSelected(event: any) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      this.errorMessage = 'Please select a valid image file (PNG, JPG, JPEG, WEBP).';
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const img = new Image();
+      img.onload = () => {
+        try {
+          const canvas = document.createElement('canvas');
+          const maxDim = 400;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > maxDim) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            }
+          } else {
+            if (height > maxDim) {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          if (ctx) {
+            ctx.drawImage(img, 0, 0, width, height);
+            this.profileImage = canvas.toDataURL('image/jpeg', 0.82);
+          } else {
+            this.profileImage = e.target.result;
+          }
+        } catch {
+          this.profileImage = e.target.result;
+        }
+      };
+      img.onerror = () => {
+        this.errorMessage = 'Failed to process selected image file.';
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  removeProfileImage() {
+    this.profileImage = '';
+  }
+
+  onCompanyLogoSelected(event: any) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      this.errorMessage = 'Please select a valid image file for company logo (PNG, JPG, JPEG, WEBP).';
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const img = new Image();
+      img.onload = () => {
+        try {
+          const canvas = document.createElement('canvas');
+          const maxDim = 400;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > maxDim) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            }
+          } else {
+            if (height > maxDim) {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          if (ctx) {
+            ctx.drawImage(img, 0, 0, width, height);
+            this.companyLogo = canvas.toDataURL('image/png', 0.9);
+          } else {
+            this.companyLogo = e.target.result;
+          }
+        } catch {
+          this.companyLogo = e.target.result;
+        }
+      };
+      img.onerror = () => {
+        this.errorMessage = 'Failed to process selected company logo.';
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  removeCompanyLogo() {
+    this.companyLogo = '';
   }
 
   loadSentInvites() {
@@ -110,7 +258,7 @@ export class Onboarding implements OnInit {
     });
   }
 
-  setTab(tab: 'persona' | 'invites') {
+  setTab(tab: 'details' | 'persona' | 'invites') {
     if (tab === 'invites' && this.isSoloRecruiter) {
       return; // Hide invites tab for solo recruiter
     }
@@ -163,9 +311,6 @@ export class Onboarding implements OnInit {
     });
   }
 
-
-  errorMessage = '';
-
   finishOnboarding(action: 'create-jd' | 'dashboard') {
     this.isSubmitting = true;
     this.errorMessage = '';
@@ -174,13 +319,15 @@ export class Onboarding implements OnInit {
 
     const payload = {
       company_name: this.companyName || 'Recruiter Workspace',
-      company_website: '',
-      company_size: this.isSoloRecruiter ? 'Solo Recruiter' : '11-50 employees',
-      industry: 'Recruitment & Staffing',
+      company_website: this.companyWebsite || '',
+      company_size: this.companySize || (this.isSoloRecruiter ? 'Solo Recruiter' : '11-50 employees'),
+      industry: this.industry || 'Recruitment & Staffing',
       recruiter_email: this.recruiterEmail,
       recruiter_role: this.recruiterRole,
       hiring_focus: this.hiringFocus,
       ai_sensitivity: this.aiSensitivity,
+      profile_image: this.profileImage,
+      company_logo: this.companyLogo,
       team_invites: validInvites
     };
 
@@ -201,10 +348,20 @@ export class Onboarding implements OnInit {
           this.isSubmitting = false;
           this.authService.loginRecruiter({
             ...currentUser,
+            fullName: this.fullName || currentUser.fullName || currentUser.full_name,
             workEmail: payload.recruiter_email,
+            phone: this.phone,
             companyName: payload.company_name,
+            companyWebsite: payload.company_website,
+            companySize: payload.company_size,
+            industry: payload.industry,
             recruiterRole: payload.recruiter_role,
+            hiringFocus: payload.hiring_focus,
             aiSensitivity: payload.ai_sensitivity,
+            profileImage: this.profileImage,
+            profile_image: this.profileImage,
+            companyLogo: this.companyLogo,
+            company_logo: this.companyLogo,
             hasCompletedOnboarding: true
           });
 

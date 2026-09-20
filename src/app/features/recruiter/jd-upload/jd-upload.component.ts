@@ -24,7 +24,7 @@ export class JdUploadComponent {
   errorMessage = signal<string | null>(null);
 
   jdForm = this.fb.group({
-    title: ['', Validators.required]
+    title: ['']
   });
 
   onDragOver(event: DragEvent) {
@@ -54,23 +54,27 @@ export class JdUploadComponent {
 
   private handleFile(file: File) {
     this.errorMessage.set(null);
-    if (file.type !== 'application/pdf') {
+    const isPdf = file.name.toLowerCase().endsWith('.pdf') || file.type === 'application/pdf';
+    if (!isPdf) {
       this.errorMessage.set('Please upload a valid PDF file.');
       return;
     }
     this.selectedFile.set(file);
+
   }
 
   upload() {
     this.errorMessage.set(null);
-    if (this.jdForm.invalid || !this.selectedFile()) {
-      this.errorMessage.set('Please provide a job title and select a PDF file.');
+
+    if (!this.selectedFile()) {
+      this.errorMessage.set('Please select or drop a PDF file to analyze.');
       return;
     }
 
+    const title = this.jdForm.value.title?.trim();
+
     this.isUploading.set(true);
-    const title = this.jdForm.value.title!;
-    
+
     this.apiService.uploadJd(title, this.selectedFile()!).subscribe({
       next: (res) => {
         this.createdJob.set(res);
@@ -85,6 +89,7 @@ export class JdUploadComponent {
       }
     });
   }
+
 
   publishJob() {
     this.router.navigate(['/recruiter/jobs']);

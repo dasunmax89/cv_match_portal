@@ -32,6 +32,9 @@ export class Dashboard implements OnInit {
     system_status: 'Healthy'
   };
 
+  isLoading = true;
+  isProvisioning = false;
+
   // Provisioning Modal State
   showProvisionModal = false;
   newCompanyName = '';
@@ -43,11 +46,17 @@ export class Dashboard implements OnInit {
   }
 
   loadData() {
+    this.isLoading = true;
     this.apiService.getAdminRecruiters().subscribe({
       next: (res) => {
         if (res && res.length > 0) {
           this.accounts = res;
         }
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Failed to load recruiters:', err);
+        this.isLoading = false;
       }
     });
 
@@ -107,6 +116,7 @@ export class Dashboard implements OnInit {
     }
 
     this.errorMessage = '';
+    this.isProvisioning = true;
 
     this.apiService.provisionRecruiter({
       company_name: this.newCompanyName,
@@ -114,11 +124,13 @@ export class Dashboard implements OnInit {
       plan: this.newPlan
     }).subscribe({
       next: (newAcc) => {
+        this.isProvisioning = false;
         this.accounts.unshift(newAcc);
         this.metrics.total_recruiters++;
         this.closeProvisionModal();
       },
       error: (err) => {
+        this.isProvisioning = false;
         this.errorMessage = err?.error?.detail || err?.message || 'Failed to provision recruiter account. Please check details and try again.';
       }
     });

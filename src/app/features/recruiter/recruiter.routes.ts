@@ -14,15 +14,19 @@ export const recruiterRoutes: Routes = [
     loadComponent: () => import('./signup/signup.component').then(m => m.SignupComponent)
   },
   {
-    path: 'onboarding',
-    component: Onboarding
-  },
-  {
     path: '',
     component: RecruiterLayout,
     canActivate: [recruiterAuthGuard],
     children: [
       { path: '', redirectTo: 'jobs', pathMatch: 'full' },
+      {
+        path: 'profile',
+        loadComponent: () => import('./company-profile/company-profile.component').then(m => m.CompanyProfileComponent)
+      },
+      {
+        path: 'onboarding',
+        component: Onboarding
+      },
       {
         path: 'create',
         loadComponent: () => import('./jd-upload/jd-upload.component').then(m => m.JdUploadComponent)
@@ -30,6 +34,10 @@ export const recruiterRoutes: Routes = [
       {
         path: 'jobs',
         loadComponent: () => import('./job-list/job-list.component').then(m => m.RecruiterJobListComponent)
+      },
+      {
+        path: 'jobs/:jobId/details',
+        loadComponent: () => import('./job-detail/job-detail.component').then(m => m.JobDetailComponent)
       },
       {
         path: 'jobs/:jobId',

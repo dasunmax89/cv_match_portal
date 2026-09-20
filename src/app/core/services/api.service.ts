@@ -123,9 +123,11 @@ export class ApiService {
     return this.http.get(`${this.baseUrl}/jobs/${jobId}?user_id=${userId}`);
   }
 
-  uploadJd(title: string, file: File): Observable<JobResponse> {
+  uploadJd(title: string | undefined, file: File): Observable<JobResponse> {
     const formData = new FormData();
-    formData.append('title', title);
+    if (title && title.trim()) {
+      formData.append('title', title.trim());
+    }
     formData.append('file', file);
     return this.http.post<JobResponse>(`${this.baseUrl}/recruiter/jobs`, formData);
   }
@@ -140,6 +142,17 @@ export class ApiService {
 
   getJobAssessment(jobId: string): Observable<PublicSJTAssessment> {
     return this.http.get<PublicSJTAssessment>(`${this.baseUrl}/candidate/jobs/${jobId}/assessment`);
+  }
+
+  generateCustomSjt(jobId: string, requirements?: string, testCriteria?: string): Observable<any> {
+    const payload: any = {};
+    if (requirements) payload.requirements = requirements;
+    if (testCriteria) payload.test_criteria = testCriteria;
+    return this.http.post<any>(`${this.baseUrl}/recruiter/jobs/${jobId}/generate-sjt`, payload);
+  }
+
+  updateJobSjt(jobId: string, assessment: any): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}/recruiter/jobs/${jobId}/sjt`, { assessment });
   }
 
   getInitialAssessment(file: File, jobId?: string): Observable<any> {
@@ -207,13 +220,21 @@ export class ApiService {
     return this.http.post(`${this.baseUrl}/recruiter/onboarding`, payload);
   }
 
-  inviteRecruiterTeam(payload: { emails: string[]; company_id: string; company_name: string }): Observable<any> {
+  inviteRecruiterTeam(payload: { emails: string[]; company_id: string; company_name: string; recruiter_email?: string }): Observable<any> {
     return this.http.post(`${this.baseUrl}/recruiter/invite-team`, payload);
   }
 
-  getTeamInvites(companyId: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/recruiter/team-invites?company_id=${encodeURIComponent(companyId)}`);
+  getTeamInvites(companyId?: string, recruiterEmail?: string): Observable<any[]> {
+    const params = new URLSearchParams();
+    if (companyId) params.set('company_id', companyId);
+    if (recruiterEmail) params.set('recruiter_email', recruiterEmail);
+    return this.http.get<any[]>(`${this.baseUrl}/recruiter/team-invites?${params.toString()}`);
   }
+
+  confirmInvitePayment(inviteId: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/payment/confirm-invite/${encodeURIComponent(inviteId)}`, {});
+  }
+
 
 
   // --- Vendor Admin Management ---

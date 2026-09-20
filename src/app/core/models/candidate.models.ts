@@ -18,13 +18,20 @@ export interface PublicSJTQuestion {
   options: SJTQuestionOption[];
 }
 
+export interface AssessmentMetadata {
+  framework?: string;
+  primary_traits?: string[];
+}
+
 export interface PublicSJTAssessment {
   job_id: string;
   title: string;
   questions: PublicSJTQuestion[];
+  assessment_metadata?: AssessmentMetadata;
 }
 
 export interface JobSJTAssessment {
+  assessment_metadata?: AssessmentMetadata;
   questions: PublicSJTQuestion[];
 }
 

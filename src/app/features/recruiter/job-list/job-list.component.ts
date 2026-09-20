@@ -18,7 +18,6 @@ export class RecruiterJobListComponent implements OnInit {
   jobs = signal<JobResponse[]>([]);
   isLoading = signal<boolean>(true);
   searchQuery = signal<string>('');
-  selectedJob = signal<JobResponse | null>(null);
 
   ngOnInit() {
     this.fetchJobs();
@@ -49,15 +48,24 @@ export class RecruiterJobListComponent implements OnInit {
   }
 
   openJobDetails(job: JobResponse) {
-    this.router.navigate(['/recruiter/jobs', job.id]);
+    this.router.navigate(['/recruiter/jobs', job.id, 'details']);
   }
 
-  selectForQuickView(job: JobResponse, event: MouseEvent) {
+  viewJobDetails(job: JobResponse, event: MouseEvent) {
     event.stopPropagation();
-    this.selectedJob.set(job);
+    this.router.navigate(['/recruiter/jobs', job.id, 'details']);
+  }
+
+  openCandidateDeck(job: JobResponse, event: MouseEvent) {
+    event.stopPropagation();
+    this.router.navigate(['/recruiter/jobs', job.id]);
   }
 
   createNewJob() {
     this.router.navigate(['/recruiter/create']);
+  }
+
+  hasBehavioralCheck(job: JobResponse): boolean {
+    return !!(job.assessment && job.assessment.questions && job.assessment.questions.length > 0);
   }
 }

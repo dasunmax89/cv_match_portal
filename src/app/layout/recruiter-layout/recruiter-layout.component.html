@@ -6,10 +6,12 @@
       <!-- Brand Logo -->
       <div class="flex items-center space-x-3">
         <a routerLink="/recruiter" class="flex items-center space-x-2.5 group">
-          <img src="logo.png" alt="Magic Match Logo" class="w-18 h-18 object-contain group-hover:scale-105 transition-transform" />
+          <img src="logo.png" alt="Magic Match Logo"
+            class="w-18 h-18 object-contain group-hover:scale-105 transition-transform" />
           <div class="flex flex-col">
             <span class="font-bold text-slate-900 leading-none text-lg tracking-tight">Magic Match</span>
-            <span class="text-[10px] font-semibold text-sky-600 uppercase tracking-widest leading-none mt-0.5">Recruiter Workspace</span>
+            <span class="text-[10px] font-semibold text-sky-600 uppercase tracking-widest leading-none mt-0.5">Recruiter
+              Workspace</span>
           </div>
         </a>
 
@@ -21,25 +23,81 @@
           </a>
           <a routerLink="/recruiter/create" routerLinkActive="bg-sky-50 text-sky-700 font-semibold"
             class="px-3.5 py-2 rounded-lg text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
-            + Post Job (Upload JD)
-          </a>
-          <a routerLink="/recruiter/onboarding" routerLinkActive="bg-sky-50 text-sky-700 font-semibold"
-            class="px-3.5 py-2 rounded-lg text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
-            Company Profile
+            + Post Job
           </a>
         </nav>
       </div>
 
-      <!-- Right Side Actions -->
+      <!-- User Menu & Recruiter Auth Dropdown -->
       <div class="flex items-center space-x-4">
         @if (authService.isRecruiterLoggedIn()) {
-        <div class="flex items-center space-x-3">
-          <span class="text-xs font-semibold text-slate-700">{{ authService.recruiterUser()?.companyName ||
-            authService.recruiterUser()?.workEmail }}</span>
-          <button (click)="authService.logoutRecruiter()"
-            class="px-3 py-1.5 text-xs font-medium text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors">
-            Sign Out
+        <div class="relative">
+          <!-- Round Profile Picture Button -->
+          <button (click)="toggleDropdown($event)" type="button"
+            class="relative w-10 h-10 rounded-full border-2 border-sky-500 hover:border-sky-600 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 transition-all cursor-pointer flex items-center justify-center overflow-hidden bg-sky-600 text-white font-bold text-xs"
+            aria-expanded="false" aria-haspopup="true">
+            @if (authService.recruiterUser()?.profileImage || authService.recruiterUser()?.profile_image) {
+            <img [src]="authService.recruiterUser()?.profileImage || authService.recruiterUser()?.profile_image"
+              alt="Profile" class="w-full h-full object-cover" />
+            } @else {
+            <span>{{ initials }}</span>
+            }
           </button>
+
+          <!-- Dropdown Menu -->
+          @if (isDropdownOpen) {
+          <div
+            class="absolute right-0 mt-2 w-60 bg-white rounded-2xl border border-slate-200 shadow-xl py-2 z-50 animate-in fade-in zoom-in-95 duration-150">
+            <!-- User Details Header -->
+            <div class="px-4 py-3 border-b border-slate-100 flex items-center gap-3">
+              <div
+                class="w-9 h-9 rounded-full bg-sky-600 text-white font-bold flex items-center justify-center text-xs shrink-0 overflow-hidden">
+                @if (authService.recruiterUser()?.profileImage || authService.recruiterUser()?.profile_image) {
+                <img [src]="authService.recruiterUser()?.profileImage || authService.recruiterUser()?.profile_image"
+                  alt="Profile" class="w-full h-full object-cover" />
+                } @else {
+                <span>{{ initials }}</span>
+                }
+              </div>
+              <div class="truncate">
+                <p class="text-xs font-bold text-slate-900 truncate">
+                  {{ authService.recruiterUser()?.companyName || authService.recruiterUser()?.company_name ||
+                  authService.recruiterUser()?.fullName || 'Recruiter Workspace' }}
+                </p>
+                <p class="text-[11px] text-slate-500 truncate">
+                  {{ authService.recruiterUser()?.workEmail || authService.recruiterUser()?.work_email ||
+                  authService.recruiterUser()?.email }}
+                </p>
+              </div>
+            </div>
+
+            <!-- Menu Links -->
+            <div class="py-1">
+              <!-- Company Profile -->
+              <button (click)="navigateTo('/recruiter/profile')" type="button"
+                class="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 hover:text-sky-700 flex items-center gap-2.5 transition-colors cursor-pointer">
+                <svg class="w-4 h-4 text-slate-400 group-hover:text-sky-600" fill="none" stroke="currentColor"
+                  viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+                Company Profile
+              </button>
+            </div>
+
+            <div class="border-t border-slate-100 pt-1">
+              <!-- Signout -->
+              <button (click)="logout()" type="button"
+                class="w-full text-left px-4 py-2 text-xs font-semibold text-rose-600 hover:bg-rose-50 flex items-center gap-2.5 transition-colors cursor-pointer">
+                <svg class="w-4 h-4 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                Signout
+              </button>
+            </div>
+          </div>
+          }
         </div>
         } @else {
         <a routerLink="/recruiter/login"

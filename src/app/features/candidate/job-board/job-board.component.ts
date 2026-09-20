@@ -26,8 +26,11 @@ export class JobBoardComponent implements OnInit {
       error: (err) => {
         console.error('Failed to load jobs', err);
         this.error.set('Could not load jobs at this time. Please try again later.');
-        this.isLoading.set(false);
       }
     });
+  }
+
+  hasBehavioralCheck(job: JobResponse): boolean {
+    return !!(job.assessment && job.assessment.questions && job.assessment.questions.length > 0);
   }
 }

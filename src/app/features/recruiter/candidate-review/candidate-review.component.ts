@@ -4,7 +4,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../../../core/services/api.service';
 import { SignalRService } from '../../../core/services/signalr.service';
 import { CandidateMatch, JobResponse } from '../../../core/models/candidate.models';
-
 @Component({
   selector: 'app-candidate-review',
   standalone: true,
@@ -25,7 +24,7 @@ export class CandidateReviewComponent implements OnInit, OnDestroy {
   viewMode = signal<'stack' | 'table'>('stack');
   selectedTableCandidate = signal<CandidateMatch | null>(null);
   
-  // Animation states for the top card
+  isLoading = signal<boolean>(true);
   swipeDirection = signal<'left' | 'right' | null>(null);
 
   constructor() {
@@ -57,6 +56,8 @@ export class CandidateReviewComponent implements OnInit, OnDestroy {
       this.loadJobDetails(id);
       this.loadCandidates();
       this.signalRService.joinJobGroup(id);
+    } else {
+      this.isLoading.set(false);
     }
   }
 
@@ -78,6 +79,7 @@ export class CandidateReviewComponent implements OnInit, OnDestroy {
   }
 
   private loadCandidates() {
+    this.isLoading.set(true);
     this.apiService.getJobMatches(this.jobId()).subscribe({
       next: (data) => {
         const sorted = data.sort((a, b) => {
@@ -86,8 +88,12 @@ export class CandidateReviewComponent implements OnInit, OnDestroy {
           return scoreB - scoreA;
         });
         this.candidates.set(sorted);
+        this.isLoading.set(false);
       },
-      error: (err) => console.error('Failed to load candidates', err)
+      error: (err) => {
+        console.error('Failed to load candidates', err);
+        this.isLoading.set(false);
+      }
     });
   }
 

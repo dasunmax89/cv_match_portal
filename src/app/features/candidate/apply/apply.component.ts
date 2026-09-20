@@ -1,23 +1,23 @@
 import { Component, signal, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ApiService } from '../../../core/services/api.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { PublicSJTAssessment, CandidateAnswer } from '../../../core/models/candidate.models';
 
 @Component({
   selector: 'app-apply',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule],
   templateUrl: './apply.component.html'
 })
 export class ApplyComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private apiService = inject(ApiService);
-  private fb = inject(FormBuilder);
+  public authService = inject(AuthService);
 
   jobId = signal<string>('');
-  isDragging = signal(false);
+  isDragging = signal<boolean>(false);
   selectedFile = signal<File | null>(null);
   
   // Stage & Assessment Signals
@@ -33,16 +33,23 @@ export class ApplyComponent implements OnInit {
   // States: 'idle' | 'submitting' | 'success' | 'error'
   submitState = signal<'idle' | 'submitting' | 'success' | 'error'>('idle');
 
-  applyForm = this.fb.group({
-    fullName: ['', Validators.required],
-    email: ['', [Validators.required, Validators.email]]
-  });
-
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('jobId');
     if (id) {
       this.jobId.set(id);
     }
+  }
+
+  getCandidateFullName(): string {
+    const user = this.authService.candidateUser() || {};
+    const parsed = this.initialAssessment();
+    return user.fullName || user.full_name || (user.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : '') || parsed?.full_name || 'Candidate';
+  }
+
+  getCandidateEmail(): string {
+    const user = this.authService.candidateUser() || {};
+    const parsed = this.initialAssessment();
+    return user.email || parsed?.email || 'candidate@example.com';
   }
 
   onDragOver(event: DragEvent) {
@@ -72,7 +79,7 @@ export class ApplyComponent implements OnInit {
 
   private handleFile(file: File) {
     if (file.type !== 'application/pdf') {
-      alert('Please upload a PDF file.');
+      alert('Please upload a valid PDF file.');
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
@@ -87,13 +94,6 @@ export class ApplyComponent implements OnInit {
       next: (assessmentData) => {
         this.loadingInitialAssessment.set(false);
         this.initialAssessment.set(assessmentData);
-        // Pre-fill extracted details if form is empty
-        if (assessmentData.full_name && assessmentData.full_name !== 'Candidate' && !this.applyForm.value.fullName) {
-          this.applyForm.patchValue({ fullName: assessmentData.full_name });
-        }
-        if (assessmentData.email && !this.applyForm.value.email) {
-          this.applyForm.patchValue({ email: assessmentData.email });
-        }
       },
       error: () => {
         this.loadingInitialAssessment.set(false);
@@ -102,8 +102,8 @@ export class ApplyComponent implements OnInit {
   }
 
   proceedToAssessment() {
-    if (this.applyForm.invalid || !this.selectedFile()) {
-      alert('Please fill out all required fields and attach your resume.');
+    if (!this.selectedFile()) {
+      alert('Please attach your PDF resume to proceed.');
       return;
     }
 
@@ -143,13 +143,14 @@ export class ApplyComponent implements OnInit {
   }
 
   submitFinalApplication() {
-    if (this.applyForm.invalid || !this.selectedFile()) {
-      alert('Please complete step 1 profile details.');
+    if (!this.selectedFile()) {
+      alert('Please attach your PDF resume.');
       return;
     }
 
     this.submitState.set('submitting');
-    const { fullName, email } = this.applyForm.value;
+    const fullName = this.getCandidateFullName();
+    const email = this.getCandidateEmail();
 
     const answersList: CandidateAnswer[] = Object.entries(this.candidateAnswers()).map(
       ([question_id, selected_key]) => ({ question_id, selected_key })
@@ -157,8 +158,8 @@ export class ApplyComponent implements OnInit {
 
     this.apiService.applyToJob(
       this.jobId(),
-      fullName!,
-      email!,
+      fullName,
+      email,
       this.selectedFile()!,
       answersList
     ).subscribe({
@@ -172,4 +173,3 @@ export class ApplyComponent implements OnInit {
     });
   }
 }
-

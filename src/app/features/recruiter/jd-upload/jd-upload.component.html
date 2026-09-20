@@ -17,8 +17,10 @@
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
       <form [formGroup]="jdForm" class="space-y-6">
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Job Title</label>
-          <input type="text" formControlName="title" placeholder="e.g. Senior Frontend Engineer" 
+          <label class="block text-sm font-medium text-gray-700 mb-1">
+            Job Title <span class="text-xs text-gray-400 font-normal">(Optional — AI auto-extracts from PDF if left blank)</span>
+          </label>
+          <input type="text" formControlName="title" placeholder="e.g. Senior Frontend Engineer (or leave blank to auto-detect)" 
                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-shadow">
         </div>
 
@@ -42,8 +44,8 @@
         </div>
 
         <div class="flex justify-end pt-4">
-          <button type="button" (click)="upload()" [disabled]="jdForm.invalid || !selectedFile() || isUploading()"
-                  class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center">
+          <button type="button" (click)="upload()" [disabled]="isUploading()"
+                  class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center shadow-md shadow-indigo-500/20 cursor-pointer">
             @if (isUploading()) {
               <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -55,6 +57,7 @@
             }
           </button>
         </div>
+
       </form>
     </div>
   } @else {
@@ -117,6 +120,66 @@
              }
            </ul>
         </div>
+
+        @if (createdJob()?.assessment) {
+          <hr class="border-gray-100">
+
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <div>
+                <p class="text-sm text-gray-500 uppercase font-semibold tracking-wider flex items-center gap-1.5">
+                  <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  Generated O*NET 28.0 Behavioral SJT Assessment
+                </p>
+                <p class="text-xs text-slate-400 mt-0.5">10 AI-generated Situational Judgment scenarios tailored for this role.</p>
+              </div>
+
+              <span class="px-2.5 py-1 bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-semibold rounded-full">
+                {{ createdJob()?.assessment?.questions?.length || 10 }} Questions
+              </span>
+            </div>
+
+            <!-- Primary Assessed Traits -->
+            @if (createdJob()?.assessment?.assessment_metadata?.primary_traits?.length) {
+              <div class="mb-4 flex flex-wrap gap-1.5 items-center">
+                <span class="text-xs text-slate-400 font-medium">Assessed Work Styles:</span>
+                @for (trait of createdJob()?.assessment?.assessment_metadata?.primary_traits; track trait) {
+                  <span class="px-2.5 py-0.5 bg-slate-100 text-slate-700 rounded-md text-xs font-medium border border-slate-200">
+                    {{ trait }}
+                  </span>
+                }
+              </div>
+            }
+
+            <!-- SJT Questions Accordion/Cards -->
+            <div class="space-y-4">
+              @for (q of createdJob()?.assessment?.questions; track q.id; let i = $index) {
+                <div class="p-4 bg-slate-50 border border-slate-200/80 rounded-2xl text-left space-y-2">
+                  <div class="flex items-start gap-2">
+                    <span class="w-6 h-6 rounded-full bg-indigo-600 text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">
+                      {{ i + 1 }}
+                    </span>
+                    <p class="text-sm font-semibold text-slate-900 leading-snug">
+                      {{ q.scenario }}
+                    </p>
+                  </div>
+
+                  <div class="pl-8 grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                    @for (opt of q.options; track opt.key) {
+                      <div class="p-2.5 bg-white border border-slate-200/70 rounded-xl text-xs text-slate-700 flex items-start gap-2">
+                        <span class="font-bold text-indigo-600 shrink-0">{{ opt.key }}.</span>
+                        <span class="leading-relaxed">{{ opt.text }}</span>
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
         
         <div class="pt-6 flex justify-end gap-3">
           <button class="px-5 py-2.5 rounded-xl text-slate-600 font-medium hover:bg-slate-100 transition-colors text-sm" (click)="parsedCriteria.set(null)">Start Over</button>
