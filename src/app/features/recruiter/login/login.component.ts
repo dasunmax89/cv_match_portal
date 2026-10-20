@@ -34,9 +34,12 @@ export class Login {
     this.apiService.login(this.workEmail, this.password).subscribe({
       next: (res) => {
         this.isLoading = false;
+        const userData = res?.user || {};
         this.authService.loginRecruiter({
-          workEmail: this.workEmail,
-          companyName: this.workEmail.split('@')[1]?.split('.')[0] || 'Company',
+          ...userData,
+          workEmail: userData.email || userData.recruiter_email || this.workEmail,
+          companyName: userData.company_name || this.workEmail.split('@')[1]?.split('.')[0] || 'Company',
+          aiSensitivity: userData.ai_sensitivity || userData.aiSensitivity || 'Balanced (65%+)',
           token: res?.access_token
         });
         this.router.navigate(['/recruiter/jobs']);

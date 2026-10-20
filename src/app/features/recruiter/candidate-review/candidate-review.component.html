@@ -1,4 +1,20 @@
 <div class="h-full min-h-screen bg-slate-50 flex flex-col items-center py-8 px-4 sm:px-6 lg:px-8 overflow-hidden relative">
+
+  <!-- Floating Feedback Toast -->
+  @if (toastMessage()) {
+    <div class="fixed top-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 rounded-xl shadow-xl border text-xs sm:text-sm font-semibold transition-all"
+         [ngClass]="toastType() === 'error' ? 'bg-rose-50 text-rose-800 border-rose-200 shadow-rose-100' : (toastType() === 'success' ? 'bg-emerald-50 text-emerald-800 border-emerald-200 shadow-emerald-100' : 'bg-slate-900 text-white border-slate-800 shadow-slate-300')">
+      @if (toastType() === 'error') {
+        <svg class="w-4 h-4 text-rose-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+      } @else if (toastType() === 'success') {
+        <svg class="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+      } @else {
+        <svg class="w-4 h-4 text-indigo-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+      }
+      <span>{{ toastMessage() }}</span>
+    </div>
+  }
+
   <div class="mb-6 z-10 w-full max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
     <div class="text-left space-y-1">
       <button (click)="goBackToJobList()" class="inline-flex items-center text-xs font-semibold text-indigo-600 hover:text-indigo-800 transition-colors mb-1">
@@ -19,20 +35,41 @@
       </p>
     </div>
 
-    <!-- View Toggle -->
-    <div class="bg-slate-200/60 p-1 rounded-lg inline-flex border border-slate-200">
-      <button (click)="viewMode.set('stack')" 
-              [ngClass]="{'bg-white shadow-sm text-indigo-700': viewMode() === 'stack', 'text-slate-500 hover:text-slate-700': viewMode() !== 'stack'}" 
-              class="px-4 py-1.5 rounded-md text-sm font-medium transition-colors focus:outline-none flex items-center gap-2">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-        Stack
+    <!-- Right Controls: Persona Sensitivity Badge & View Toggle -->
+    <div class="flex items-center gap-3">
+      <!-- Company Persona Sensitivity Indicator -->
+      <a routerLink="/recruiter/company-profile" 
+         class="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-xs text-slate-700 shadow-2xs hover:border-indigo-300 hover:text-indigo-600 transition-all cursor-pointer"
+         title="Configure AI Screening Sensitivity Threshold in Company Persona Setting">
+        <span class="w-2 h-2 rounded-full" [ngClass]="sensitivityThreshold() >= 80 ? 'bg-purple-500' : (sensitivityThreshold() >= 65 ? 'bg-indigo-500' : 'bg-blue-500')"></span>
+        <span class="font-medium text-slate-500">Screening Threshold:</span>
+        <span class="font-bold text-slate-900">&ge;{{ sensitivityThreshold() }}%</span>
+        <span class="text-[10px] text-slate-400 font-medium">({{ sensitivityLabel() }})</span>
+      </a>
+
+      <!-- Refresh Candidates Button -->
+      <button (click)="refreshCandidates()"
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-xs font-semibold text-slate-700 shadow-2xs hover:bg-slate-50 hover:text-indigo-600 hover:border-indigo-200 transition-all cursor-pointer"
+              title="Refresh candidate applications">
+        <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+        <span>Refresh</span>
       </button>
-      <button (click)="viewMode.set('table')" 
-              [ngClass]="{'bg-white shadow-sm text-indigo-700': viewMode() === 'table', 'text-slate-500 hover:text-slate-700': viewMode() !== 'table'}" 
-              class="px-4 py-1.5 rounded-md text-sm font-medium transition-colors focus:outline-none flex items-center gap-2">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
-        Table
-      </button>
+
+      <!-- View Toggle -->
+      <div class="bg-slate-200/60 p-1 rounded-lg inline-flex border border-slate-200">
+        <button (click)="viewMode.set('stack')" 
+                [ngClass]="{'bg-white shadow-sm text-indigo-700': viewMode() === 'stack', 'text-slate-500 hover:text-slate-700': viewMode() !== 'stack'}" 
+                class="px-4 py-1.5 rounded-md text-sm font-medium transition-colors focus:outline-none flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+          Stack
+        </button>
+        <button (click)="viewMode.set('table')" 
+                [ngClass]="{'bg-white shadow-sm text-indigo-700': viewMode() === 'table', 'text-slate-500 hover:text-slate-700': viewMode() !== 'table'}" 
+                class="px-4 py-1.5 rounded-md text-sm font-medium transition-colors focus:outline-none flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
+          Table
+        </button>
+      </div>
     </div>
   </div>
 
@@ -88,20 +125,88 @@
               <div>
                 <h2 class="text-xl font-bold text-slate-900">{{ candidate.candidateName }}</h2>
                 <p class="text-xs text-slate-500 mt-0.5">{{ candidate.candidateEmail }}</p>
+                @if (candidate.linkedin_url || candidate.facebook_url || candidate.tiktok_url) {
+                  <div class="flex items-center gap-1.5 mt-2 flex-wrap">
+                    @if (candidate.linkedin_url) {
+                      <a [href]="candidate.linkedin_url" target="_blank" rel="noopener noreferrer"
+                         (click)="$event.stopPropagation()"
+                         class="inline-flex items-center gap-1 px-2 py-0.5 text-[11px] font-semibold rounded-md bg-[#0A66C2]/10 text-[#0A66C2] hover:bg-[#0A66C2]/20 border border-[#0A66C2]/20 transition-all shadow-2xs"
+                         title="LinkedIn Profile">
+                        <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 8.76a1.4 1.4 0 1 0-.01-2.8 1.4 1.4 0 0 0 .01 2.8m1.39 9.74v-8.37H5.07v8.37h2.78z"/></svg>
+                        LinkedIn
+                      </a>
+                    }
+                    @if (candidate.facebook_url) {
+                      <a [href]="candidate.facebook_url" target="_blank" rel="noopener noreferrer"
+                         (click)="$event.stopPropagation()"
+                         class="inline-flex items-center gap-1 px-2 py-0.5 text-[11px] font-semibold rounded-md bg-[#1877F2]/10 text-[#1877F2] hover:bg-[#1877F2]/20 border border-[#1877F2]/20 transition-all shadow-2xs"
+                         title="Facebook Profile">
+                        <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                        Facebook
+                      </a>
+                    }
+                    @if (candidate.tiktok_url) {
+                      <a [href]="candidate.tiktok_url" target="_blank" rel="noopener noreferrer"
+                         (click)="$event.stopPropagation()"
+                         class="inline-flex items-center gap-1 px-2 py-0.5 text-[11px] font-semibold rounded-md bg-slate-900/10 text-slate-900 hover:bg-slate-900/20 border border-slate-900/20 transition-all shadow-2xs"
+                         title="TikTok Profile">
+                        <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.24 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+                        TikTok
+                      </a>
+                    }
+                  </div>
+                }
               </div>
               <div class="text-right flex flex-col items-end">
                 <div class="text-3xl font-black" [ngClass]="getScoreColor(candidate.evaluation?.overall_match_score)">
                   {{ candidate.evaluation?.overall_match_score ?? '--' }}<span class="text-lg" *ngIf="candidate.evaluation">%</span>
                 </div>
-                <span class="mt-1 px-2.5 py-0.5 rounded-full text-xs font-semibold border"
-                      [ngClass]="getVerdictBadgeClass(candidate.evaluation?.fit_verdict || candidate.status)">
-                  {{ candidate.evaluation?.fit_verdict || candidate.status || 'Pending' }}
-                </span>
+                <div class="mt-1 flex items-center gap-1.5 flex-wrap justify-end">
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold border flex items-center gap-1"
+                        [ngClass]="getVerdictBadgeClass(getDisplayVerdict(candidate))">
+                    @if (candidate.status === 'Rejected') {
+                      <svg class="w-3 h-3 text-rose-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    }
+                    {{ getDisplayVerdict(candidate) }}
+                  </span>
+                  @if (candidate.evaluation) {
+                    @if (canShortlist(candidate)) {
+                      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 inline-flex items-center gap-1" [title]="'Meets or exceeds Company Persona Sensitivity Threshold (&ge;' + sensitivityThreshold() + '%)'">
+                        <svg class="w-2.5 h-2.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        &ge;{{ sensitivityThreshold() }}%
+                      </span>
+                    } @else {
+                      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200 inline-flex items-center gap-1" [title]="'Score is below Company Persona Sensitivity Threshold (' + sensitivityThreshold() + '%)'">
+                        <svg class="w-2.5 h-2.5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        &lt;{{ sensitivityThreshold() }}%
+                      </span>
+                    }
+                  }
+                </div>
               </div>
             </div>
 
             <!-- Card Body - Scrollable -->
             <div class="flex-grow overflow-y-auto p-5 space-y-5">
+              
+              <!-- Interview Scheduled Alert Banner -->
+              @if (candidate.status !== 'Rejected' && candidate.interview; as iv) {
+                <div class="p-3.5 bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl flex items-center justify-between gap-3 text-xs shadow-2xs">
+                  <div class="flex items-center gap-2.5 text-emerald-950">
+                    <span class="p-1.5 bg-emerald-600 text-white rounded-lg text-xs font-bold leading-none">📅</span>
+                    <div>
+                      <span class="font-bold text-emerald-900">Interview Scheduled:</span>
+                      <span class="font-semibold text-emerald-800 ml-1">{{ formatDisplayDate(iv.scheduled_at) }}</span>
+                      @if (iv.location) {
+                        <span class="text-slate-500 ml-1.5">• {{ iv.location }}</span>
+                      }
+                    </div>
+                  </div>
+                  <button (click)="openScheduleModal(candidate)" class="px-2.5 py-1 bg-white hover:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-lg font-semibold text-[11px] transition-colors shrink-0">
+                    Reschedule
+                  </button>
+                </div>
+              }
               
               @if (!candidate.evaluation) {
                 <div class="p-6 bg-indigo-50 border border-indigo-100 rounded-xl text-center">
@@ -155,8 +260,11 @@
                       Gaps & Red Flags
                     </h4>
                     <div class="flex flex-wrap gap-1.5">
-                      @for (gap of candidate.evaluation?.gaps_and_red_flags; track gap) {
+                      @for (gap of getCandidateGaps(candidate); track gap) {
                         <span class="bg-white text-rose-700 text-xs px-2.5 py-1 rounded-md border border-rose-200 shadow-2xs">{{ gap }}</span>
+                      }
+                      @if (getCandidateGaps(candidate).length === 0) {
+                        <span class="text-slate-400 text-xs italic">No critical gaps or red flags identified.</span>
                       }
                     </div>
                   </div>
@@ -252,15 +360,36 @@
             </div>
 
             <!-- Card Bottom Action Bar -->
-            <div class="p-4 border-t border-slate-100 bg-white flex justify-between items-center gap-4">
-              <button (click)="reject(candidate)" class="flex-1 py-2.5 px-4 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold text-xs border border-rose-200 transition-colors flex items-center justify-center gap-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                Reject
-              </button>
-              <button (click)="shortlist(candidate)" class="flex-1 py-2.5 px-4 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-semibold text-xs border border-emerald-200 transition-colors flex items-center justify-center gap-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                Shortlist
-              </button>
+            <div class="p-4 border-t border-slate-100 bg-white flex flex-col gap-2.5">
+              @if (candidate.status === 'Rejected') {
+                <div class="flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold text-center">
+                  <svg class="w-4 h-4 text-rose-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                  <span>This candidate has been rejected.</span>
+                </div>
+              }
+              <div class="flex justify-between items-center gap-4">
+                <button (click)="reject(candidate)" 
+                        [disabled]="candidate.status === 'Rejected'"
+                        class="flex-1 py-2.5 px-4 rounded-xl font-semibold text-xs border transition-colors flex items-center justify-center gap-2"
+                        [ngClass]="candidate.status === 'Rejected' ? 'bg-rose-100/60 text-rose-400 border-rose-200 cursor-not-allowed' : 'bg-rose-50 hover:bg-rose-100 text-rose-700 border-rose-200 cursor-pointer'">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                  {{ candidate.status === 'Rejected' ? 'Rejected' : 'Reject' }}
+                </button>
+                <button (click)="shortlist(candidate)" 
+                        [disabled]="!canShortlist(candidate)"
+                        [title]="!canShortlist(candidate) ? 'Candidate score (' + (candidate.evaluation?.overall_match_score ?? 0) + '%) is below Company Persona Sensitivity Threshold (' + sensitivityThreshold() + '%)' : 'Shortlist & Schedule Interview'"
+                        class="flex-1 py-2.5 px-4 rounded-xl font-semibold text-xs border transition-all flex items-center justify-center gap-2"
+                        [ngClass]="canShortlist(candidate) ? 'bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border-emerald-200 cursor-pointer' : 'bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed opacity-60'">
+                  <svg class="w-4 h-4" [ngClass]="canShortlist(candidate) ? 'text-emerald-600' : 'text-slate-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                  {{ candidate.interview ? 'Reschedule Interview' : 'Shortlist & Schedule' }}
+                </button>
+              </div>
+              @if (!canShortlist(candidate)) {
+                <div class="flex items-center justify-center gap-1.5 text-[11px] font-medium text-amber-800 bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-200 text-center">
+                  <svg class="w-3.5 h-3.5 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                  <span>Score ({{ candidate.evaluation?.overall_match_score ?? 0 }}%) is below your Company Persona Screening Threshold (&ge;{{ sensitivityThreshold() }}% - {{ sensitivityLabel() }}). Shortlisting is locked.</span>
+                </div>
+              }
             </div>
 
           </div>
@@ -288,17 +417,68 @@
               <td class="p-4">
                 <div class="font-bold text-slate-900 hover:text-indigo-600 transition-colors">{{ candidate.candidateName }}</div>
                 <div class="text-slate-500 text-xs mt-0.5">{{ candidate.candidateEmail }}</div>
+                @if (candidate.linkedin_url || candidate.facebook_url || candidate.tiktok_url) {
+                  <div class="flex items-center gap-1.5 mt-1.5">
+                    @if (candidate.linkedin_url) {
+                      <a [href]="candidate.linkedin_url" target="_blank" rel="noopener noreferrer"
+                         (click)="$event.stopPropagation()"
+                         class="p-1 rounded bg-[#0A66C2]/10 text-[#0A66C2] hover:bg-[#0A66C2]/20 border border-[#0A66C2]/20 transition-colors"
+                         title="LinkedIn Profile">
+                        <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 8.76a1.4 1.4 0 1 0-.01-2.8 1.4 1.4 0 0 0 .01 2.8m1.39 9.74v-8.37H5.07v8.37h2.78z"/></svg>
+                      </a>
+                    }
+                    @if (candidate.facebook_url) {
+                      <a [href]="candidate.facebook_url" target="_blank" rel="noopener noreferrer"
+                         (click)="$event.stopPropagation()"
+                         class="p-1 rounded bg-[#1877F2]/10 text-[#1877F2] hover:bg-[#1877F2]/20 border border-[#1877F2]/20 transition-colors"
+                         title="Facebook Profile">
+                        <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                      </a>
+                    }
+                    @if (candidate.tiktok_url) {
+                      <a [href]="candidate.tiktok_url" target="_blank" rel="noopener noreferrer"
+                         (click)="$event.stopPropagation()"
+                         class="p-1 rounded bg-slate-900/10 text-slate-900 hover:bg-slate-900/20 border border-slate-900/20 transition-colors"
+                         title="TikTok Profile">
+                        <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.24 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+                      </a>
+                    }
+                  </div>
+                }
               </td>
               <td class="p-4 text-center">
-                <span class="inline-flex items-center justify-center w-10 h-10 rounded-full font-black text-sm bg-slate-50 border border-slate-200" [ngClass]="getScoreColor(candidate.evaluation?.overall_match_score)">
-                  {{ candidate.evaluation?.overall_match_score ?? '--' }}<span *ngIf="candidate.evaluation" class="text-xs font-normal">%</span>
-                </span>
+                <div class="flex flex-col items-center gap-1">
+                  <span class="inline-flex items-center justify-center w-10 h-10 rounded-full font-black text-sm bg-slate-50 border border-slate-200" [ngClass]="getScoreColor(candidate.evaluation?.overall_match_score)">
+                    {{ candidate.evaluation?.overall_match_score ?? '--' }}<span *ngIf="candidate.evaluation" class="text-xs font-normal">%</span>
+                  </span>
+                  @if (candidate.evaluation) {
+                    @if (canShortlist(candidate)) {
+                      <span class="text-[9px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded-full inline-flex items-center gap-0.5" [title]="'Meets Persona Sensitivity Threshold (&ge;' + sensitivityThreshold() + '%)'">
+                        &ge;{{ sensitivityThreshold() }}%
+                      </span>
+                    } @else {
+                      <span class="text-[9px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded-full inline-flex items-center gap-0.5" [title]="'Below Persona Sensitivity Threshold (' + sensitivityThreshold() + '%)'">
+                        &lt;{{ sensitivityThreshold() }}%
+                      </span>
+                    }
+                  }
+                </div>
               </td>
               <td class="p-4 text-center">
-                <span class="px-2.5 py-1 rounded-full text-xs font-semibold border"
-                      [ngClass]="getVerdictBadgeClass(candidate.evaluation?.fit_verdict || candidate.status)">
-                  {{ candidate.evaluation?.fit_verdict || candidate.status || 'Pending' }}
-                </span>
+                <div class="flex flex-col items-center gap-1">
+                  <span class="px-2.5 py-1 rounded-full text-xs font-semibold border flex items-center gap-1"
+                        [ngClass]="getVerdictBadgeClass(getDisplayVerdict(candidate))">
+                    @if (candidate.status === 'Rejected') {
+                      <svg class="w-3 h-3 text-rose-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    }
+                    {{ getDisplayVerdict(candidate) }}
+                  </span>
+                  @if (candidate.status !== 'Rejected' && candidate.interview?.scheduled_at) {
+                    <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md flex items-center gap-1" [title]="'Interview: ' + formatDisplayDate(candidate.interview?.scheduled_at)">
+                      📅 {{ formatDisplayDate(candidate.interview?.scheduled_at) }}
+                    </span>
+                  }
+                </div>
               </td>
               <td class="p-4 max-w-xs truncate text-slate-600 text-xs" title="{{ candidate.evaluation?.concise_rationale || 'Processing AI Analysis...' }}">
                 {{ candidate.evaluation?.concise_rationale || 'Processing AI Analysis...' }}
@@ -308,10 +488,18 @@
                   <button (click)="openCandidateDetails(candidate)" class="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors border border-indigo-100" title="View Candidate Details">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                   </button>
-                  <button (click)="reject(candidate)" class="p-2 text-rose-500 hover:bg-rose-50 rounded-lg transition-colors border border-rose-100" title="Reject">
+                  <button (click)="reject(candidate)" 
+                          [disabled]="candidate.status === 'Rejected'"
+                          class="p-2 rounded-lg transition-colors border"
+                          [ngClass]="candidate.status === 'Rejected' ? 'text-rose-300 bg-rose-50/50 border-rose-100 cursor-not-allowed' : 'text-rose-500 hover:bg-rose-50 border-rose-100 cursor-pointer'"
+                          [title]="candidate.status === 'Rejected' ? 'Candidate already rejected' : 'Reject Candidate'">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                   </button>
-                  <button (click)="shortlist(candidate)" class="p-2 text-emerald-500 hover:bg-emerald-50 rounded-lg transition-colors border border-emerald-100" title="Shortlist">
+                  <button (click)="shortlist(candidate)" 
+                          [disabled]="!canShortlist(candidate)"
+                          class="p-2 rounded-lg transition-colors border"
+                          [ngClass]="canShortlist(candidate) ? 'text-emerald-500 hover:bg-emerald-50 border-emerald-100 cursor-pointer' : 'text-slate-300 border-slate-100 cursor-not-allowed opacity-40'"
+                          [title]="!canShortlist(candidate) ? 'Score (' + (candidate.evaluation?.overall_match_score ?? 0) + '%) is below Company Persona Sensitivity Threshold (' + sensitivityThreshold() + '%)' : (candidate.interview ? 'Reschedule Interview' : 'Shortlist & Schedule Interview')">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                   </button>
                 </div>
@@ -341,7 +529,37 @@
               Candidate Inspection
             </span>
             <h2 class="text-2xl font-bold text-slate-900 mt-2">{{ candidate.candidateName }}</h2>
-            <p class="text-sm text-slate-500 mt-0.5">{{ candidate.candidateEmail }}</p>
+            <div class="flex items-center gap-3 mt-1.5 flex-wrap">
+              <p class="text-sm text-slate-500">{{ candidate.candidateEmail }}</p>
+              @if (candidate.linkedin_url || candidate.facebook_url || candidate.tiktok_url) {
+                <div class="flex items-center gap-2 pl-3 border-l border-slate-200">
+                  @if (candidate.linkedin_url) {
+                    <a [href]="candidate.linkedin_url" target="_blank" rel="noopener noreferrer"
+                       class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-lg bg-[#0A66C2]/10 text-[#0A66C2] hover:bg-[#0A66C2]/20 border border-[#0A66C2]/20 transition-all shadow-2xs"
+                       title="View LinkedIn Profile">
+                      <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 8.76a1.4 1.4 0 1 0-.01-2.8 1.4 1.4 0 0 0 .01 2.8m1.39 9.74v-8.37H5.07v8.37h2.78z"/></svg>
+                      LinkedIn
+                    </a>
+                  }
+                  @if (candidate.facebook_url) {
+                    <a [href]="candidate.facebook_url" target="_blank" rel="noopener noreferrer"
+                       class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-lg bg-[#1877F2]/10 text-[#1877F2] hover:bg-[#1877F2]/20 border border-[#1877F2]/20 transition-all shadow-2xs"
+                       title="View Facebook Profile">
+                      <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                      Facebook
+                    </a>
+                  }
+                  @if (candidate.tiktok_url) {
+                    <a [href]="candidate.tiktok_url" target="_blank" rel="noopener noreferrer"
+                       class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-900/10 text-slate-900 hover:bg-slate-900/20 border border-slate-900/20 transition-all shadow-2xs"
+                       title="View TikTok Profile">
+                      <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.24 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+                      TikTok
+                    </a>
+                  }
+                </div>
+              }
+            </div>
           </div>
           <button (click)="closeCandidateDetails()" class="p-2 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 transition-colors">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -351,6 +569,37 @@
         <!-- Modal Body -->
         <div class="p-6 overflow-y-auto space-y-6 flex-grow">
           
+          <!-- Interview Schedule Card (If Scheduled) -->
+          @if (candidate.status !== 'Rejected' && candidate.interview; as iv) {
+            <div class="p-4 rounded-xl bg-gradient-to-r from-emerald-50 via-teal-50 to-indigo-50 border border-emerald-200 shadow-2xs">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2">
+                  <span class="p-1.5 bg-emerald-600 text-white rounded-lg text-xs leading-none">📅</span>
+                  <span class="text-xs font-bold uppercase tracking-wider text-emerald-900">Interview Scheduled & Confirmed</span>
+                </div>
+                <button (click)="openScheduleModal(candidate)" class="px-3 py-1 bg-white hover:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-lg text-xs font-semibold transition-colors">
+                  Edit / Reschedule
+                </button>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <div class="bg-white/90 p-2.5 rounded-lg border border-emerald-100">
+                  <span class="text-slate-500 font-semibold uppercase text-[10px] block">Date & Time</span>
+                  <span class="font-bold text-slate-800">{{ formatDisplayDate(iv.scheduled_at) }}</span>
+                </div>
+                <div class="bg-white/90 p-2.5 rounded-lg border border-emerald-100">
+                  <span class="text-slate-500 font-semibold uppercase text-[10px] block">Location</span>
+                  <span class="font-bold text-slate-800 truncate block" [title]="iv.location">{{ iv.location || 'Remote / Online' }}</span>
+                </div>
+              </div>
+              @if (iv.custom_message) {
+                <div class="mt-2.5 bg-white/90 p-2.5 rounded-lg border border-emerald-100 text-xs">
+                  <span class="text-slate-500 font-semibold uppercase text-[10px] block">Custom Notes for Candidate</span>
+                  <span class="text-slate-700 italic block mt-0.5">{{ iv.custom_message }}</span>
+                </div>
+              }
+            </div>
+          }
+          
           <!-- Overall Match Card -->
           <div class="flex items-center justify-between p-4 rounded-xl bg-slate-50 border border-slate-200">
             <div>
@@ -359,9 +608,12 @@
                 <span class="text-4xl font-black" [ngClass]="getScoreColor(candidate.evaluation?.overall_match_score)">
                   {{ candidate.evaluation?.overall_match_score ?? '--' }}<span *ngIf="candidate.evaluation" class="text-xl">%</span>
                 </span>
-                <span class="px-3 py-1 rounded-full text-xs font-semibold border"
-                      [ngClass]="getVerdictBadgeClass(candidate.evaluation?.fit_verdict || candidate.status)">
-                  {{ candidate.evaluation?.fit_verdict || candidate.status || 'Pending' }}
+                <span class="px-3 py-1 rounded-full text-xs font-semibold border flex items-center gap-1"
+                      [ngClass]="getVerdictBadgeClass(getDisplayVerdict(candidate))">
+                  @if (candidate.status === 'Rejected') {
+                    <svg class="w-3 h-3 text-rose-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                  }
+                  {{ getDisplayVerdict(candidate) }}
                 </span>
               </div>
             </div>
@@ -416,8 +668,11 @@
               Gaps & Identified Red Flags
             </h4>
             <div class="flex flex-wrap gap-2">
-              @for (gap of candidate.evaluation?.gaps_and_red_flags; track gap) {
+              @for (gap of getCandidateGaps(candidate); track gap) {
                 <span class="bg-white text-rose-700 text-xs px-3 py-1.5 rounded-md border border-rose-200 font-medium shadow-2xs">{{ gap }}</span>
+              }
+              @if (getCandidateGaps(candidate).length === 0) {
+                <span class="text-slate-400 text-xs italic">No critical gaps or red flags identified.</span>
               }
             </div>
           </div>
@@ -522,18 +777,280 @@
         </div>
 
         <!-- Modal Footer Actions -->
-        <div class="p-4 border-t border-slate-100 bg-slate-50 flex justify-between items-center gap-4">
-          <button (click)="reject(candidate)" class="px-5 py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold text-xs border border-rose-200 transition-colors flex items-center gap-2">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            Reject Candidate
-          </button>
-          <button (click)="shortlist(candidate)" class="px-5 py-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-semibold text-xs border border-emerald-200 transition-colors flex items-center gap-2">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-            Shortlist Candidate
-          </button>
+        <div class="p-4 border-t border-slate-100 bg-slate-50 flex flex-col gap-2.5">
+          @if (candidate.status === 'Rejected') {
+            <div class="flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold text-center">
+              <svg class="w-4 h-4 text-rose-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+              <span>This candidate has been rejected.</span>
+            </div>
+          }
+          <div class="flex justify-between items-center gap-4">
+            <button (click)="reject(candidate)" 
+                    [disabled]="candidate.status === 'Rejected'"
+                    class="px-5 py-2.5 rounded-xl font-semibold text-xs border transition-colors flex items-center gap-2"
+                    [ngClass]="candidate.status === 'Rejected' ? 'bg-rose-100/60 text-rose-400 border-rose-200 cursor-not-allowed' : 'bg-rose-50 hover:bg-rose-100 text-rose-700 border-rose-200 cursor-pointer'">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+              {{ candidate.status === 'Rejected' ? 'Candidate Rejected' : 'Reject Candidate' }}
+            </button>
+            <button (click)="shortlist(candidate)" 
+                    [disabled]="!canShortlist(candidate)"
+                    [title]="!canShortlist(candidate) ? 'Candidate score (' + (candidate.evaluation?.overall_match_score ?? 0) + '%) is below the Company Persona Screening Sensitivity Threshold (' + sensitivityThreshold() + '%)' : 'Shortlist & Schedule Interview'"
+                    class="px-5 py-2.5 rounded-xl font-semibold text-xs border transition-colors flex items-center gap-2"
+                    [ngClass]="canShortlist(candidate) ? 'bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border-emerald-200 cursor-pointer' : 'bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed opacity-60'">
+              <svg class="w-4 h-4" [ngClass]="canShortlist(candidate) ? 'text-emerald-600' : 'text-slate-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+              {{ candidate.interview ? 'Reschedule Interview' : 'Shortlist & Schedule Interview' }}
+            </button>
+          </div>
+          @if (!canShortlist(candidate)) {
+            <div class="flex items-center justify-center gap-1.5 text-[11px] font-medium text-amber-800 bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-200 text-center">
+              <svg class="w-3.5 h-3.5 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+              <span>Shortlisting locked: Candidate score ({{ candidate.evaluation?.overall_match_score ?? 0 }}%) is below your Company Persona Screening Threshold (&ge;{{ sensitivityThreshold() }}% - {{ sensitivityLabel() }}).</span>
+            </div>
+          }
         </div>
 
       </div>
     </div>
   }
+
+  <!-- Interview Scheduling Modal Popup -->
+  @if (isScheduleModalOpen()) {
+    @if (schedulingCandidate(); as candidate) {
+      <div class="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn"
+           (click)="closeScheduleModal()">
+        <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-xl overflow-hidden animate-scaleUp flex flex-col max-h-[92vh]"
+             (click)="$event.stopPropagation()">
+             
+          <!-- Modal Header with Brand Gradient Accent -->
+          <div class="p-5 border-b border-slate-100 bg-gradient-to-r from-indigo-50/80 via-white to-purple-50/80 flex justify-between items-start">
+            <div class="flex items-start gap-3">
+              <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow-md shadow-indigo-200 shrink-0">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+              </div>
+              <div>
+                <h2 class="text-xl font-bold text-slate-900">Schedule Interview & Shortlist</h2>
+                <p class="text-xs text-slate-500 mt-0.5">
+                  Candidate: <strong class="text-slate-800">{{ candidate.candidateName }}</strong> &bull; 
+                  <span class="text-indigo-600 font-semibold">{{ jobDetails()?.title || 'Job Position' }}</span>
+                </p>
+              </div>
+            </div>
+            <button (click)="closeScheduleModal()" class="p-2 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Notification Notice Banner -->
+          <div class="px-5 py-2.5 bg-indigo-50/70 border-b border-indigo-100 flex items-center gap-2.5 text-xs text-indigo-900">
+            <svg class="w-4 h-4 text-indigo-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+            </svg>
+            <span>
+              An invitation email will be delivered to <strong class="underline decoration-indigo-300">{{ candidate.candidateEmail }}</strong>
+            </span>
+          </div>
+
+          <!-- Threshold Alignment Banner in Modal -->
+          <div class="px-5 py-2 border-b text-xs flex items-center justify-between"
+               [ngClass]="canShortlist(candidate) ? 'bg-emerald-50/60 border-emerald-100 text-emerald-900' : 'bg-rose-50 border-rose-200 text-rose-800'">
+            <div class="flex items-center gap-2">
+              <span class="font-medium text-slate-600">Candidate Score:</span>
+              <strong class="font-black">{{ candidate.evaluation?.overall_match_score ?? 0 }}%</strong>
+              <span class="text-slate-300">&bull;</span>
+              <span class="font-medium text-slate-600">Screening Threshold:</span>
+              <strong class="font-bold">&ge;{{ sensitivityThreshold() }}%</strong>
+              <span class="text-[10px] text-slate-500">({{ sensitivityLabel() }})</span>
+            </div>
+            @if (canShortlist(candidate)) {
+              <span class="text-emerald-700 font-bold flex items-center gap-1 text-[11px]">
+                <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                Meets Threshold
+              </span>
+            } @else {
+              <span class="text-rose-700 font-bold flex items-center gap-1 text-[11px]">
+                <svg class="w-3.5 h-3.5 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                Below Threshold
+              </span>
+            }
+          </div>
+
+          <!-- Form Content -->
+          <div class="p-5 space-y-4 overflow-y-auto flex-grow">
+            
+            <!-- Success Message Banner -->
+            @if (scheduleSuccessMessage()) {
+              <div class="p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-2.5 text-xs font-semibold text-emerald-800">
+                <svg class="w-5 h-5 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span>{{ scheduleSuccessMessage() }}</span>
+              </div>
+            }
+
+            <!-- Error Message Banner -->
+            @if (scheduleError()) {
+              <div class="p-3.5 bg-rose-50 border border-rose-200 rounded-xl flex items-center gap-2.5 text-xs font-semibold text-rose-800">
+                <svg class="w-5 h-5 text-rose-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span>{{ scheduleError() }}</span>
+              </div>
+            }
+
+            <!-- Date & Time Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <!-- Date Field -->
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                  <svg class="w-3.5 h-3.5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                  </svg>
+                  Interview Date <span class="text-rose-500">*</span>
+                </label>
+                <input 
+                  type="date"
+                  [min]="minDate()"
+                  [ngModel]="interviewDate()"
+                  (ngModelChange)="interviewDate.set($event)"
+                  class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all shadow-2xs"
+                  required
+                />
+                <!-- Quick Date Chips -->
+                <div class="flex flex-wrap gap-1.5 mt-2">
+                  <button type="button" (click)="setQuickDate(1)" class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-600 transition-colors">
+                    Tomorrow
+                  </button>
+                  <button type="button" (click)="setQuickDate(2)" class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-600 transition-colors">
+                    In 2 Days
+                  </button>
+                  <button type="button" (click)="setQuickDate(7)" class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-600 transition-colors">
+                    Next Week
+                  </button>
+                </div>
+              </div>
+
+              <!-- Time Field -->
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                  <svg class="w-3.5 h-3.5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  Interview Time <span class="text-rose-500">*</span>
+                </label>
+                <input 
+                  type="time"
+                  [ngModel]="interviewTime()"
+                  (ngModelChange)="interviewTime.set($event)"
+                  class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all shadow-2xs"
+                  required
+                />
+                <!-- Quick Time Chips -->
+                <div class="flex flex-wrap gap-1.5 mt-2">
+                  <button type="button" (click)="setQuickTime('09:30')" class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-600 transition-colors">
+                    09:30 AM
+                  </button>
+                  <button type="button" (click)="setQuickTime('11:00')" class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-600 transition-colors">
+                    11:00 AM
+                  </button>
+                  <button type="button" (click)="setQuickTime('14:00')" class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-600 transition-colors">
+                    02:00 PM
+                  </button>
+                  <button type="button" (click)="setQuickTime('16:00')" class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-600 transition-colors">
+                    04:00 PM
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Location Input Box -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center justify-between">
+                <span class="flex items-center gap-1.5">
+                  <svg class="w-3.5 h-3.5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                  </svg>
+                  Location (Map URL or Physical / Virtual Address) <span class="text-rose-500">*</span>
+                </span>
+              </label>
+              <div class="relative">
+                <input 
+                  type="text"
+                  [ngModel]="interviewLocation()"
+                  (ngModelChange)="interviewLocation.set($event)"
+                  placeholder="e.g. Google Maps link, office address, or meeting link (Google Meet / Zoom)"
+                  class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all shadow-2xs"
+                  required
+                />
+              </div>
+              <!-- Quick Location Presets -->
+              <div class="flex flex-wrap gap-1.5 mt-2">
+                <button type="button" (click)="setQuickLocation('Google Meet: https://meet.google.com/new')" class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-600 transition-colors">
+                  + Google Meet
+                </button>
+                <button type="button" (click)="setQuickLocation('Microsoft Teams Meeting')" class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-600 transition-colors">
+                  + MS Teams
+                </button>
+                <button type="button" (click)="setQuickLocation('Main HQ Office, Floor 3, Conference Room A')" class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-600 transition-colors">
+                  + In-Person Office
+                </button>
+              </div>
+              <p class="text-[11px] text-slate-400 mt-1">If a URL or map link is provided, candidates can open it with a single tap in their invitation email.</p>
+            </div>
+
+            <!-- Custom Information / Recruiter Message Text Area -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path>
+                </svg>
+                Custom Information / Recruiter Instructions
+              </label>
+              <textarea 
+                rows="3"
+                [ngModel]="interviewCustomMessage()"
+                (ngModelChange)="interviewCustomMessage.set($event)"
+                placeholder="e.g., Please bring your laptop for a 15-minute live pairing session. We will cover technical design and team fit..."
+                class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all shadow-2xs resize-none"
+              ></textarea>
+              <p class="text-[11px] text-slate-400 mt-1">This note is prominently highlighted inside the candidate's invitation email.</p>
+            </div>
+
+          </div>
+
+          <!-- Modal Footer Actions -->
+          <div class="p-4 border-t border-slate-100 bg-slate-50 flex justify-end items-center gap-3">
+            <button 
+              type="button" 
+              (click)="closeScheduleModal()"
+              [disabled]="isScheduling()"
+              class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100 font-semibold text-xs transition-colors disabled:opacity-50">
+              Cancel
+            </button>
+            <button 
+              type="button" 
+              (click)="confirmScheduleAndShortlist()"
+              [disabled]="isScheduling() || !canShortlist(candidate)"
+              class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs transition-colors flex items-center gap-2 shadow-sm shadow-indigo-200 disabled:opacity-50 disabled:cursor-not-allowed">
+              @if (isScheduling()) {
+                <div class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                <span>Scheduling & Emailing...</span>
+              } @else {
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                <span>Schedule Interview & Shortlist</span>
+              }
+            </button>
+          </div>
+
+        </div>
+      </div>
+    }
+  }
 </div>
+

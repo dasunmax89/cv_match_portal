@@ -21,6 +21,14 @@
     </div>
 
     <div class="flex items-center space-x-3">
+      <a routerLink="/recruiter/candidates"
+        class="inline-flex items-center justify-center px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-semibold rounded-xl text-sm transition-colors shadow-2xs">
+        <svg class="w-4 h-4 mr-1.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+        Candidates Directory
+      </a>
       <button (click)="createNewJob()"
         class="inline-flex items-center justify-center px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white font-semibold rounded-xl shadow-md shadow-indigo-500/20 hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5">
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -41,7 +49,7 @@
         </svg>
       </div>
       <input type="text" [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)"
-        placeholder="Search by job title or required skill..."
+        placeholder="Search by job title, skill, or applicant name..."
         class="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm">
     </div>
 
@@ -156,6 +164,73 @@
           </p>
         </div>
         }
+
+        <!-- Applied Candidates Section -->
+        <div class="pt-3 border-t border-slate-100" (click)="$event.stopPropagation()">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              Applied Candidates
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold"
+                [ngClass]="(job.applied_candidates.length || 0) > 0 ? 'bg-indigo-100 text-indigo-700' : 'bg-slate-100 text-slate-500'">
+                {{ job.applied_candidates.length || 0 }}
+              </span>
+            </span>
+            @if ((job.applied_candidates.length || 0) > 0) {
+            <span class="text-[10px] text-slate-400 font-medium">Click candidate to view match</span>
+            }
+          </div>
+
+          @if (!job.applied_candidates || job.applied_candidates.length === 0) {
+          <div class="p-3 rounded-xl bg-slate-50 border border-slate-100 text-center">
+            <p class="text-xs text-slate-400">No candidates applied yet.</p>
+          </div>
+          } @else {
+          <div class="space-y-1.5 max-h-48 overflow-y-auto pr-1">
+            @for (cand of job.applied_candidates; track cand.id) {
+            <div (click)="openCandidateMatching(job, cand, $event)"
+              class="p-2.5 rounded-xl bg-slate-50/90 hover:bg-indigo-50 border border-slate-200/80 hover:border-indigo-300 transition-all flex items-center justify-between gap-2.5 cursor-pointer group/item shadow-2xs">
+              <div class="flex items-center gap-2 truncate">
+                <div
+                  class="w-7 h-7 rounded-full bg-gradient-to-br from-indigo-500 to-indigo-700 text-white font-bold text-[10px] flex items-center justify-center shrink-0 shadow-2xs">
+                  {{ getInitials(cand.candidateName) }}
+                </div>
+                <div class="truncate">
+                  <p class="text-xs font-bold text-slate-800 group-hover/item:text-indigo-600 truncate transition-colors">
+                    {{ cand.candidateName }}
+                  </p>
+                  <p class="text-[10px] text-slate-400 truncate">{{ cand.candidateEmail }}</p>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-1.5 shrink-0">
+                @if (cand.interview?.scheduled_at) {
+                <span
+                  class="px-1.5 py-0.5 rounded text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold flex items-center gap-0.5"
+                  title="Interview Scheduled">
+                  📅
+                </span>
+                }
+                @if (cand.evaluation?.overall_match_score !== undefined) {
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-black border"
+                  [ngClass]="getScoreColor(cand.evaluation?.overall_match_score)">
+                  {{ cand.evaluation?.overall_match_score }}%
+                </span>
+                }
+                <svg
+                  class="w-3.5 h-3.5 text-slate-300 group-hover/item:text-indigo-600 group-hover/item:translate-x-0.5 transition-all"
+                  fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </div>
+            }
+          </div>
+          }
+        </div>
       </div>
 
       <!-- Bottom Footer Action -->
@@ -166,11 +241,11 @@
         <div class="flex items-center space-x-2">
           <button (click)="viewJobDetails(job, $event)"
             class="text-xs font-semibold text-slate-600 hover:text-indigo-600 px-2.5 py-1 rounded-lg hover:bg-slate-100 transition-colors">
-            View
+            View Job
           </button>
           <button (click)="openCandidateDeck(job, $event)"
             class="inline-flex items-center text-xs font-bold text-indigo-600 hover:text-indigo-700 transition-colors">
-            Evaluate Candidates
+            Evaluate ({{ job.applied_candidates.length || 0 }})
             <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
             </svg>

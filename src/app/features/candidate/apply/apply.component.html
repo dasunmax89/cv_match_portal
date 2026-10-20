@@ -149,16 +149,25 @@
           </div>
 
           @if (ia.skills && ia.skills.length > 0) {
-          <div class="flex flex-wrap gap-1.5 pt-1">
-            @for (sk of ia.skills.slice(0, 6); track sk) {
-            <span
-              class="px-2.5 py-0.5 bg-white text-indigo-700 border border-indigo-200 text-[10px] font-semibold rounded-md shadow-2xs">
-              {{ sk }}
-            </span>
-            }
+          <div class="space-y-1.5 pt-1">
+            <span class="text-[11px] font-bold text-indigo-900 block">Parsed Skills (Click ✕ to remove):</span>
+            <div class="flex flex-wrap gap-1.5">
+              @for (sk of ia.skills; track sk) {
+              <span
+                class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white text-indigo-700 border border-indigo-200 text-[11px] font-semibold rounded-lg shadow-2xs group hover:border-indigo-400 transition-colors">
+                <span>{{ sk }}</span>
+                <button type="button" (click)="removeParsedSkill(sk)"
+                  class="text-indigo-400 hover:text-rose-600 focus:outline-none transition-colors font-bold text-xs cursor-pointer"
+                  title="Remove {{ sk }}">
+                  ✕
+                </button>
+              </span>
+              }
+            </div>
           </div>
           }
         </div>
+
         }
 
         <button type="button" (click)="proceedToAssessment()" [disabled]="!selectedFile() || loadingAssessment()"

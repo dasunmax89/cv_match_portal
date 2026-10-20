@@ -28,6 +28,9 @@ export class Onboarding implements OnInit {
   jobTitle = '';
   experienceYears = 3;
   education = '';
+  linkedinUrl = '';
+  facebookUrl = '';
+  tiktokUrl = '';
   selectedSkills: string[] = [];
   availableSkills: string[] = [];
   
@@ -69,7 +72,12 @@ export class Onboarding implements OnInit {
 
   removeSkill(skill: string) {
     this.selectedSkills = this.selectedSkills.filter(s => s !== skill);
+    this.availableSkills = this.availableSkills.filter(s => s !== skill);
+    if (this.initialAssessment && Array.isArray(this.initialAssessment.skills)) {
+      this.initialAssessment.skills = this.initialAssessment.skills.filter((s: string) => s !== skill);
+    }
   }
+
 
   addWorkHistoryItem() {
     this.workHistory.push({
@@ -122,6 +130,9 @@ export class Onboarding implements OnInit {
       experience_years: this.experienceYears,
       work_arrangement: this.workArrangement,
       min_salary: this.minSalary,
+      linkedin_url: this.linkedinUrl.trim(),
+      facebook_url: this.facebookUrl.trim(),
+      tiktok_url: this.tiktokUrl.trim(),
       background: this.initialAssessment
     };
 
@@ -151,6 +162,9 @@ export class Onboarding implements OnInit {
           workHistory: this.workHistory,
           workArrangement: res.work_arrangement || payload.work_arrangement,
           minSalary: payload.min_salary,
+          linkedinUrl: res.linkedin_url || payload.linkedin_url,
+          facebookUrl: res.facebook_url || payload.facebook_url,
+          tiktokUrl: res.tiktok_url || payload.tiktok_url,
           hasSetupProfile: true,
           initialAssessment: this.initialAssessment
         });
@@ -190,6 +204,9 @@ export class Onboarding implements OnInit {
       if (user.initialAssessment) {
         this.initialAssessment = user.initialAssessment;
       }
+      if (user.linkedinUrl || user.linkedin_url) this.linkedinUrl = user.linkedinUrl || user.linkedin_url;
+      if (user.facebookUrl || user.facebook_url) this.facebookUrl = user.facebookUrl || user.facebook_url;
+      if (user.tiktokUrl || user.tiktok_url) this.tiktokUrl = user.tiktokUrl || user.tiktok_url;
 
       if (this.authService.hasCandidateProfile()) {
         this.currentStep = 3;

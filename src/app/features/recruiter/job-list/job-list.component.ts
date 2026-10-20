@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../../core/services/api.service';
-import { JobResponse } from '../../../core/models/candidate.models';
+import { JobOverviewItem, CandidateMatch } from '../../../core/models/candidate.models';
 
 @Component({
   selector: 'app-recruiter-job-list',
@@ -15,7 +15,7 @@ export class RecruiterJobListComponent implements OnInit {
   private apiService = inject(ApiService);
   private router = inject(Router);
 
-  jobs = signal<JobResponse[]>([]);
+  jobs = signal<JobOverviewItem[]>([]);
   isLoading = signal<boolean>(true);
   searchQuery = signal<string>('');
 
@@ -25,47 +25,88 @@ export class RecruiterJobListComponent implements OnInit {
 
   fetchJobs() {
     this.isLoading.set(true);
-    this.apiService.getRecruiterJobs().subscribe({
+    this.apiService.getRecruiterJobsOverview().subscribe({
       next: (data) => {
         this.jobs.set(data);
         this.isLoading.set(false);
       },
       error: (err) => {
-        console.error('Failed to load recruiter jobs:', err);
-        this.isLoading.set(false);
+        console.error('Failed to load recruiter jobs overview, falling back to basic jobs:', err);
+        this.apiService.getRecruiterJobs().subscribe({
+          next: (jobs) => {
+            const overview: JobOverviewItem[] = jobs.map(j => ({
+              ...j,
+              candidates_count: 0,
+              applied_candidates: []
+            }));
+            this.jobs.set(overview);
+            this.isLoading.set(false);
+          },
+          error: (fallbackErr) => {
+            console.error('Failed to load recruiter jobs:', fallbackErr);
+            this.isLoading.set(false);
+          }
+        });
       }
     });
   }
 
-  get filteredJobs(): JobResponse[] {
+  get filteredJobs(): JobOverviewItem[] {
     const q = this.searchQuery().toLowerCase().trim();
     if (!q) return this.jobs();
     return this.jobs().filter(j => 
       j.title.toLowerCase().includes(q) ||
       j.criteria?.title?.toLowerCase().includes(q) ||
-      j.criteria?.required_skills?.some(s => s.toLowerCase().includes(q))
+      j.criteria?.required_skills?.some(s => s.toLowerCase().includes(q)) ||
+      j.applied_candidates?.some(c => 
+        c.candidateName?.toLowerCase().includes(q) || 
+        c.candidateEmail?.toLowerCase().includes(q)
+      )
     );
   }
 
-  openJobDetails(job: JobResponse) {
+  openJobDetails(job: JobOverviewItem) {
     this.router.navigate(['/recruiter/jobs', job.id, 'details']);
   }
 
-  viewJobDetails(job: JobResponse, event: MouseEvent) {
+  viewJobDetails(job: JobOverviewItem, event: MouseEvent) {
     event.stopPropagation();
     this.router.navigate(['/recruiter/jobs', job.id, 'details']);
   }
 
-  openCandidateDeck(job: JobResponse, event: MouseEvent) {
+  openCandidateDeck(job: JobOverviewItem, event: MouseEvent) {
     event.stopPropagation();
     this.router.navigate(['/recruiter/jobs', job.id]);
+  }
+
+  openCandidateMatching(job: JobOverviewItem, candidate: CandidateMatch, event: MouseEvent) {
+    event.stopPropagation();
+    this.router.navigate(['/recruiter/jobs', job.id], {
+      queryParams: { candidateId: candidate.id }
+    });
   }
 
   createNewJob() {
     this.router.navigate(['/recruiter/create']);
   }
 
-  hasBehavioralCheck(job: JobResponse): boolean {
+  hasBehavioralCheck(job: JobOverviewItem): boolean {
     return !!(job.assessment && job.assessment.questions && job.assessment.questions.length > 0);
+  }
+
+  getScoreColor(score?: number): string {
+    if (score === undefined || score === null) return 'text-slate-600 bg-slate-100 border-slate-200';
+    if (score >= 80) return 'text-emerald-700 bg-emerald-50 border-emerald-200';
+    if (score >= 65) return 'text-indigo-700 bg-indigo-50 border-indigo-200';
+    return 'text-amber-700 bg-amber-50 border-amber-200';
+  }
+
+  getInitials(name?: string): string {
+    if (!name) return 'C';
+    const parts = name.trim().split(/\s+/);
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+    return name.slice(0, 2).toUpperCase();
   }
 }

@@ -101,7 +101,19 @@ export class ApplyComponent implements OnInit {
     });
   }
 
+  removeParsedSkill(skillToRemove: string) {
+    const current = this.initialAssessment();
+    if (current && current.skills && Array.isArray(current.skills)) {
+      const updatedSkills = current.skills.filter((s: string) => s !== skillToRemove);
+      this.initialAssessment.set({
+        ...current,
+        skills: updatedSkills
+      });
+    }
+  }
+
   proceedToAssessment() {
+
     if (!this.selectedFile()) {
       alert('Please attach your PDF resume to proceed.');
       return;

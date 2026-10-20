@@ -10,9 +10,15 @@ export const recruiterRoutes: Routes = [
     component: Login
   },
   {
+    path: 'forgot-password',
+    loadComponent: () => import('../shared/forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent),
+    data: { role: 'recruiter' }
+  },
+  {
     path: 'signup',
     loadComponent: () => import('./signup/signup.component').then(m => m.SignupComponent)
   },
+
   {
     path: '',
     component: RecruiterLayout,
@@ -34,6 +40,14 @@ export const recruiterRoutes: Routes = [
       {
         path: 'jobs',
         loadComponent: () => import('./job-list/job-list.component').then(m => m.RecruiterJobListComponent)
+      },
+      {
+        path: 'candidates',
+        loadComponent: () => import('./candidates/candidates.component').then(m => m.RecruiterCandidatesComponent)
+      },
+      {
+        path: 'interviews',
+        loadComponent: () => import('./interviews/interviews.component').then(m => m.RecruiterInterviewsComponent)
       },
       {
         path: 'jobs/:jobId/details',

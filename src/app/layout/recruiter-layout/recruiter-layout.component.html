@@ -21,6 +21,14 @@
             class="px-3.5 py-2 rounded-lg text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
             Job Listings
           </a>
+          <a routerLink="/recruiter/candidates" routerLinkActive="bg-sky-50 text-sky-700 font-semibold"
+            class="px-3.5 py-2 rounded-lg text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+            Candidates
+          </a>
+          <a routerLink="/recruiter/interviews" routerLinkActive="bg-sky-50 text-sky-700 font-semibold"
+            class="px-3.5 py-2 rounded-lg text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+            Interviews
+          </a>
           <a routerLink="/recruiter/create" routerLinkActive="bg-sky-50 text-sky-700 font-semibold"
             class="px-3.5 py-2 rounded-lg text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
             + Post Job
@@ -73,6 +81,24 @@
 
             <!-- Menu Links -->
             <div class="py-1">
+              <!-- Candidates Directory -->
+              <button (click)="navigateTo('/recruiter/candidates')" type="button"
+                class="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 hover:text-sky-700 flex items-center gap-2.5 transition-colors cursor-pointer">
+                <svg class="w-4 h-4 text-slate-400 group-hover:text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                Candidates Directory
+              </button>
+
+              <!-- Scheduled Interviews -->
+              <button (click)="navigateTo('/recruiter/interviews')" type="button"
+                class="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 hover:text-sky-700 flex items-center gap-2.5 transition-colors cursor-pointer">
+                <svg class="w-4 h-4 text-slate-400 group-hover:text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                Scheduled Interviews
+              </button>
+
               <!-- Company Profile -->
               <button (click)="navigateTo('/recruiter/profile')" type="button"
                 class="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 hover:text-sky-700 flex items-center gap-2.5 transition-colors cursor-pointer">

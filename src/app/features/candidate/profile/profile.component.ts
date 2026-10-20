@@ -31,6 +31,11 @@ export class ProfileComponent implements OnInit {
   education = '';
   profileImage = '';
 
+  // Social & Professional Profiles
+  linkedinUrl = '';
+  facebookUrl = '';
+  tiktokUrl = '';
+
   // Technical Skills State
   selectedSkills: string[] = [];
   availableSkills: string[] = [];
@@ -79,6 +84,9 @@ export class ProfileComponent implements OnInit {
       if (user.profileImage || user.profile_image) {
         this.profileImage = user.profileImage || user.profile_image;
       }
+      if (user.linkedinUrl || user.linkedin_url) this.linkedinUrl = user.linkedinUrl || user.linkedin_url;
+      if (user.facebookUrl || user.facebook_url) this.facebookUrl = user.facebookUrl || user.facebook_url;
+      if (user.tiktokUrl || user.tiktok_url) this.tiktokUrl = user.tiktokUrl || user.tiktok_url;
 
       if (user.skills && Array.isArray(user.skills)) {
         this.selectedSkills = [...user.skills];
@@ -143,7 +151,12 @@ export class ProfileComponent implements OnInit {
 
   removeSkill(skill: string) {
     this.selectedSkills = this.selectedSkills.filter(s => s !== skill);
+    this.availableSkills = this.availableSkills.filter(s => s !== skill);
+    if (this.initialAssessment && Array.isArray(this.initialAssessment.skills)) {
+      this.initialAssessment.skills = this.initialAssessment.skills.filter((s: string) => s !== skill);
+    }
   }
+
 
   toggleSkill(skill: string) {
     if (this.selectedSkills.includes(skill)) {
@@ -372,6 +385,9 @@ export class ProfileComponent implements OnInit {
       work_arrangement: this.workArrangement,
       min_salary: this.minSalary,
       profile_image: this.profileImage,
+      linkedin_url: this.linkedinUrl.trim(),
+      facebook_url: this.facebookUrl.trim(),
+      tiktok_url: this.tiktokUrl.trim(),
       background: this.initialAssessment
     };
 
@@ -404,6 +420,9 @@ export class ProfileComponent implements OnInit {
           workArrangement: res.work_arrangement || payload.work_arrangement,
           minSalary: payload.min_salary,
           profileImage: this.profileImage,
+          linkedinUrl: res.linkedin_url || payload.linkedin_url,
+          facebookUrl: res.facebook_url || payload.facebook_url,
+          tiktokUrl: res.tiktok_url || payload.tiktok_url,
           hasSetupProfile: true,
           initialAssessment: this.initialAssessment
         });

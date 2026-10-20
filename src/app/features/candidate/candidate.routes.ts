@@ -10,9 +10,15 @@ export const candidateRoutes: Routes = [
     component: Login
   },
   {
+    path: 'forgot-password',
+    loadComponent: () => import('../shared/forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent),
+    data: { role: 'candidate' }
+  },
+  {
     path: 'signup',
     loadComponent: () => import('./signup/signup.component').then(m => m.SignupComponent)
   },
+
   {
     path: '',
     component: CandidateLayout,
@@ -22,6 +28,10 @@ export const candidateRoutes: Routes = [
       {
         path: 'dashboard',
         loadComponent: () => import('./job-board/job-board.component').then(m => m.JobBoardComponent)
+      },
+      {
+        path: 'applied-jobs',
+        loadComponent: () => import('./applied-jobs/applied-jobs.component').then(m => m.CandidateAppliedJobsComponent)
       },
       {
         path: 'onboarding',

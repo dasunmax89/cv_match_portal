@@ -2,7 +2,19 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, from } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { ParsedCriteria, CandidateMatch, JobResponse, PublicSJTAssessment, CandidateAnswer } from '../models/candidate.models';
+import { 
+  ParsedCriteria, 
+  CandidateMatch, 
+  JobResponse, 
+  PublicSJTAssessment, 
+  CandidateAnswer, 
+  JobOverviewItem, 
+  CandidateDirectoryItem, 
+  CandidateApplication,
+  RecruiterInterviewsOverviewResponse,
+  InterviewDecisionRequest,
+  SaveInterviewNotesRequest
+} from '../models/candidate.models';
 import { hashPasswordClient } from '../utils/crypto.utils';
 
 
@@ -104,24 +116,32 @@ export class ApiService {
     return this.http.post(`${this.baseUrl}/auth/resend-otp`, { email });
   }
 
+  requestPasswordReset(email: string, role?: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/auth/forgot-password/request`, { email, role });
+  }
+
+  resendPasswordResetOtp(email: string, role?: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/auth/forgot-password/resend-otp`, { email, role });
+  }
+
+  resetPassword(payload: { email: string; code: string; newPassword: string }): Observable<any> {
+    const rawPass = payload.newPassword || '';
+    return from(hashPasswordClient(rawPass)).pipe(
+      switchMap(passwordHash =>
+        this.http.post(`${this.baseUrl}/auth/forgot-password/reset`, {
+          email: payload.email,
+          code: payload.code,
+          password_hash: passwordHash
+        })
+      )
+    );
+  }
+
+
   authenticateUser(payload: { username: string; password_hash: string }): Observable<any> {
     return this.http.post(`${this.baseUrl}/users/authenticate`, payload);
   }
 
-  submitJob(jobType: string, payload: any = {}, file?: File, userId: string = 'anonymous'): Observable<any> {
-    const formData = new FormData();
-    formData.append('job_type', jobType);
-    formData.append('payload_json', JSON.stringify(payload));
-    formData.append('user_id', userId);
-    if (file) {
-      formData.append('file', file);
-    }
-    return this.http.post(`${this.baseUrl}/jobs/submit`, formData);
-  }
-
-  getJobStatus(jobId: string, userId: string = 'anonymous'): Observable<any> {
-    return this.http.get(`${this.baseUrl}/jobs/${jobId}?user_id=${userId}`);
-  }
 
   uploadJd(title: string | undefined, file: File): Observable<JobResponse> {
     const formData = new FormData();
@@ -134,6 +154,47 @@ export class ApiService {
 
   getRecruiterJobs(): Observable<JobResponse[]> {
     return this.http.get<JobResponse[]>(`${this.baseUrl}/recruiter/jobs`);
+  }
+
+  getRecruiterJobsOverview(): Observable<JobOverviewItem[]> {
+    return this.http.get<JobOverviewItem[]>(`${this.baseUrl}/recruiter/jobs-overview`);
+  }
+
+  getRecruiterCandidates(): Observable<CandidateDirectoryItem[]> {
+    return this.http.get<CandidateDirectoryItem[]>(`${this.baseUrl}/recruiter/candidates`);
+  }
+
+  getRecruiterInterviewsOverview(): Observable<RecruiterInterviewsOverviewResponse> {
+    return this.http.get<RecruiterInterviewsOverviewResponse>(`${this.baseUrl}/recruiter/interviews`);
+  }
+
+  submitInterviewDecision(
+    jobId: string,
+    matchId: string,
+    payload: InterviewDecisionRequest
+  ): Observable<any> {
+    return this.http.post<any>(
+      `${this.baseUrl}/recruiter/jobs/${jobId}/matches/${matchId}/interview-decision`,
+      payload
+    );
+  }
+
+  saveInterviewNotes(
+    jobId: string,
+    matchId: string,
+    payload: SaveInterviewNotesRequest
+  ): Observable<any> {
+    return this.http.post<any>(
+      `${this.baseUrl}/recruiter/jobs/${jobId}/matches/${matchId}/interview-notes`,
+      payload
+    );
+  }
+
+  getCandidateAppliedJobs(email?: string): Observable<CandidateApplication[]> {
+    const url = email 
+      ? `${this.baseUrl}/candidate/applied-jobs?email=${encodeURIComponent(email)}`
+      : `${this.baseUrl}/candidate/applied-jobs`;
+    return this.http.get<CandidateApplication[]>(url);
   }
 
   getRecruiterJob(jobId: string): Observable<JobResponse> {
@@ -193,10 +254,33 @@ export class ApiService {
     return this.http.get<JobResponse>(`${this.baseUrl}/candidate/jobs/${jobId}/public`);
   }
 
-  updateMatchStatus(jobId: string, matchId: string, status: string): Observable<CandidateMatch> {
+  updateMatchStatus(
+    jobId: string, 
+    matchId: string, 
+    status: string,
+    interviewSchedule?: {
+      scheduled_at?: string;
+      location?: string;
+      custom_message?: string;
+    },
+    sensitivityThreshold?: number,
+    recruiterEmail?: string
+  ): Observable<CandidateMatch> {
+    const payload: any = { status };
+    if (interviewSchedule) {
+      if (interviewSchedule.scheduled_at) payload.scheduled_at = interviewSchedule.scheduled_at;
+      if (interviewSchedule.location) payload.location = interviewSchedule.location;
+      if (interviewSchedule.custom_message) payload.custom_message = interviewSchedule.custom_message;
+    }
+    if (sensitivityThreshold !== undefined && sensitivityThreshold !== null) {
+      payload.sensitivity_threshold = sensitivityThreshold;
+    }
+    if (recruiterEmail) {
+      payload.recruiter_email = recruiterEmail;
+    }
     return this.http.patch<CandidateMatch>(
       `${this.baseUrl}/recruiter/jobs/${jobId}/matches/${matchId}/status`,
-      { status }
+      payload
     );
   }
 
