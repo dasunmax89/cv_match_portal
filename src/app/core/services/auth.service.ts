@@ -53,6 +53,34 @@ export class AuthService {
     localStorage.setItem('recruiter_user', JSON.stringify(user));
   }
 
+  updateRecruiterSubscription(sub: any) {
+    const current = this.recruiterUser();
+    if (current) {
+      const updated = { ...current, subscription: sub };
+      this.loginRecruiter(updated);
+    }
+  }
+
+  isTrial(): boolean {
+    const sub = this.recruiterUser()?.subscription;
+    return !!(sub && sub.isTrial && sub.status === 'Active');
+  }
+
+  isPaymentDone(): boolean {
+    const sub = this.recruiterUser()?.subscription;
+    return !!(sub && sub.paymentDone);
+  }
+
+  isTrialExpired(): boolean {
+    const sub = this.recruiterUser()?.subscription;
+    return !!(sub && (sub.status === 'Expired' || (sub.daysRemaining <= 0 && !sub.paymentDone)));
+  }
+
+  trialDaysRemaining(): number {
+    const sub = this.recruiterUser()?.subscription;
+    return sub?.daysRemaining ?? 30;
+  }
+
   logoutRecruiter() {
     this.recruiterUser.set(null);
     localStorage.removeItem('recruiter_user');

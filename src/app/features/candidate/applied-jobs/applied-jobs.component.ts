@@ -4,7 +4,13 @@ import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../../core/services/api.service';
 import { AuthService } from '../../../core/services/auth.service';
-import { CandidateApplication } from '../../../core/models/candidate.models';
+import {
+  CandidateApplication,
+  ContractOffer,
+  POPULAR_CURRENCIES,
+  SignOfferRequest,
+  DeclineOfferRequest
+} from '../../../core/models/candidate.models';
 
 @Component({
   selector: 'app-candidate-applied-jobs',
@@ -20,8 +26,19 @@ export class CandidateAppliedJobsComponent implements OnInit {
   applications = signal<CandidateApplication[]>([]);
   isLoading = signal<boolean>(true);
   searchQuery = signal<string>('');
-  selectedStatusFilter = signal<'all' | 'interview' | 'shortlisted' | 'pending'>('all');
+  selectedStatusFilter = signal<'all' | 'interview' | 'shortlisted' | 'pending' | 'offers'>('all');
   selectedJobForModal = signal<CandidateApplication | null>(null);
+
+  // Contract Offer Review & E-Signature State
+  selectedOfferForModal = signal<CandidateApplication | null>(null);
+  legalSignatureName = signal<string>('');
+  agreeToOfferTerms = signal<boolean>(false);
+  declineReason = signal<string>('');
+  showDeclinePrompt = signal<boolean>(false);
+  isOfferSubmitting = signal<boolean>(false);
+  offerActionError = signal<string | null>(null);
+  offerActionSuccess = signal<string | null>(null);
+  popularCurrencies = POPULAR_CURRENCIES;
 
   ngOnInit() {
     this.fetchAppliedJobs();
@@ -56,6 +73,9 @@ export class CandidateAppliedJobsComponent implements OnInit {
       );
       if (!matchesSearch) return false;
 
+      if (filter === 'offers') {
+        return !!app.offer && app.offer.status !== 'Draft';
+      }
       if (filter === 'interview') {
         return !!app.interview?.scheduled_at;
       }
@@ -63,7 +83,7 @@ export class CandidateAppliedJobsComponent implements OnInit {
         return app.status?.toLowerCase() === 'shortlisted';
       }
       if (filter === 'pending') {
-        return !app.interview?.scheduled_at && app.status?.toLowerCase() !== 'shortlisted' && app.status?.toLowerCase() !== 'rejected';
+        return !app.interview?.scheduled_at && !app.offer && app.status?.toLowerCase() !== 'shortlisted' && app.status?.toLowerCase() !== 'rejected';
       }
       return true;
     });
@@ -71,6 +91,10 @@ export class CandidateAppliedJobsComponent implements OnInit {
 
   get totalApplicationsCount(): number {
     return this.applications().length;
+  }
+
+  get offersCount(): number {
+    return this.applications().filter(a => !!a.offer && a.offer.status === 'Offered').length;
   }
 
   get shortlistedCount(): number {
@@ -83,7 +107,7 @@ export class CandidateAppliedJobsComponent implements OnInit {
 
   get pendingCount(): number {
     return this.applications().filter(a => 
-      !a.interview?.scheduled_at && a.status?.toLowerCase() !== 'shortlisted' && a.status?.toLowerCase() !== 'rejected'
+      !a.interview?.scheduled_at && !a.offer && a.status?.toLowerCase() !== 'shortlisted' && a.status?.toLowerCase() !== 'rejected'
     ).length;
   }
 
@@ -95,7 +119,177 @@ export class CandidateAppliedJobsComponent implements OnInit {
     this.selectedJobForModal.set(null);
   }
 
-  getStatusBadgeClass(status?: string, hasInterview?: boolean): string {
+  // --- Contract Offer Review & E-Signature Handlers ---
+  openOfferModal(app: CandidateApplication) {
+    this.selectedOfferForModal.set(app);
+    this.offerActionError.set(null);
+    this.offerActionSuccess.set(null);
+    this.showDeclinePrompt.set(false);
+    this.declineReason.set('');
+    this.agreeToOfferTerms.set(false);
+
+    const user = this.authService.candidateUser();
+    const candidateName = user?.name || user?.candidateName || '';
+    this.legalSignatureName.set(app.offer?.signed_name || candidateName);
+  }
+
+  closeOfferModal() {
+    this.selectedOfferForModal.set(null);
+    this.offerActionError.set(null);
+    this.offerActionSuccess.set(null);
+    this.showDeclinePrompt.set(false);
+  }
+
+  submitSignOffer() {
+    const app = this.selectedOfferForModal();
+    if (!app || !app.id) return;
+
+    const signature = this.legalSignatureName().trim();
+    if (!signature) {
+      this.offerActionError.set('Please type your legal full name as your electronic signature.');
+      return;
+    }
+
+    if (!this.agreeToOfferTerms()) {
+      this.offerActionError.set('Please check the confirmation box to agree to the employment contract terms.');
+      return;
+    }
+
+    this.isOfferSubmitting.set(true);
+    this.offerActionError.set(null);
+
+    const user = this.authService.candidateUser();
+    const candidateEmail = user?.email || user?.candidateEmail || undefined;
+
+    const payload: SignOfferRequest = {
+      legal_name: signature,
+      signed_name: signature,
+      candidate_email: candidateEmail
+    };
+
+    this.apiService.candidateSignOffer(app.id, payload).subscribe({
+      next: (updatedOffer) => {
+        this.isOfferSubmitting.set(false);
+        this.offerActionSuccess.set('🎉 Congratulations! You have successfully signed and accepted the contract offer!');
+
+        // Update local application record
+        const updatedList = this.applications().map(a => {
+          if (a.id === app.id) {
+            return {
+              ...a,
+              status: 'Placed',
+              offer: updatedOffer
+            };
+          }
+          return a;
+        });
+        this.applications.set(updatedList);
+
+        // Update active modal reference
+        const currentModal = this.selectedOfferForModal();
+        if (currentModal && currentModal.id === app.id) {
+          this.selectedOfferForModal.set({
+            ...currentModal,
+            status: 'Placed',
+            offer: updatedOffer
+          });
+        }
+      },
+      error: (err) => {
+        this.isOfferSubmitting.set(false);
+        console.error('Failed to sign offer:', err);
+        const detail = err?.error?.detail;
+        let errorMsg = 'Failed to sign the offer. Please try again or contact your recruiter.';
+        if (typeof detail === 'string') {
+          errorMsg = detail;
+        } else if (Array.isArray(detail)) {
+          errorMsg = detail.map((d: any) => d.msg || d.message || JSON.stringify(d)).join(', ');
+        } else if (err?.message) {
+          errorMsg = err.message;
+        }
+        this.offerActionError.set(errorMsg);
+      }
+    });
+  }
+
+  submitDeclineOffer() {
+    const app = this.selectedOfferForModal();
+    if (!app || !app.id) return;
+
+    this.isOfferSubmitting.set(true);
+    this.offerActionError.set(null);
+
+    const user = this.authService.candidateUser();
+    const candidateEmail = user?.email || user?.candidateEmail || undefined;
+
+    const payload: DeclineOfferRequest = {
+      reason: this.declineReason().trim() || undefined,
+      candidate_email: candidateEmail
+    };
+
+    this.apiService.candidateDeclineOffer(app.id, payload).subscribe({
+      next: (updatedOffer) => {
+        this.isOfferSubmitting.set(false);
+        this.offerActionSuccess.set('You have declined this offer. Your recruiter and the hiring company have been notified.');
+
+        // Update local application record
+        const updatedList = this.applications().map(a => {
+          if (a.id === app.id) {
+            return {
+              ...a,
+              status: 'Rejected',
+              offer: updatedOffer
+            };
+          }
+          return a;
+        });
+        this.applications.set(updatedList);
+
+        setTimeout(() => {
+          this.closeOfferModal();
+        }, 1800);
+      },
+      error: (err) => {
+        this.isOfferSubmitting.set(false);
+        console.error('Failed to decline offer:', err);
+        const detail = err?.error?.detail;
+        let errorMsg = 'Failed to record decision. Please try again.';
+        if (typeof detail === 'string') {
+          errorMsg = detail;
+        } else if (Array.isArray(detail)) {
+          errorMsg = detail.map((d: any) => d.msg || d.message || JSON.stringify(d)).join(', ');
+        } else if (err?.message) {
+          errorMsg = err.message;
+        }
+        this.offerActionError.set(errorMsg);
+      }
+    });
+  }
+
+  getCurrencySymbol(code?: string): string {
+    const found = this.popularCurrencies.find(c => c.code === (code || '').toUpperCase());
+    return found ? found.symbol : (code || 'CHF');
+  }
+
+  formatCurrency(val?: number, currencyCode: string = 'CHF'): string {
+    if (val === undefined || val === null) return '-';
+    const sym = this.getCurrencySymbol(currencyCode);
+    return `${sym} ${val.toLocaleString()}`;
+  }
+
+  getStatusBadgeClass(status?: string, hasInterview?: boolean, offer?: ContractOffer): string {
+    if (offer?.status === 'Accepted' || status === 'Placed') {
+      return 'bg-emerald-100 text-emerald-900 border-emerald-400 font-extrabold shadow-2xs';
+    }
+    if (offer?.status === 'Offered' || status === 'Offered') {
+      return 'bg-gradient-to-r from-emerald-50 to-teal-50 text-emerald-800 border-emerald-300 font-black animate-pulse';
+    }
+    if (offer?.status === 'Draft' || status === 'Offer Drafting') {
+      return 'bg-sky-50 text-sky-800 border-sky-300 font-semibold';
+    }
+    if (offer?.status === 'Declined') {
+      return 'bg-slate-150 text-slate-700 border-slate-300 font-semibold';
+    }
     if (status === 'Interview Passed') return 'bg-emerald-50 text-emerald-800 border-emerald-300 font-bold';
     if (hasInterview) return 'bg-sky-50 text-sky-800 border-sky-300';
     if (!status) return 'bg-slate-100 text-slate-700 border-slate-200';
@@ -108,6 +302,10 @@ export class CandidateAppliedJobsComponent implements OnInit {
   }
 
   getStatusLabel(app: CandidateApplication): string {
+    if (app.offer?.status === 'Accepted' || app.status === 'Placed') return 'Contract Signed ✓';
+    if (app.offer?.status === 'Offered' || app.status === 'Offered') return '🎉 Contract Offered!';
+    if (app.offer?.status === 'Draft' || app.status === 'Offer Drafting') return 'Offer In Preparation 📝';
+    if (app.offer?.status === 'Declined') return 'Offer Declined';
     if (app.status === 'Interview Passed' || app.interview?.outcome === 'Passed') return 'Interview Passed ✓';
     if (app.status === 'Rejected' && app.interview?.outcome === 'Failed') return 'Interview Concluded';
     if (app.interview?.scheduled_at) return 'Interview Scheduled';
@@ -138,3 +336,4 @@ export class CandidateAppliedJobsComponent implements OnInit {
     return s.startsWith('http://') || s.startsWith('https://') || s.includes('maps.google') || s.includes('goo.gl');
   }
 }
+

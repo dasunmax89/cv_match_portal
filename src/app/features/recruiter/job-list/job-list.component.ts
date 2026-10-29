@@ -95,10 +95,10 @@ export class RecruiterJobListComponent implements OnInit {
   }
 
   getScoreColor(score?: number): string {
-    if (score === undefined || score === null) return 'text-slate-600 bg-slate-100 border-slate-200';
-    if (score >= 80) return 'text-emerald-700 bg-emerald-50 border-emerald-200';
-    if (score >= 65) return 'text-indigo-700 bg-indigo-50 border-indigo-200';
-    return 'text-amber-700 bg-amber-50 border-amber-200';
+    if (score === undefined || score === null) return 'text-[#4E6770] bg-[#F8FBFA] border-[#D5EDED]';
+    if (score >= 80) return 'text-[#244653] bg-[#CBF1F5] border-[#71C9CE] font-bold';
+    if (score >= 65) return 'text-[#244653] bg-[#E3FDFD] border-[#A6E3E9] font-semibold';
+    return 'text-[#172B32] bg-amber-50 border-amber-200';
   }
 
   getInitials(name?: string): string {

@@ -10,13 +10,18 @@ import {
   ScheduledInterviewItem,
   InterviewResult,
   InterviewDecisionRequest,
-  SaveInterviewNotesRequest
+  SaveInterviewNotesRequest,
+  POPULAR_CURRENCIES,
+  CurrencyOption,
+  CreateOfferRequest,
+  ContractOffer
 } from '../../../core/models/candidate.models';
+import { OfferDraftModalComponent } from '../offer-draft-modal/offer-draft-modal.component';
 
 @Component({
   selector: 'app-recruiter-interviews',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, OfferDraftModalComponent],
   templateUrl: './interviews.component.html'
 })
 export class RecruiterInterviewsComponent implements OnInit {
@@ -27,7 +32,7 @@ export class RecruiterInterviewsComponent implements OnInit {
   isLoading = signal<boolean>(true);
   isActionLoading = signal<boolean>(false);
   searchQuery = signal<string>('');
-  activeFilter = signal<'all' | 'today_upcoming' | 'needs_eval' | 'passed' | 'failed'>('all');
+  activeFilter = signal<'all' | 'today_upcoming' | 'needs_eval' | 'passed' | 'offers_drafting' | 'offers_extended' | 'offers_accepted' | 'failed'>('all');
 
   overviewData = signal<RecruiterInterviewsOverviewResponse | null>(null);
   expandedJobs = signal<Set<string>>(new Set());
@@ -52,6 +57,11 @@ export class RecruiterInterviewsComponent implements OnInit {
   notifyCandidate = signal<boolean>(true);
   decisionError = signal<string | null>(null);
   decisionSuccess = signal<string | null>(null);
+
+  // Contract Offer Modal State
+  popularCurrencies = POPULAR_CURRENCIES;
+  isOfferDrawerOpen = signal<boolean>(false);
+  offerInterview = signal<ScheduledInterviewItem | null>(null);
 
   ngOnInit() {
     this.fetchOverview();
@@ -110,6 +120,15 @@ export class RecruiterInterviewsComponent implements OnInit {
         }
         if (filter === 'passed') {
           return isPassed;
+        }
+        if (filter === 'offers_drafting') {
+          return item.offer?.status === 'Draft' || item.status === 'Offer Drafting';
+        }
+        if (filter === 'offers_extended') {
+          return item.offer?.status === 'Offered' || item.status === 'Offer Extended' || item.status === 'Offered';
+        }
+        if (filter === 'offers_accepted') {
+          return item.offer?.status === 'Accepted' || item.status === 'Contract Signed';
         }
         if (filter === 'failed') {
           return isFailed;
@@ -267,7 +286,7 @@ export class RecruiterInterviewsComponent implements OnInit {
   }
 
   // Confirm Decision
-  confirmDecision() {
+  confirmDecision(advanceToOffer: boolean = false) {
     const item = this.selectedInterview();
     if (!item) return;
 
@@ -297,11 +316,21 @@ export class RecruiterInterviewsComponent implements OnInit {
         this.updateLocalInterviewData(item.jobId, item.id, updatedMatch);
         this.closeEvaluationDrawer();
         this.fetchOverview(); // Refresh counts and groups
+
+        if (advanceToOffer && payload.outcome === 'Passed') {
+          const updatedItem: ScheduledInterviewItem = {
+            ...item,
+            status: updatedMatch.status || 'Interview Passed',
+            interview: updatedMatch.interview || item.interview,
+            offer: updatedMatch.offer || item.offer
+          };
+          this.openOfferDrawer(updatedItem);
+        }
       },
       error: (err) => {
         this.isActionLoading.set(false);
         console.error('Failed to submit interview decision', err);
-        this.decisionError.set(err?.error?.detail || 'Failed to submit decision. Please try again.');
+        this.decisionError.set(err?.error?.detail || err?.message || 'Failed to submit decision. Please try again.');
       }
     });
   }
@@ -317,7 +346,8 @@ export class RecruiterInterviewsComponent implements OnInit {
         return {
           ...iv,
           status: updatedDoc.status || iv.status,
-          interview: updatedDoc.interview || iv.interview
+          interview: updatedDoc.interview || iv.interview,
+          offer: updatedDoc.offer !== undefined ? updatedDoc.offer : iv.offer
         };
       });
       return {
@@ -335,7 +365,17 @@ export class RecruiterInterviewsComponent implements OnInit {
       this.selectedInterview.set({
         ...this.selectedInterview()!,
         status: updatedDoc.status || this.selectedInterview()!.status,
-        interview: updatedDoc.interview || this.selectedInterview()!.interview
+        interview: updatedDoc.interview || this.selectedInterview()!.interview,
+        offer: updatedDoc.offer !== undefined ? updatedDoc.offer : this.selectedInterview()!.offer
+      });
+    }
+
+    if (this.offerInterview()?.id === matchId) {
+      this.offerInterview.set({
+        ...this.offerInterview()!,
+        status: updatedDoc.status || this.offerInterview()!.status,
+        interview: updatedDoc.interview || this.offerInterview()!.interview,
+        offer: updatedDoc.offer !== undefined ? updatedDoc.offer : this.offerInterview()!.offer
       });
     }
   }
@@ -381,17 +421,47 @@ export class RecruiterInterviewsComponent implements OnInit {
   }
 
   getOutcomeInfo(item: ScheduledInterviewItem): { label: string; css: string; icon: string } {
+    const offerStatus = item.offer?.status;
+    if (offerStatus === 'Accepted' || item.status === 'Contract Signed') {
+      return {
+        label: 'Contract Signed',
+        css: 'bg-emerald-100 text-emerald-900 border-emerald-300 font-extrabold',
+        icon: '✓'
+      };
+    }
+    if (offerStatus === 'Offered' || item.status === 'Offer Extended' || item.status === 'Offered') {
+      return {
+        label: 'Offer Extended',
+        css: 'bg-indigo-50 text-indigo-800 border-indigo-300 font-bold',
+        icon: 'extended_rec.svg'
+      };
+    }
+    if (offerStatus === 'Draft' || item.status === 'Offer Drafting') {
+      return {
+        label: 'Offer Drafting',
+        css: 'bg-sky-50 text-sky-800 border-sky-300 font-bold',
+        icon: '📝'
+      };
+    }
+    if (offerStatus === 'Declined') {
+      return {
+        label: 'Offer Declined',
+        css: 'bg-rose-50 text-rose-800 border-rose-300 font-semibold',
+        icon: '✕'
+      };
+    }
+
     const outcome = item.interview?.outcome;
     const status = item.status;
 
-    if (outcome === 'Passed' || status === 'Interview Passed') {
+    if (outcome === 'Passed' || status === 'Interview Passed' || status === 'Passed') {
       return {
         label: 'Passed ✓',
         css: 'bg-emerald-50 text-emerald-800 border-emerald-300 font-bold',
         icon: '✓'
       };
     }
-    if (outcome === 'Failed' || status === 'Rejected') {
+    if (outcome === 'Failed' || status === 'Rejected' || status === 'Interview Failed') {
       return {
         label: 'Unsuccessful',
         css: 'bg-rose-50 text-rose-700 border-rose-200 font-semibold',
@@ -402,7 +472,7 @@ export class RecruiterInterviewsComponent implements OnInit {
       return {
         label: 'Awaiting Results',
         css: 'bg-amber-50 text-amber-800 border-amber-300 font-bold animate-pulse',
-        icon: '⏳'
+        icon: 'feedback_rec.svg'
       };
     }
     if (this.isToday(item.interview?.scheduled_at)) {
@@ -433,5 +503,44 @@ export class RecruiterInterviewsComponent implements OnInit {
       return (parts[0][0] + parts[1][0]).toUpperCase();
     }
     return name.slice(0, 2).toUpperCase();
+  }
+
+  // --- Contract Offer Actions ---
+  openOfferDrawer(item: ScheduledInterviewItem, event?: MouseEvent) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    // Cleanly close evaluation drawer to prevent backdrop overlay conflict
+    if (this.isDrawerOpen()) {
+      this.closeEvaluationDrawer();
+    }
+
+    this.offerInterview.set(item);
+    this.isOfferDrawerOpen.set(true);
+  }
+
+  closeOfferDrawer() {
+    this.isOfferDrawerOpen.set(false);
+    this.offerInterview.set(null);
+  }
+
+  onOfferSaved(event: { match: any; isDraft: boolean }) {
+    const item = this.offerInterview();
+    if (item && event.match) {
+      this.updateLocalInterviewData(item.jobId, item.id, event.match);
+      this.fetchOverview();
+    }
+  }
+
+  getCurrencySymbol(code: string): string {
+    const found = this.popularCurrencies.find(c => c.code === (code || '').toUpperCase());
+    return found ? found.symbol : (code || 'CHF');
+  }
+
+  formatCurrencyDisplay(val?: number, currencyCode: string = 'CHF'): string {
+    if (val === undefined || val === null) return '-';
+    const sym = this.getCurrencySymbol(currencyCode);
+    return `${sym} ${val.toLocaleString()}`;
   }
 }

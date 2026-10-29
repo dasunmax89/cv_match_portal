@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink, Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { ApiService } from '../../../core/services/api.service';
+import { GoogleAuthService } from '../../../core/services/google-auth.service';
 
 @Component({
   selector: 'app-candidate-signup',
@@ -15,6 +16,7 @@ import { ApiService } from '../../../core/services/api.service';
 export class SignupComponent {
   private authService = inject(AuthService);
   private apiService = inject(ApiService);
+  private googleAuthService = inject(GoogleAuthService);
   private router = inject(Router);
 
   fullName = '';
@@ -22,6 +24,42 @@ export class SignupComponent {
   password = '';
   errorMessage = '';
   isLoading = false;
+
+  onGoogleSignUp() {
+    this.isLoading = true;
+    this.errorMessage = '';
+    this.googleAuthService.signInWithPopup('candidate')
+      .then(authRes => {
+        const obs = authRes.credential
+          ? this.apiService.loginWithGoogle(authRes.credential, 'candidate')
+          : this.apiService.loginWithGoogle('', 'candidate', authRes.accessToken);
+
+        obs.subscribe({
+          next: (res) => {
+            this.isLoading = false;
+            const u = res?.user || {};
+            const fullName = u.full_name || u.fullName || 'Candidate';
+            this.authService.loginCandidate({
+              ...u,
+              email: u.email,
+              firstName: u.first_name || (fullName.split(' ')[0]),
+              lastName: u.last_name || (fullName.split(' ').slice(1).join(' ')),
+              fullName: fullName,
+              token: res?.access_token
+            });
+            this.router.navigate(['/candidate/onboarding']);
+          },
+          error: (err) => {
+            this.isLoading = false;
+            this.errorMessage = err?.error?.detail || err?.message || 'Google registration failed. Please try again.';
+          }
+        });
+      })
+      .catch(err => {
+        this.isLoading = false;
+        this.errorMessage = err?.message || 'Google sign-up was cancelled or encountered an error.';
+      });
+  }
 
   onSubmit() {
     if (!this.email || !this.password || !this.fullName) {

@@ -2,10 +2,10 @@
 
   <!-- Header Section -->
   <div
-    class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80">
+    class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-white p-6 rounded-2xl shadow-xs border border-[#D5EDED]">
     <div>
       <div class="flex items-center space-x-3">
-        <span class="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl">
+        <span class="p-2.5 bg-[#CBF1F5] text-[#244653] border border-[#A6E3E9] rounded-xl">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
@@ -13,8 +13,8 @@
           </svg>
         </span>
         <div>
-          <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Recruiter Job Postings</h1>
-          <p class="text-sm text-slate-500 mt-0.5">Manage job requisitions, view AI-extracted requirements, and track
+          <h1 class="text-2xl font-extrabold text-[#172B32] tracking-tight">Recruiter Job Postings</h1>
+          <p class="text-sm text-[#4E6770] mt-0.5">Manage job requisitions, view AI-extracted requirements, and track
             candidate evaluations.</p>
         </div>
       </div>
@@ -22,16 +22,16 @@
 
     <div class="flex items-center space-x-3">
       <a routerLink="/recruiter/candidates"
-        class="inline-flex items-center justify-center px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-semibold rounded-xl text-sm transition-colors shadow-2xs">
-        <svg class="w-4 h-4 mr-1.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        class="inline-flex items-center justify-center px-4 py-2.5 bg-white hover:bg-[#F8FBFA] text-[#172B32] border border-[#D5EDED] hover:border-[#71C9CE] font-semibold rounded-xl text-sm transition-colors shadow-2xs">
+        <svg class="w-4 h-4 mr-1.5 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
             d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
         </svg>
         Candidates Directory
       </a>
       <button (click)="createNewJob()"
-        class="inline-flex items-center justify-center px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white font-semibold rounded-xl shadow-md shadow-indigo-500/20 hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5">
-        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        class="inline-flex items-center justify-center px-5 py-2.5 bg-[#244653] hover:bg-[#1B353F] text-white font-semibold rounded-xl shadow-xs transition-all duration-200 cursor-pointer focus-visible:ring-2 focus-visible:ring-[#71C9CE]">
+        <svg class="w-5 h-5 mr-2 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
         </svg>
         Post New Job
@@ -43,18 +43,18 @@
   <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
     <div class="relative w-full sm:w-96">
       <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-        <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-5 h-5 text-[#4E6770]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
         </svg>
       </div>
       <input type="text" [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)"
         placeholder="Search by job title, skill, or applicant name..."
-        class="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm">
+        class="w-full pl-10 pr-4 py-2.5 bg-white border border-[#D5EDED] rounded-xl text-[#172B32] placeholder-[#4E6770]/60 focus:outline-none focus:ring-2 focus:ring-[#71C9CE] focus:border-[#71C9CE] transition-all text-sm shadow-2xs">
     </div>
 
-    <div class="text-sm font-medium text-slate-500 self-end sm:self-auto">
-      Showing <span class="text-slate-900 font-bold">{{ filteredJobs.length }}</span> {{ filteredJobs.length === 1 ?
+    <div class="text-sm font-medium text-[#4E6770] self-end sm:self-auto">
+      Showing <span class="text-[#172B32] font-bold">{{ filteredJobs.length }}</span> {{ filteredJobs.length === 1 ?
       'job' : 'jobs' }}
     </div>
   </div>
@@ -63,32 +63,32 @@
   @if (isLoading()) {
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     @for (item of [1,2,3,4,5,6]; track item) {
-    <div class="bg-white p-6 rounded-2xl border border-slate-200 animate-pulse space-y-4">
-      <div class="h-6 bg-slate-200 rounded w-3/4"></div>
-      <div class="h-4 bg-slate-150 rounded w-1/2"></div>
+    <div class="bg-white p-6 rounded-2xl border border-[#D5EDED] animate-pulse space-y-4">
+      <div class="h-6 bg-[#CBF1F5]/40 rounded w-3/4"></div>
+      <div class="h-4 bg-[#E3FDFD] rounded w-1/2"></div>
       <div class="flex gap-2 pt-2">
-        <div class="h-6 bg-slate-200 rounded-full w-16"></div>
-        <div class="h-6 bg-slate-200 rounded-full w-20"></div>
+        <div class="h-6 bg-[#D5EDED] rounded-full w-16"></div>
+        <div class="h-6 bg-[#D5EDED] rounded-full w-20"></div>
       </div>
     </div>
     }
   </div>
   } @else if (filteredJobs.length === 0) {
   <!-- Empty State -->
-  <div class="bg-white border border-slate-200 rounded-2xl p-12 text-center max-w-lg mx-auto my-8">
-    <div class="w-16 h-16 bg-indigo-50 text-indigo-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
-      <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <div class="bg-white border border-[#D5EDED] rounded-2xl p-12 text-center max-w-lg mx-auto my-8 shadow-xs">
+    <div class="w-16 h-16 bg-[#E3FDFD] text-[#244653] border border-[#A6E3E9] rounded-2xl flex items-center justify-center mx-auto mb-4">
+      <svg class="w-8 h-8 text-[#244653]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
           d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
         </path>
       </svg>
     </div>
-    <h3 class="text-lg font-bold text-slate-900 mb-1">No Jobs Found</h3>
-    <p class="text-slate-500 text-sm mb-6">
+    <h3 class="text-lg font-bold text-[#172B32] mb-1">No Jobs Found</h3>
+    <p class="text-[#4E6770] text-sm mb-6">
       {{ searchQuery() ? 'No job postings match your search term.' : 'You haven\'t posted any job descriptions yet.' }}
     </p>
     <button (click)="createNewJob()"
-      class="px-5 py-2.5 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition-colors">
+      class="px-5 py-2.5 bg-[#244653] text-white rounded-xl text-sm font-semibold hover:bg-[#1B353F] transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-[#71C9CE]">
       Upload First Job Description
     </button>
   </div>
@@ -97,29 +97,29 @@
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     @for (job of filteredJobs; track job.id) {
     <div (click)="openJobDetails(job)"
-      class="group relative bg-white rounded-2xl border border-slate-200/90 hover:border-indigo-400/80 p-6 shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col justify-between overflow-hidden">
+      class="group relative bg-white rounded-2xl border border-[#D5EDED] hover:border-[#71C9CE] p-6 shadow-2xs hover:shadow-md transition-all duration-300 cursor-pointer flex flex-col justify-between overflow-hidden">
 
       <div class="space-y-4">
         <!-- Header Row -->
         <div class="flex items-start justify-between gap-3">
-          <h2 class="text-lg font-bold text-slate-900 group-hover:text-indigo-600 transition-colors line-clamp-1">
+          <h2 class="text-lg font-bold text-[#172B32] group-hover:text-[#244653] transition-colors line-clamp-1">
             {{ job.title || job.criteria?.title }}
           </h2>
           <div class="flex items-center gap-1.5 shrink-0">
             <span
-              class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 shrink-0">
+              class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#CBF1F5] text-[#244653] border border-[#71C9CE] shrink-0">
               Active
             </span>
           </div>
         </div>
 
         <!-- Experience & Level Subtitle -->
-        <div class="flex items-center text-xs font-medium text-slate-500 space-x-2">
+        <div class="flex items-center text-xs font-medium text-[#4E6770] space-x-2">
           @if (hasBehavioralCheck(job)) {
           <span
-            class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-purple-50 text-purple-700 border border-purple-200/80 shadow-xs"
+            class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold bg-[#E3FDFD] text-[#244653] border border-[#A6E3E9] shadow-2xs"
             title="Behavioral Check Configured">
-            <svg class="w-3.5 h-3.5 text-purple-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-3.5 h-3.5 text-[#244653] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
@@ -127,7 +127,7 @@
           </span>
           }
           <span class="inline-flex items-center">
-            <svg class="w-3.5 h-3.5 mr-1 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-3.5 h-3.5 mr-1 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
               </path>
@@ -140,16 +140,16 @@
 
         <!-- Required Skills Chips -->
         <div>
-          <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Key Skills</p>
+          <p class="text-xs font-bold text-[#4E6770] uppercase tracking-wider mb-2">Key Skills</p>
           <div class="flex flex-wrap gap-1.5">
             @for (skill of (job.criteria?.required_skills || []).slice(0, 4); track skill) {
             <span
-              class="bg-indigo-50/70 text-indigo-700 border border-indigo-100 text-xs px-2.5 py-1 rounded-lg font-medium">
+              class="bg-[#E3FDFD] text-[#244653] border border-[#A6E3E9] text-xs px-2.5 py-1 rounded-lg font-medium">
               {{ skill }}
             </span>
             }
             @if ((job.criteria?.required_skills?.length || 0) > 4) {
-            <span class="bg-slate-100 text-slate-600 text-xs px-2 py-1 rounded-lg font-medium">
+            <span class="bg-[#F8FBFA] text-[#4E6770] border border-[#D5EDED] text-xs px-2 py-1 rounded-lg font-medium">
               +{{ (job.criteria?.required_skills?.length || 0) - 4 }} more
             </span>
             }
@@ -158,70 +158,70 @@
 
         <!-- Responsibilities Teaser -->
         @if (job.criteria?.core_responsibilities?.length) {
-        <div class="pt-2 border-t border-slate-100">
-          <p class="text-xs text-slate-500 line-clamp-2 italic">
-            "{{ job.criteria?.core_responsibilities?.[0] }}"
+        <div class="pt-2 border-t border-[#D5EDED]">
+          <p class="text-xs text-[#4E6770] line-clamp-2 italic">
+            "{{ job.criteria.core_responsibilities[0] }}"
           </p>
         </div>
         }
 
         <!-- Applied Candidates Section -->
-        <div class="pt-3 border-t border-slate-100" (click)="$event.stopPropagation()">
+        <div class="pt-3 border-t border-[#D5EDED]" (click)="$event.stopPropagation()">
           <div class="flex items-center justify-between mb-2">
-            <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-              <svg class="w-3.5 h-3.5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <span class="text-xs font-bold text-[#172B32] flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
               Applied Candidates
               <span class="px-2 py-0.5 rounded-full text-[10px] font-bold"
-                [ngClass]="(job.applied_candidates.length || 0) > 0 ? 'bg-indigo-100 text-indigo-700' : 'bg-slate-100 text-slate-500'">
+                [ngClass]="(job.applied_candidates.length || 0) > 0 ? 'bg-[#CBF1F5] text-[#244653]' : 'bg-[#F8FBFA] text-[#4E6770] border border-[#D5EDED]'">
                 {{ job.applied_candidates.length || 0 }}
               </span>
             </span>
             @if ((job.applied_candidates.length || 0) > 0) {
-            <span class="text-[10px] text-slate-400 font-medium">Click candidate to view match</span>
+            <span class="text-[10px] text-[#4E6770] font-medium">Click candidate to view match</span>
             }
           </div>
 
           @if (!job.applied_candidates || job.applied_candidates.length === 0) {
-          <div class="p-3 rounded-xl bg-slate-50 border border-slate-100 text-center">
-            <p class="text-xs text-slate-400">No candidates applied yet.</p>
+          <div class="p-3 rounded-xl bg-[#F8FBFA] border border-[#D5EDED] text-center">
+            <p class="text-xs text-[#4E6770]">No candidates applied yet.</p>
           </div>
           } @else {
           <div class="space-y-1.5 max-h-48 overflow-y-auto pr-1">
             @for (cand of job.applied_candidates; track cand.id) {
             <div (click)="openCandidateMatching(job, cand, $event)"
-              class="p-2.5 rounded-xl bg-slate-50/90 hover:bg-indigo-50 border border-slate-200/80 hover:border-indigo-300 transition-all flex items-center justify-between gap-2.5 cursor-pointer group/item shadow-2xs">
+              class="p-2.5 rounded-xl bg-[#F8FBFA] hover:bg-[#E3FDFD] border border-[#D5EDED] hover:border-[#71C9CE] transition-all flex items-center justify-between gap-2.5 cursor-pointer group/item shadow-2xs">
               <div class="flex items-center gap-2 truncate">
                 <div
-                  class="w-7 h-7 rounded-full bg-gradient-to-br from-indigo-500 to-indigo-700 text-white font-bold text-[10px] flex items-center justify-center shrink-0 shadow-2xs">
+                  class="w-7 h-7 rounded-full bg-[#244653] text-white font-bold text-[10px] flex items-center justify-center shrink-0 shadow-2xs">
                   {{ getInitials(cand.candidateName) }}
                 </div>
                 <div class="truncate">
-                  <p class="text-xs font-bold text-slate-800 group-hover/item:text-indigo-600 truncate transition-colors">
+                  <p class="text-xs font-bold text-[#172B32] group-hover/item:text-[#244653] truncate transition-colors">
                     {{ cand.candidateName }}
                   </p>
-                  <p class="text-[10px] text-slate-400 truncate">{{ cand.candidateEmail }}</p>
+                  <p class="text-[10px] text-[#4E6770] truncate">{{ cand.candidateEmail }}</p>
                 </div>
               </div>
 
               <div class="flex items-center gap-1.5 shrink-0">
                 @if (cand.interview?.scheduled_at) {
                 <span
-                  class="px-1.5 py-0.5 rounded text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold flex items-center gap-0.5"
+                  class="px-1.5 py-0.5 rounded text-[10px] bg-[#CBF1F5] text-[#244653] border border-[#71C9CE] font-semibold flex items-center gap-0.5"
                   title="Interview Scheduled">
                   📅
                 </span>
                 }
                 @if (cand.evaluation?.overall_match_score !== undefined) {
-                <span class="px-2 py-0.5 rounded-full text-[10px] font-black border"
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold border"
                   [ngClass]="getScoreColor(cand.evaluation?.overall_match_score)">
                   {{ cand.evaluation?.overall_match_score }}%
                 </span>
                 }
                 <svg
-                  class="w-3.5 h-3.5 text-slate-300 group-hover/item:text-indigo-600 group-hover/item:translate-x-0.5 transition-all"
+                  class="w-3.5 h-3.5 text-[#4E6770] group-hover/item:text-[#244653] group-hover/item:translate-x-0.5 transition-all"
                   fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
@@ -234,17 +234,17 @@
       </div>
 
       <!-- Bottom Footer Action -->
-      <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
-        <span class="text-xs text-slate-400 font-medium">
+      <div class="mt-6 pt-4 border-t border-[#D5EDED] flex items-center justify-between">
+        <span class="text-xs text-[#4E6770] font-medium">
           Created {{ job.createdAt | date:'shortDate' }}
         </span>
         <div class="flex items-center space-x-2">
           <button (click)="viewJobDetails(job, $event)"
-            class="text-xs font-semibold text-slate-600 hover:text-indigo-600 px-2.5 py-1 rounded-lg hover:bg-slate-100 transition-colors">
+            class="text-xs font-semibold text-[#4E6770] hover:text-[#244653] px-2.5 py-1 rounded-lg hover:bg-[#E3FDFD] transition-colors cursor-pointer">
             View Job
           </button>
           <button (click)="openCandidateDeck(job, $event)"
-            class="inline-flex items-center text-xs font-bold text-indigo-600 hover:text-indigo-700 transition-colors">
+            class="inline-flex items-center text-xs font-bold text-[#244653] hover:text-[#71C9CE] transition-colors cursor-pointer">
             Evaluate ({{ job.applied_candidates.length || 0 }})
             <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>

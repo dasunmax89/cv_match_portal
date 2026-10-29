@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink, Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { ApiService } from '../../../core/services/api.service';
+import { GoogleAuthService } from '../../../core/services/google-auth.service';
 
 @Component({
   selector: 'app-candidate-login',
@@ -15,12 +16,58 @@ import { ApiService } from '../../../core/services/api.service';
 export class Login {
   private authService = inject(AuthService);
   private apiService = inject(ApiService);
+  private googleAuthService = inject(GoogleAuthService);
   private router = inject(Router);
 
   email = '';
   password = '';
   errorMessage = '';
   isLoading = false;
+
+  onGoogleSignIn() {
+    this.isLoading = true;
+    this.errorMessage = '';
+    this.googleAuthService.signInWithPopup('candidate')
+      .then(authRes => {
+        const obs = authRes.credential
+          ? this.apiService.loginWithGoogle(authRes.credential, 'candidate')
+          : this.apiService.loginWithGoogle('', 'candidate', authRes.accessToken);
+
+        obs.subscribe({
+          next: (res) => {
+            this.isLoading = false;
+            const u = res?.user || {};
+            const fullName = u.full_name || u.fullName || 'Candidate';
+            this.authService.loginCandidate({
+              ...u,
+              email: u.email,
+              firstName: u.first_name || (fullName.split(' ')[0]),
+              lastName: u.last_name || (fullName.split(' ').slice(1).join(' ')),
+              fullName: fullName,
+              jobTitle: u.job_title || u.jobTitle || '',
+              education: u.education || '',
+              skills: u.skills || [],
+              availableSkills: u.skills || [],
+              experienceYears: u.experience_years ?? u.experienceYears ?? 3,
+              workArrangement: u.work_arrangement || u.workArrangement || 'Remote Preferred',
+              minSalary: u.min_salary || u.minSalary || '',
+              initialAssessment: u.background || u.initialAssessment || null,
+              hasSetupProfile: true,
+              token: res?.access_token
+            });
+            this.router.navigate(['/candidate/dashboard']);
+          },
+          error: (err) => {
+            this.isLoading = false;
+            this.errorMessage = err?.error?.detail || err?.message || 'Google sign-in failed. Please try again.';
+          }
+        });
+      })
+      .catch(err => {
+        this.isLoading = false;
+        this.errorMessage = err?.message || 'Google sign-in was cancelled or encountered an error.';
+      });
+  }
 
   onSubmit() {
     if (!this.email || !this.password) {

@@ -83,6 +83,154 @@ export interface SaveInterviewNotesRequest {
   recruiter_email?: string;
 }
 
+export interface CurrencyOption {
+  code: string;
+  symbol: string;
+  name: string;
+  label?: string;
+  flag: string;
+}
+
+export const POPULAR_CURRENCIES: CurrencyOption[] = [
+  { code: 'CHF', symbol: 'CHF', name: 'Swiss Franc', label: 'Swiss Franc', flag: '🇨🇭' },
+  { code: 'USD', symbol: '$', name: 'US Dollar', label: 'US Dollar', flag: '🇺🇸' },
+  { code: 'EUR', symbol: '€', name: 'Euro', label: 'Euro', flag: '🇪🇺' },
+  { code: 'GBP', symbol: '£', name: 'British Pound', label: 'British Pound', flag: '🇬🇧' },
+  { code: 'CAD', symbol: 'CA$', name: 'Canadian Dollar', label: 'Canadian Dollar', flag: '🇨🇦' },
+  { code: 'AUD', symbol: 'A$', name: 'Australian Dollar', label: 'Australian Dollar', flag: '🇦🇺' },
+  { code: 'SGD', symbol: 'S$', name: 'Singapore Dollar', label: 'Singapore Dollar', flag: '🇸🇬' },
+  { code: 'MYR', symbol: 'RM', name: 'Malaysian Ringgit', label: 'Malaysian Ringgit', flag: '🇲🇾' },
+  { code: 'JPY', symbol: '¥', name: 'Japanese Yen', label: 'Japanese Yen', flag: '🇯🇵' },
+  { code: 'AED', symbol: 'AED', name: 'UAE Dirham', label: 'UAE Dirham', flag: '🇦🇪' }
+];
+
+export interface ContractOffer {
+  offer_id: string;
+  job_id: string;
+  match_id: string;
+  candidate_id?: string;
+  candidate_name: string;
+  candidate_email: string;
+  recruiter_email?: string;
+  company_name?: string;
+  company_cc_email?: string;
+  currency: string;
+  annual_base_salary: number;
+  bonus_or_allowances?: number;
+  start_date: string;
+  contract_type: string;
+  probation_period_months?: number;
+  notes_or_terms?: string;
+  commission_rate_percent: number;
+  commission_amount: number;
+  commission_status: 'Pending' | 'Invoiced' | 'Paid' | 'Waived';
+  invoice_reference_id?: string;
+  contract_pdf_url?: string;
+  contract_title?: string;
+  signed_by_candidate: boolean;
+  signed_at?: string;
+  signature_legal_name?: string;
+  signed_name?: string;
+  decline_reason?: string;
+  declined_at?: string;
+  status: 'Draft' | 'Offered' | 'Accepted' | 'Declined' | 'Started' | 'Cancelled';
+  created_at: string;
+  updated_at?: string;
+}
+
+export interface CreateOfferRequest {
+  annual_base_salary: number;
+  currency: string;
+  bonus_or_allowances?: number;
+  start_date: string;
+  contract_type?: string;
+  probation_period_months?: number;
+  notes_or_terms?: string;
+  company_cc_email?: string;
+  contract_title?: string;
+  commission_rate_percent?: number;
+  recruiter_email?: string;
+  is_draft?: boolean;
+}
+
+export interface SignOfferRequest {
+  legal_name?: string;
+  signed_name?: string;
+  confirmed_start_date?: string;
+  candidate_email?: string;
+}
+
+export interface DeclineOfferRequest {
+  reason?: string;
+  candidate_email?: string;
+}
+
+export interface UpdateCommissionRequest {
+  commission_status: 'Pending' | 'Invoiced' | 'Paid' | 'Waived';
+  invoice_reference_id?: string;
+  invoice_reference?: string;
+  notes?: string;
+}
+
+export interface PlacementOverviewItem {
+  matchId: string;
+  match_id?: string;
+  jobId: string;
+  job_id?: string;
+  jobTitle: string;
+  job_title?: string;
+  candidateName: string;
+  candidate_name?: string;
+  candidateEmail: string;
+  candidate_email?: string;
+  profile_image?: string;
+  profileImage?: string;
+  recruiterEmail?: string;
+  recruiter_email?: string;
+  companyName?: string;
+  company_name?: string;
+  companyCcEmail?: string;
+  company_cc_email?: string;
+  currency: string;
+  annualBaseSalary: number;
+  annual_base_salary?: number;
+  startDate: string;
+  start_date?: string;
+  offerStatus: string;
+  offer_status?: string;
+  signedAt?: string;
+  signed_at?: string;
+  signatureLegalName?: string;
+  signature_legal_name?: string;
+  signed_name?: string;
+  commissionRatePercent: number;
+  commission_rate_percent?: number;
+  commissionAmount: number;
+  commission_amount?: number;
+  commissionStatus: string;
+  commission_status?: string;
+  invoiceReferenceId?: string;
+  invoice_reference?: string;
+  notes?: string;
+  createdAt: string;
+  created_at?: string;
+}
+
+export interface ManagementPlacementsResponse {
+  totalPlacements: number;
+  total_placements?: number;
+  totalOffered: number;
+  total_offered?: number;
+  totalAccepted: number;
+  total_accepted?: number;
+  totalCommissionPending: number;
+  total_commission_pending?: number;
+  total_commission_estimated?: number;
+  totalCommissionPaid: number;
+  total_commission_paid?: number;
+  placements: PlacementOverviewItem[];
+}
+
 export interface ScheduledInterviewItem {
   id: string;
   jobId: string;
@@ -90,12 +238,15 @@ export interface ScheduledInterviewItem {
   seniorityLevel?: string;
   candidateName: string;
   candidateEmail: string;
+  profile_image?: string;
+  profileImage?: string;
   status: string;
   overall_match_score?: number;
   fit_verdict?: string;
   behavioral_archetype?: string;
   client_interview_probes?: string[];
   interview?: InterviewDetails;
+  offer?: ContractOffer;
   resumeUrl?: string;
   linkedin_url?: string;
   createdAt?: string;
@@ -118,6 +269,9 @@ export interface RecruiterInterviewsOverviewResponse {
   needsEvaluation: number;
   totalPassed: number;
   totalFailed: number;
+  totalOffersDrafting?: number;
+  totalOffersExtended?: number;
+  totalOffersAccepted?: number;
   groups: JobInterviewsGroup[];
 }
 
@@ -126,6 +280,8 @@ export interface CandidateMatch {
   jobId: string;
   candidateName: string;
   candidateEmail: string;
+  profile_image?: string;
+  profileImage?: string;
   createdAt: string;
   evaluation?: {
     overall_match_score: number;
@@ -141,6 +297,7 @@ export interface CandidateMatch {
   status?: string;
   resumeUrl?: string;
   interview?: InterviewDetails;
+  offer?: ContractOffer;
   linkedin_url?: string;
   facebook_url?: string;
   tiktok_url?: string;
@@ -165,6 +322,8 @@ export interface CandidateApplication {
   coreResponsibilities?: string[];
   candidateName: string;
   candidateEmail: string;
+  profile_image?: string;
+  profileImage?: string;
   status: string;
   evaluation?: {
     overall_match_score?: number;
@@ -177,6 +336,7 @@ export interface CandidateApplication {
   };
   behavioral_evaluation?: CandidateBehavioralEvaluation;
   interview?: InterviewDetails;
+  offer?: ContractOffer;
   resumeUrl?: string;
   linkedin_url?: string;
   facebook_url?: string;
@@ -197,7 +357,10 @@ export interface CandidateAppliedJobSummary {
   status: string;
   overall_match_score?: number;
   fit_verdict?: string;
+  profile_image?: string;
+  profileImage?: string;
   interview?: InterviewDetails;
+  offer?: ContractOffer;
   resumeUrl?: string;
   createdAt: string;
 }
@@ -205,6 +368,8 @@ export interface CandidateAppliedJobSummary {
 export interface CandidateDirectoryItem {
   candidateEmail: string;
   candidateName: string;
+  profile_image?: string;
+  profileImage?: string;
   phone?: string;
   skills?: string[];
   bio?: string;

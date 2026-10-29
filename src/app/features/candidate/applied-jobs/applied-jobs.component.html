@@ -29,25 +29,50 @@
   </div>
 
   <!-- Summary Stats Cards -->
-  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-    <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-2xs space-y-1">
-      <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Applications</span>
-      <p class="text-2xl font-black text-slate-900">{{ totalApplicationsCount }}</p>
+  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+    <!-- Total Applications -->
+    <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-2xs flex flex-col justify-between">
+      <div class="flex items-center justify-between">
+        <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Total Applications</span>
+        <img src="total_applications.svg" alt="" aria-hidden="true" class="w-9 h-9 shrink-0">
+      </div>
+      <p class="text-2xl font-black text-slate-900 mt-2">{{ totalApplicationsCount }}</p>
     </div>
 
-    <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-2xs space-y-1">
-      <span class="text-xs font-semibold uppercase tracking-wider text-amber-600">Under Review</span>
-      <p class="text-2xl font-black text-amber-600">{{ pendingCount }}</p>
+    <!-- Under Review -->
+    <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-2xs flex flex-col justify-between">
+      <div class="flex items-center justify-between">
+        <span class="text-[11px] font-bold uppercase tracking-wider text-amber-700">Under Review</span>
+        <img src="under_review.svg" alt="" aria-hidden="true" class="w-9 h-9 shrink-0">
+      </div>
+      <p class="text-2xl font-black text-amber-600 mt-2">{{ pendingCount }}</p>
     </div>
 
-    <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-2xs space-y-1">
-      <span class="text-xs font-semibold uppercase tracking-wider text-teal-600">Shortlisted</span>
-      <p class="text-2xl font-black text-teal-600">{{ shortlistedCount }}</p>
+    <!-- Shortlisted -->
+    <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-2xs flex flex-col justify-between">
+      <div class="flex items-center justify-between">
+        <span class="text-[11px] font-bold uppercase tracking-wider text-teal-700">Shortlisted</span>
+        <img src="shortlisted.svg" alt="" aria-hidden="true" class="w-9 h-9 shrink-0">
+      </div>
+      <p class="text-2xl font-black text-teal-600 mt-2">{{ shortlistedCount }}</p>
     </div>
 
-    <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-2xs space-y-1">
-      <span class="text-xs font-semibold uppercase tracking-wider text-emerald-600">Interviews Scheduled</span>
-      <p class="text-2xl font-black text-emerald-600">{{ interviewCount }}</p>
+    <!-- Interviews -->
+    <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-2xs flex flex-col justify-between">
+      <div class="flex items-center justify-between">
+        <span class="text-[11px] font-bold uppercase tracking-wider text-sky-700">Interviews</span>
+        <img src="interviews.svg" alt="" aria-hidden="true" class="w-9 h-9 shrink-0">
+      </div>
+      <p class="text-2xl font-black text-sky-600 mt-2">{{ interviewCount }}</p>
+    </div>
+
+    <!-- Contract Offers -->
+    <div class="bg-gradient-to-br from-emerald-50 via-teal-50 to-emerald-100/40 p-5 rounded-2xl border border-emerald-300 shadow-2xs flex flex-col justify-between">
+      <div class="flex items-center justify-between">
+        <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-800">Contract Offers</span>
+        <img src="contract_offers.svg" alt="" aria-hidden="true" class="w-9 h-9 shrink-0">
+      </div>
+      <p class="text-2xl font-black text-emerald-800 mt-2">{{ offersCount }}</p>
     </div>
   </div>
 
@@ -71,19 +96,29 @@
         class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all shrink-0">
         All ({{ applications().length }})
       </button>
+      <button (click)="selectedStatusFilter.set('offers')"
+        [ngClass]="selectedStatusFilter() === 'offers' ? 'bg-emerald-600 shadow-xs text-white font-extrabold' : 'text-slate-600 hover:text-slate-900'"
+        class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all shrink-0 inline-flex items-center gap-1.5">
+        <img src="offers_inline.svg" alt="" aria-hidden="true" class="w-4 h-4"
+          [class.brightness-0]="selectedStatusFilter() === 'offers'" [class.invert]="selectedStatusFilter() === 'offers'">
+        Offers ({{ offersCount }})
+      </button>
       <button (click)="selectedStatusFilter.set('interview')"
         [ngClass]="selectedStatusFilter() === 'interview' ? 'bg-white shadow-xs text-emerald-700 font-bold' : 'text-slate-600 hover:text-slate-900'"
-        class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all shrink-0">
-        📅 Interview
+        class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all shrink-0 inline-flex items-center gap-1.5">
+        <img src="interview_inline.svg" alt="" aria-hidden="true" class="w-4 h-4">
+        Interview
       </button>
       <button (click)="selectedStatusFilter.set('shortlisted')"
         [ngClass]="selectedStatusFilter() === 'shortlisted' ? 'bg-white shadow-xs text-teal-700 font-bold' : 'text-slate-600 hover:text-slate-900'"
-        class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all shrink-0">
+        class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all shrink-0 inline-flex items-center gap-1.5">
+        <img src="shortlisted_inline.svg" alt="" aria-hidden="true" class="w-4 h-4">
         Shortlisted
       </button>
       <button (click)="selectedStatusFilter.set('pending')"
         [ngClass]="selectedStatusFilter() === 'pending' ? 'bg-white shadow-xs text-amber-700 font-bold' : 'text-slate-600 hover:text-slate-900'"
-        class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all shrink-0">
+        class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all shrink-0 inline-flex items-center gap-1.5">
+        <img src="in_review_inline.svg" alt="" aria-hidden="true" class="w-4 h-4">
         In Review
       </button>
     </div>
@@ -137,7 +172,7 @@
               {{ app.jobTitle }}
             </h2>
             <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold border"
-                  [ngClass]="getStatusBadgeClass(app.status, !!app.interview?.scheduled_at)">
+                  [ngClass]="getStatusBadgeClass(app.status, !!app.interview?.scheduled_at, app.offer)">
               {{ getStatusLabel(app) }}
             </span>
           </div>
@@ -169,6 +204,96 @@
           </button>
         </div>
       </div>
+
+      <!-- Contract Offer Banner (if offer exists) -->
+      @if (app.offer) {
+        @if (app.offer.status === 'Draft' || app.status === 'Offer Drafting') {
+        <div class="p-4 rounded-2xl bg-sky-50 border border-sky-200 text-sky-950 flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-in fade-in shadow-2xs">
+          <div class="flex items-center gap-3">
+            <span class="w-9 h-9 rounded-xl bg-sky-100 text-sky-700 flex items-center justify-center text-base shadow-2xs font-bold shrink-0">📝</span>
+            <div>
+              <h4 class="text-xs font-black uppercase tracking-wider text-sky-950">Offer in Preparation</h4>
+              <p class="text-xs text-sky-800">The hiring team is drafting your employment contract terms. You will receive an official notification and email once it is ready for your review and e-signature.</p>
+            </div>
+          </div>
+          <span class="text-[11px] font-bold px-3 py-1 bg-white border border-sky-300 rounded-lg text-sky-700 self-start sm:self-auto shrink-0 shadow-2xs">
+            Drafting Phase
+          </span>
+        </div>
+        }
+        @else if (app.offer.status === 'Offered') {
+        <div class="p-5 rounded-2xl bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-indigo-500/10 border-2 border-emerald-400 shadow-md shadow-emerald-500/10 space-y-3.5 animate-in fade-in">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-emerald-200/80 pb-3">
+            <div class="flex items-center gap-2.5">
+              <span class="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-sm shadow-xs font-black">🎉</span>
+              <div>
+                <h3 class="text-sm font-black text-emerald-950 uppercase tracking-wide">Official Employment Contract Offer Available!</h3>
+                <p class="text-xs text-emerald-800">Your recruiter has drafted and dispatched your official employment offer.</p>
+              </div>
+            </div>
+
+            <button (click)="openOfferModal(app)" type="button"
+              class="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white font-extrabold text-xs rounded-xl shadow-md shadow-emerald-600/20 hover:shadow-lg transition-all cursor-pointer self-start sm:self-auto shrink-0">
+              <span>Review & E-Sign Offer</span>
+              <span>&rarr;</span>
+            </button>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+            <div class="bg-white/95 p-3 rounded-xl border border-emerald-200/80 shadow-2xs space-y-0.5">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Annual Base Salary</span>
+              <p class="font-black text-emerald-700 text-sm">
+                {{ formatCurrency(app.offer.annual_base_salary, app.offer.currency) }}
+              </p>
+            </div>
+
+            <div class="bg-white/95 p-3 rounded-xl border border-emerald-200/80 shadow-2xs space-y-0.5">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Bonus / Allowances</span>
+              <p class="font-bold text-slate-800 text-sm">
+                {{ app.offer.bonus_or_allowances ? formatCurrency(app.offer.bonus_or_allowances, app.offer.currency) : 'None' }}
+              </p>
+            </div>
+
+            <div class="bg-white/95 p-3 rounded-xl border border-emerald-200/80 shadow-2xs space-y-0.5">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Agreed Start Date</span>
+              <p class="font-bold text-slate-800 text-sm">
+                {{ app.offer.start_date ? (app.offer.start_date | date:'mediumDate') : 'To Be Agreed' }}
+              </p>
+            </div>
+
+            <div class="bg-white/95 p-3 rounded-xl border border-emerald-200/80 shadow-2xs space-y-0.5">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Contract Engagement</span>
+              <p class="font-bold text-slate-800 text-sm truncate" [title]="app.offer.contract_type">
+                {{ app.offer.contract_type }}
+              </p>
+            </div>
+          </div>
+        </div>
+        } @else if (app.offer.status === 'Accepted') {
+        <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-300 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <span class="w-7 h-7 rounded-lg bg-emerald-600 text-white font-black text-xs flex items-center justify-center">✓</span>
+            <div>
+              <p class="text-xs font-extrabold text-emerald-950">Contract Signed & Executed</p>
+              <p class="text-[11px] text-emerald-800">
+                You accepted this offer with e-signature: <span class="font-mono font-bold">{{ app.offer.signed_name }}</span> on {{ app.offer.signed_at | date:'mediumDate' }}.
+              </p>
+            </div>
+          </div>
+          <button (click)="openOfferModal(app)" type="button"
+            class="px-3.5 py-1.5 bg-white hover:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-lg text-xs font-bold transition-all shadow-2xs cursor-pointer self-start sm:self-auto">
+            View Executed Terms
+          </button>
+        </div>
+        } @else if (app.offer.status === 'Declined') {
+        <div class="p-3.5 rounded-xl bg-slate-100 border border-slate-200 text-xs text-slate-600 flex items-center justify-between">
+          <span>Contract offer was declined on {{ app.offer.declined_at | date:'mediumDate' }}.</span>
+          <button (click)="openOfferModal(app)" type="button" class="text-slate-700 hover:text-slate-900 font-semibold underline text-xs">
+            Review History
+          </button>
+        </div>
+        }
+      }
 
       <!-- Interview Scheduled Banner (if scheduled) -->
       @if (app.interview?.scheduled_at) {
@@ -286,6 +411,232 @@
           <button (click)="closeJobModal()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition-colors">
             Close
           </button>
+        </div>
+
+      </div>
+    </div>
+  }
+
+  <!-- Contract Offer Review & E-Signature Modal -->
+  @if (selectedOfferForModal(); as offerApp) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in"
+         (click)="closeOfferModal()">
+      <div class="bg-white rounded-3xl shadow-2xl border border-slate-200 w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200"
+           (click)="$event.stopPropagation()">
+
+        <!-- Modal Header -->
+        <div class="p-6 border-b border-slate-100 bg-gradient-to-r from-emerald-500/10 via-white to-teal-500/10 flex items-center justify-between shrink-0">
+          <div class="flex items-center space-x-3.5">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-700 text-white font-black text-sm flex items-center justify-center shrink-0 shadow-md shadow-emerald-500/20">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <div>
+              <div class="flex items-center space-x-2.5">
+                <h2 class="text-xl font-extrabold text-slate-900">Employment Contract Offer</h2>
+                @if (offerApp.offer) {
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full border"
+                  [ngClass]="offerApp.offer.status === 'Accepted' ? 'bg-emerald-50 text-emerald-800 border-emerald-300' : (offerApp.offer.status === 'Declined' ? 'bg-rose-50 text-rose-800 border-rose-300' : 'bg-amber-50 text-amber-800 border-amber-300')">
+                  {{ offerApp.offer.status === 'Accepted' ? '✓ Accepted & Signed' : (offerApp.offer.status === 'Declined' ? '✕ Declined' : 'Pending Signature') }}
+                </span>
+                }
+              </div>
+              <p class="text-xs text-slate-500 mt-0.5">
+                Role: <span class="font-bold text-slate-800">{{ offerApp.jobTitle }}</span> &bull; Requisition: <span class="font-mono text-slate-600">{{ offerApp.jobId }}</span>
+              </p>
+            </div>
+          </div>
+
+          <button (click)="closeOfferModal()" type="button"
+            class="w-9 h-9 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 flex items-center justify-center transition-colors cursor-pointer text-lg font-bold">
+            ✕
+          </button>
+        </div>
+
+        <!-- Modal Content (Scrollable) -->
+        <div class="p-6 overflow-y-auto space-y-6 flex-1 text-sm">
+
+          <!-- Alert / Feedback -->
+          @if (offerActionSuccess()) {
+          <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center gap-2.5 animate-in fade-in">
+            <svg class="w-5 h-5 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>{{ offerActionSuccess() }}</span>
+          </div>
+          }
+
+          @if (offerActionError()) {
+          <div class="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold flex items-center gap-2.5 animate-in fade-in">
+            <svg class="w-5 h-5 text-rose-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>{{ offerActionError() }}</span>
+          </div>
+          }
+
+          <!-- Compensation Package Card -->
+          <div class="p-5 rounded-2xl bg-gradient-to-br from-slate-900 to-indigo-950 text-white shadow-lg space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+              <span class="text-xs font-black uppercase tracking-wider text-slate-300">Official Remuneration Package</span>
+              <span class="text-xs font-black uppercase px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
+                {{ offerApp.offer?.currency || 'CHF' }}
+              </span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <span class="text-[11px] text-slate-400 uppercase tracking-wider font-semibold block">Annual Base Salary</span>
+                <span class="text-2xl font-black text-emerald-400">
+                  {{ formatCurrency(offerApp.offer?.annual_base_salary, offerApp.offer?.currency) }}
+                </span>
+                <span class="text-[11px] text-slate-400 block mt-0.5">Payable in monthly installments</span>
+              </div>
+
+              <div>
+                <span class="text-[11px] text-slate-400 uppercase tracking-wider font-semibold block">Bonus / Allowances</span>
+                <span class="text-xl font-black text-white">
+                  {{ offerApp.offer?.bonus_or_allowances ? formatCurrency(offerApp.offer?.bonus_or_allowances, offerApp.offer?.currency) : 'N/A' }}
+                </span>
+                <span class="text-[11px] text-slate-400 block mt-0.5">Performance & signing incentives</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Key Conditions & Timeline Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/90 space-y-1">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Agreed Target Start Date</span>
+              <p class="font-bold text-slate-900 text-sm">
+                {{ offerApp.offer?.start_date ? (offerApp.offer?.start_date | date:'longDate') : 'Pending confirmation' }}
+              </p>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/90 space-y-1">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Contract Engagement Type</span>
+              <p class="font-bold text-slate-900 text-sm">
+                {{ offerApp.offer?.contract_type || 'Full-Time Permanent' }}
+              </p>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/90 space-y-1">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Probation Period</span>
+              <p class="font-bold text-slate-900 text-sm">
+                {{ offerApp.offer?.probation_period_months ? offerApp.offer?.probation_period_months + ' Months' : 'Immediate Tenured' }}
+              </p>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/90 space-y-1">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Company & Recruiter CC</span>
+              <p class="font-bold text-slate-900 text-sm truncate" [title]="offerApp.offer?.company_cc_email || 'Direct Recruiter Dispatch'">
+                {{ offerApp.offer?.company_cc_email || 'Direct Recruiter Notification' }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Special Notes & Additional Terms -->
+          @if (offerApp.offer?.notes_or_terms) {
+          <div class="p-4 rounded-2xl bg-sky-50/70 border border-sky-100 space-y-1.5">
+            <span class="text-[10px] font-extrabold uppercase tracking-wider text-sky-900">Custom Terms & Stipulations</span>
+            <p class="text-xs text-sky-950 whitespace-pre-line leading-relaxed">{{ offerApp.offer?.notes_or_terms }}</p>
+          </div>
+          }
+
+          <!-- If already accepted -->
+          @if (offerApp.offer?.status === 'Accepted') {
+          <div class="p-5 rounded-2xl bg-emerald-50 border border-emerald-300 space-y-2">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-lg bg-emerald-600 text-white font-black text-xs flex items-center justify-center">✓</span>
+              <span class="text-sm font-extrabold text-emerald-950">Contract Fully Executed</span>
+            </div>
+            <p class="text-xs text-emerald-900 leading-relaxed">
+              Signed by electronic signature:
+              <span class="font-mono bg-white px-2 py-0.5 rounded border border-emerald-300 font-bold ml-1">
+                {{ offerApp.offer?.signed_name }}
+              </span>
+              on {{ offerApp.offer?.signed_at ? (offerApp.offer?.signed_at | date:'medium') : 'Recently' }}.
+            </p>
+          </div>
+          }
+
+          <!-- E-Signature Section (if Offered) -->
+          @if (offerApp.offer?.status === 'Offered') {
+          <div class="p-5 rounded-2xl bg-gradient-to-r from-emerald-50/70 to-teal-50/70 border border-emerald-200 space-y-4">
+            <div class="border-b border-emerald-200 pb-2">
+              <h4 class="text-xs font-black uppercase tracking-wider text-emerald-950">Electronic Acceptance & Signature</h4>
+              <p class="text-[11px] text-emerald-800 mt-0.5">
+                Typing your full legal name below constitutes a legally binding agreement under electronic signature legislation.
+              </p>
+            </div>
+
+            <div class="space-y-1.5">
+              <label class="block text-xs font-bold text-slate-800">
+                Full Legal Name <span class="text-rose-500">*</span>
+              </label>
+              <input type="text" [ngModel]="legalSignatureName()" (ngModelChange)="legalSignatureName.set($event)"
+                placeholder="e.g. Jane Doe"
+                class="w-full px-3.5 py-2.5 bg-white border border-emerald-300 rounded-xl text-xs font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all font-mono" />
+            </div>
+
+            <label class="flex items-start space-x-2.5 cursor-pointer select-none">
+              <input type="checkbox" [ngModel]="agreeToOfferTerms()" (ngModelChange)="agreeToOfferTerms.set($event)"
+                class="mt-0.5 rounded border-emerald-400 text-emerald-600 focus:ring-emerald-500 cursor-pointer" />
+              <span class="text-xs text-emerald-950 font-medium leading-tight">
+                I have reviewed the position details, remuneration package, and start date. I accept and agree to enter into employment according to the terms specified above.
+              </span>
+            </label>
+
+            <!-- Decline option accordion -->
+            @if (showDeclinePrompt()) {
+            <div class="p-3.5 rounded-xl bg-rose-50 border border-rose-200 space-y-2 animate-in fade-in">
+              <label class="block text-xs font-bold text-rose-900">Reason for declining (Optional)</label>
+              <textarea [ngModel]="declineReason()" (ngModelChange)="declineReason.set($event)" rows="2"
+                placeholder="e.g. Accepted another offer, compensation mismatch..."
+                class="w-full px-3 py-2 bg-white border border-rose-200 rounded-lg text-xs text-slate-900"></textarea>
+
+              <div class="flex items-center gap-2 justify-end">
+                <button (click)="showDeclinePrompt.set(false)" type="button"
+                  class="px-3 py-1.5 bg-white text-slate-600 rounded-lg text-xs font-semibold border border-slate-200">
+                  Cancel
+                </button>
+                <button (click)="submitDeclineOffer()" type="button" [disabled]="isOfferSubmitting()"
+                  class="px-3 py-1.5 bg-rose-600 text-white rounded-lg text-xs font-bold hover:bg-rose-700">
+                  Confirm Decline
+                </button>
+              </div>
+            </div>
+            }
+          </div>
+          }
+
+        </div>
+
+        <!-- Modal Footer Actions -->
+        <div class="p-5 border-t border-slate-100 bg-slate-50 flex items-center justify-between gap-3 shrink-0">
+          <button (click)="closeOfferModal()" type="button" [disabled]="isOfferSubmitting()"
+            class="px-4 py-2.5 bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-xl text-xs font-semibold transition-all cursor-pointer">
+            Close
+          </button>
+
+          @if (offerApp.offer?.status === 'Offered') {
+          <div class="flex items-center gap-2.5">
+            @if (!showDeclinePrompt()) {
+            <button (click)="showDeclinePrompt.set(true)" type="button" [disabled]="isOfferSubmitting()"
+              class="px-4 py-2.5 text-rose-700 hover:bg-rose-50 border border-rose-200 rounded-xl text-xs font-semibold transition-all cursor-pointer">
+              Decline Offer
+            </button>
+            }
+
+            <button (click)="submitSignOffer()" type="button" [disabled]="isOfferSubmitting() || !legalSignatureName().trim() || !agreeToOfferTerms()"
+              class="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white rounded-xl text-xs font-black shadow-md shadow-emerald-500/20 transition-all cursor-pointer disabled:opacity-50">
+              @if (isOfferSubmitting()) {
+              <span class="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+              }
+              <span>Accept & Sign Contract Offer</span>
+            </button>
+          </div>
+          }
         </div>
 
       </div>

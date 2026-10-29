@@ -33,55 +33,75 @@
 
   <!-- Metric Banner Cards -->
   @if (overviewData(); as overview) {
-  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+  <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3.5">
     <!-- Total Scheduled -->
-    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs">
+    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-2xs">
       <div class="flex items-center justify-between">
-        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Interviews</span>
-        <span class="w-8 h-8 rounded-lg bg-slate-50 text-slate-500 flex items-center justify-center text-sm font-bold">📋</span>
+        <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Total</span>
+        <img src="total_rec.svg" alt="" aria-hidden="true" class="w-8 h-8 shrink-0">
       </div>
-      <p class="text-2xl font-black text-slate-900 mt-2">{{ overview.totalScheduled }}</p>
-      <span class="text-[11px] text-slate-500 mt-0.5 block">Across all requisitions</span>
+      <p class="text-xl font-black text-slate-900 mt-1.5">{{ overview.totalScheduled }}</p>
+      <span class="text-[10px] text-slate-500 mt-0.5 block truncate">All interviews</span>
     </div>
 
     <!-- Happening Today -->
-    <div class="bg-white p-5 rounded-2xl border border-sky-100 shadow-2xs">
+    <div class="bg-white p-4 rounded-2xl border border-sky-100 shadow-2xs">
       <div class="flex items-center justify-between">
-        <span class="text-xs font-bold uppercase tracking-wider text-sky-700">Today</span>
-        <span class="w-8 h-8 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center text-sm font-bold">📅</span>
+        <span class="text-[11px] font-bold uppercase tracking-wider text-sky-700">Today</span>
+        <img src="today_rec.svg" alt="" aria-hidden="true" class="w-8 h-8 shrink-0">
       </div>
-      <p class="text-2xl font-black text-sky-900 mt-2">{{ overview.happeningToday }}</p>
-      <span class="text-[11px] text-sky-600 mt-0.5 block">Interviews scheduled today</span>
+      <p class="text-xl font-black text-sky-900 mt-1.5">{{ overview.happeningToday }}</p>
+      <span class="text-[10px] text-sky-600 mt-0.5 block truncate">Scheduled today</span>
     </div>
 
     <!-- Needs Evaluation -->
-    <div class="bg-white p-5 rounded-2xl border border-amber-200 shadow-2xs">
+    <div class="bg-white p-4 rounded-2xl border border-amber-200 shadow-2xs">
       <div class="flex items-center justify-between">
-        <span class="text-xs font-bold uppercase tracking-wider text-amber-800">Awaiting Feedback</span>
-        <span class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center text-sm font-bold">⏳</span>
+        <span class="text-[11px] font-bold uppercase tracking-wider text-amber-800">Feedback</span>
+        <img src="feedback_rec.svg" alt="" aria-hidden="true" class="w-8 h-8 shrink-0">
       </div>
-      <p class="text-2xl font-black text-amber-900 mt-2">{{ overview.needsEvaluation }}</p>
-      <span class="text-[11px] text-amber-700 mt-0.5 block">Conducted, pending notes</span>
+      <p class="text-xl font-black text-amber-900 mt-1.5">{{ overview.needsEvaluation }}</p>
+      <span class="text-[10px] text-amber-700 mt-0.5 block truncate">Awaiting notes</span>
     </div>
 
     <!-- Total Passed -->
-    <div class="bg-white p-5 rounded-2xl border border-emerald-100 shadow-2xs">
+    <div class="bg-white p-4 rounded-2xl border border-emerald-100 shadow-2xs">
       <div class="flex items-center justify-between">
-        <span class="text-xs font-bold uppercase tracking-wider text-emerald-700">Passed</span>
-        <span class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-sm font-bold">✓</span>
+        <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-700">Passed</span>
+        <img src="passed_rec.svg" alt="" aria-hidden="true" class="w-8 h-8 shrink-0">
       </div>
-      <p class="text-2xl font-black text-emerald-900 mt-2">{{ overview.totalPassed }}</p>
-      <span class="text-[11px] text-emerald-600 mt-0.5 block">Advanced / Offer round</span>
+      <p class="text-xl font-black text-emerald-900 mt-1.5">{{ overview.totalPassed }}</p>
+      <span class="text-[10px] text-emerald-600 mt-0.5 block truncate">Ready for offer</span>
     </div>
 
-    <!-- Total Failed -->
-    <div class="bg-white p-5 rounded-2xl border border-rose-100 shadow-2xs">
+    <!-- Offers in Drafting (New Stage) -->
+    <div class="bg-white p-4 rounded-2xl border border-sky-200 shadow-2xs">
       <div class="flex items-center justify-between">
-        <span class="text-xs font-bold uppercase tracking-wider text-rose-700">Unsuccessful</span>
-        <span class="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center text-sm font-bold">✕</span>
+        <span class="text-[11px] font-bold uppercase tracking-wider text-sky-700">Drafting</span>
+        <img src="drafting_rec.svg" alt="" aria-hidden="true" class="w-8 h-8 shrink-0">
       </div>
-      <p class="text-2xl font-black text-rose-900 mt-2">{{ overview.totalFailed }}</p>
-      <span class="text-[11px] text-rose-600 mt-0.5 block">Concluded with feedback</span>
+      <p class="text-xl font-black text-sky-900 mt-1.5">{{ overview.totalOffersDrafting ?? 0 }}</p>
+      <span class="text-[10px] text-sky-600 mt-0.5 block truncate">Draft preparation</span>
+    </div>
+
+    <!-- Offers Extended -->
+    <div class="bg-white p-4 rounded-2xl border border-indigo-200 shadow-2xs">
+      <div class="flex items-center justify-between">
+        <span class="text-[11px] font-bold uppercase tracking-wider text-indigo-700">Extended</span>
+        <img src="extended_rec.svg" alt="" aria-hidden="true" class="w-8 h-8 shrink-0">
+      </div>
+      <p class="text-xl font-black text-indigo-900 mt-1.5">{{ overview.totalOffersExtended ?? 0 }}</p>
+      <span class="text-[10px] text-indigo-600 mt-0.5 block truncate">Dispatched to candidate</span>
+    </div>
+
+    <!-- Contracts Signed -->
+    <div class="bg-white p-4 rounded-2xl border border-emerald-200 shadow-2xs">
+      <div class="flex items-center justify-between">
+        <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-800">Signed</span>
+        <img src="signed_rec.svg" alt="" aria-hidden="true" class="w-8 h-8 shrink-0">
+      </div>
+      <p class="text-xl font-black text-emerald-950 mt-1.5">{{ overview.totalOffersAccepted ?? 0 }}</p>
+      <span class="text-[10px] text-emerald-700 mt-0.5 block truncate">Placement fee active</span>
     </div>
   </div>
   }
@@ -104,27 +124,42 @@
     <div class="flex items-center gap-1.5 bg-slate-200/60 p-1 rounded-xl border border-slate-200 self-start md:self-auto overflow-x-auto">
       <button (click)="activeFilter.set('all')"
         [ngClass]="activeFilter() === 'all' ? 'bg-white shadow-xs text-sky-700 font-bold' : 'text-slate-600 hover:text-slate-900'"
-        class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer">
-        All Interviews
+        class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer">
+        All
       </button>
       <button (click)="activeFilter.set('today_upcoming')"
         [ngClass]="activeFilter() === 'today_upcoming' ? 'bg-white shadow-xs text-sky-700 font-bold' : 'text-slate-600 hover:text-slate-900'"
-        class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer">
-        Today & Upcoming
+        class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer">
+        Today / Upcoming
       </button>
       <button (click)="activeFilter.set('needs_eval')"
         [ngClass]="activeFilter() === 'needs_eval' ? 'bg-white shadow-xs text-amber-800 font-bold' : 'text-slate-600 hover:text-slate-900'"
-        class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer">
+        class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer">
         Needs Feedback
       </button>
       <button (click)="activeFilter.set('passed')"
         [ngClass]="activeFilter() === 'passed' ? 'bg-white shadow-xs text-emerald-800 font-bold' : 'text-slate-600 hover:text-slate-900'"
-        class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer">
+        class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer">
         Passed
+      </button>
+      <button (click)="activeFilter.set('offers_drafting')"
+        [ngClass]="activeFilter() === 'offers_drafting' ? 'bg-white shadow-xs text-sky-800 font-bold' : 'text-slate-600 hover:text-slate-900'"
+        class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer">
+        Drafting ({{ overviewData()?.totalOffersDrafting ?? 0 }})
+      </button>
+      <button (click)="activeFilter.set('offers_extended')"
+        [ngClass]="activeFilter() === 'offers_extended' ? 'bg-white shadow-xs text-indigo-800 font-bold' : 'text-slate-600 hover:text-slate-900'"
+        class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer">
+        Extended ({{ overviewData()?.totalOffersExtended ?? 0 }})
+      </button>
+      <button (click)="activeFilter.set('offers_accepted')"
+        [ngClass]="activeFilter() === 'offers_accepted' ? 'bg-white shadow-xs text-emerald-800 font-bold' : 'text-slate-600 hover:text-slate-900'"
+        class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer">
+        Signed ({{ overviewData()?.totalOffersAccepted ?? 0 }})
       </button>
       <button (click)="activeFilter.set('failed')"
         [ngClass]="activeFilter() === 'failed' ? 'bg-white shadow-xs text-rose-800 font-bold' : 'text-slate-600 hover:text-slate-900'"
-        class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer">
+        class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer">
         Unsuccessful
       </button>
     </div>
@@ -299,22 +334,83 @@
               <!-- Outcome Status -->
               <td class="py-4 px-4 whitespace-nowrap">
                 @let outcomeBadge = getOutcomeInfo(item);
-                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs border"
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs border"
                   [ngClass]="outcomeBadge.css">
-                  <span>{{ outcomeBadge.icon }}</span>
+                  @if (outcomeBadge.icon.endsWith('.svg')) {
+                    <img [src]="outcomeBadge.icon" alt="" aria-hidden="true" class="w-4 h-4 shrink-0">
+                  } @else {
+                    <span>{{ outcomeBadge.icon }}</span>
+                  }
                   <span>{{ outcomeBadge.label }}</span>
                 </span>
               </td>
 
               <!-- Actions -->
               <td class="py-4 px-5 text-right whitespace-nowrap">
-                <button (click)="openEvaluationDrawer(item, $event)" type="button"
-                  class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-white hover:bg-sky-50 text-sky-700 border border-sky-200 hover:border-sky-300 rounded-xl text-xs font-bold transition-all shadow-2xs hover:shadow-xs cursor-pointer">
-                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                  </svg>
-                  <span>{{ item.interview?.outcome ? 'View / Edit Results' : 'Evaluate Candidate' }}</span>
-                </button>
+                <div class="inline-flex items-center gap-2">
+                  <!-- Offer Contract Button / Badge -->
+                  @if (item.offer) {
+                    @if (item.offer.status === 'Accepted') {
+                    <button (click)="openOfferDrawer(item, $event)" type="button"
+                      class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-xl text-xs font-bold transition-all shadow-2xs cursor-pointer"
+                      title="Contract signed by candidate! Click to view contract terms & commission">
+                      <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <span>Contract Signed</span>
+                    </button>
+                    } @else if (item.offer.status === 'Declined') {
+                    <button (click)="openOfferDrawer(item, $event)" type="button"
+                      class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-800 border border-rose-300 rounded-xl text-xs font-bold transition-all shadow-2xs cursor-pointer"
+                      title="Candidate declined offer. Click to re-draft offer with updated terms">
+                      <span>✕ Offer Declined</span>
+                    </button>
+                    } @else if (item.offer.status === 'Draft' || item.status === 'Offer Drafting') {
+                    <button (click)="openOfferDrawer(item, $event)" type="button"
+                      class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-300 rounded-xl text-xs font-bold transition-all shadow-2xs cursor-pointer"
+                      title="Offer saved as draft (candidate has not been notified). Click to edit or dispatch.">
+                      <svg class="w-3.5 h-3.5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                      </svg>
+                      <span>📝 Offer Drafting</span>
+                    </button>
+                    } @else {
+                    <button (click)="openOfferDrawer(item, $event)" type="button"
+                      class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-900 border border-indigo-300 rounded-xl text-xs font-bold transition-all shadow-2xs cursor-pointer"
+                      title="Contract offer dispatched and pending candidate signature. Click to review or update">
+                      <img src="extended_rec.svg" alt="" aria-hidden="true" class="w-4 h-4 shrink-0">
+                      <span>Offer Extended</span>
+                    </button>
+                    }
+                  } @else if (item.interview?.outcome === 'Passed' || item.status === 'Interview Passed' || item.status === 'Passed' || item.status === 'Offer Extended' || item.status === 'Offered' || item.status === 'Offer Drafting') {
+                    <button (click)="openOfferDrawer(item, $event)" type="button"
+                      class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-xl text-xs font-extrabold shadow-xs hover:shadow-md transition-all cursor-pointer"
+                      title="Candidate passed interview! Click to draft contract offer">
+                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      <span>Draft Offer</span>
+                    </button>
+                  } @else if (item.interview?.outcome !== 'Failed' && item.status !== 'Rejected' && item.status !== 'Interview Failed') {
+                    <button (click)="openOfferDrawer(item, $event)" type="button"
+                      class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-xl text-xs font-bold transition-all shadow-2xs hover:shadow-xs cursor-pointer"
+                      title="Directly prepare and draft employment contract offer for this candidate">
+                      <svg class="w-3.5 h-3.5 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      <span>Draft Offer</span>
+                    </button>
+                  }
+
+                  <!-- Evaluation Button -->
+                  <button (click)="openEvaluationDrawer(item, $event)" type="button"
+                    class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-white hover:bg-sky-50 text-sky-700 border border-sky-200 hover:border-sky-300 rounded-xl text-xs font-bold transition-all shadow-2xs hover:shadow-xs cursor-pointer">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                    <span>{{ item.interview?.outcome ? 'View / Edit Results' : 'Evaluate Candidate' }}</span>
+                  </button>
+                </div>
               </td>
             </tr>
             }
@@ -349,9 +445,17 @@
           <div class="flex items-center space-x-2">
             <h3 class="text-lg font-extrabold text-slate-900">{{ interview.candidateName }}</h3>
             @let badge = getOutcomeInfo(interview);
-            <span class="text-[10px] font-bold px-2 py-0.5 rounded-md border" [ngClass]="badge.css">
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-md border inline-flex items-center gap-1" [ngClass]="badge.css">
+              @if (badge.icon.endsWith('.svg')) {
+                <img [src]="badge.icon" alt="" aria-hidden="true" class="w-3.5 h-3.5 shrink-0">
+              }
               {{ badge.label }}
             </span>
+            @if (interview.offer) {
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 border border-amber-300">
+              Offer {{ interview.offer.status }}
+            </span>
+            }
           </div>
           <p class="text-xs text-slate-500 mt-0.5">
             Role: <span class="font-bold text-slate-700">{{ interview.jobTitle }}</span> &bull; {{ interview.candidateEmail }}
@@ -359,10 +463,21 @@
         </div>
       </div>
 
-      <button (click)="closeEvaluationDrawer()" type="button"
-        class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-200 flex items-center justify-center transition-colors cursor-pointer">
-        ✕
-      </button>
+      <div class="flex items-center space-x-2">
+        <button (click)="openOfferDrawer(interview, $event)" type="button"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-xl text-xs font-bold transition-all shadow-2xs hover:shadow-xs cursor-pointer"
+          title="Open employment contract offer drawer">
+          <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          <span>{{ interview.offer ? 'View Contract' : 'Offer Contract' }}</span>
+        </button>
+
+        <button (click)="closeEvaluationDrawer()" type="button"
+          class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-200 flex items-center justify-center transition-colors cursor-pointer">
+          ✕
+        </button>
+      </div>
     </div>
     }
 
@@ -567,16 +682,28 @@
         💾 Save Draft Notes
       </button>
 
-      <div class="w-full sm:w-auto flex items-center space-x-2.5">
+      <div class="w-full sm:w-auto flex flex-wrap items-center gap-2">
+        <!-- Direct Offer Contract Button -->
+        <button (click)="openOfferDrawer(interview, $event)" type="button"
+          class="px-4 py-2.5 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white rounded-xl text-xs font-extrabold shadow-md shadow-emerald-500/20 transition-all cursor-pointer"
+          title="Open employment contract offer drawer">
+          <span class="flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <span>{{ interview.offer ? 'Manage Contract' : 'Offer Contract' }}</span>
+          </span>
+        </button>
+
         <!-- Fail / Reject Button -->
         <button (click)="openDecisionConfirmation('Failed')" type="button" [disabled]="isActionLoading()"
-          class="flex-1 sm:flex-initial px-4 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-xl text-xs font-bold transition-all shadow-2xs cursor-pointer disabled:opacity-50">
+          class="px-4 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-xl text-xs font-bold transition-all shadow-2xs cursor-pointer disabled:opacity-50">
           ✕ Fail / Reject
         </button>
 
         <!-- Pass Interview Button -->
         <button (click)="openDecisionConfirmation('Passed')" type="button" [disabled]="isActionLoading()"
-          class="flex-1 sm:flex-initial px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-extrabold shadow-md shadow-emerald-500/20 transition-all cursor-pointer disabled:opacity-50">
+          class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-extrabold shadow-md shadow-emerald-500/20 transition-all cursor-pointer disabled:opacity-50">
           ✓ Pass Interview &rarr;
         </button>
       </div>
@@ -686,23 +813,58 @@
     </div>
 
     <!-- Step 2 Footer Actions -->
-    <div class="p-5 border-t border-slate-200 bg-slate-50 flex items-center justify-between gap-3 shrink-0">
+    <div class="p-5 border-t border-slate-200 bg-slate-50 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
       <button (click)="backToEvaluation()" type="button" [disabled]="isActionLoading()"
-        class="px-4 py-2.5 bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-xl text-xs font-semibold transition-all cursor-pointer">
+        class="w-full sm:w-auto px-4 py-2.5 bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-xl text-xs font-semibold transition-all cursor-pointer">
         &larr; Back to Scorecard
       </button>
 
-      <button (click)="confirmDecision()" type="button" [disabled]="isActionLoading()"
-        class="inline-flex items-center gap-2 px-6 py-2.5 text-white rounded-xl text-xs font-extrabold shadow-md transition-all cursor-pointer disabled:opacity-50"
-        [ngClass]="pendingOutcome() === 'Passed' ? 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-500/20' : 'bg-rose-600 hover:bg-rose-700 shadow-rose-500/20'">
-        @if (isActionLoading()) {
-        <span class="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+      <div class="w-full sm:w-auto flex flex-wrap items-center justify-end gap-2.5">
+        @if (pendingOutcome() === 'Passed') {
+        <button (click)="confirmDecision(false)" type="button" [disabled]="isActionLoading()"
+          class="px-4 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-xl text-xs font-bold transition-all cursor-pointer disabled:opacity-50">
+          Confirm Pass Notice
+        </button>
+
+        <button (click)="confirmDecision(true)" type="button" [disabled]="isActionLoading()"
+          class="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white rounded-xl text-xs font-extrabold shadow-md shadow-emerald-500/20 transition-all cursor-pointer disabled:opacity-50">
+          @if (isActionLoading()) {
+          <span class="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+          }
+          <span>✓ Pass & Advance to Offer Contract &rarr;</span>
+        </button>
+        } @else {
+        <button (click)="confirmDecision(false)" type="button" [disabled]="isActionLoading()"
+          class="inline-flex items-center gap-2 px-6 py-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-extrabold shadow-md shadow-rose-500/20 transition-all cursor-pointer disabled:opacity-50">
+          @if (isActionLoading()) {
+          <span class="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+          }
+          <span>Confirm & Dispatch Rejection</span>
+        </button>
         }
-        <span>Confirm & Dispatch {{ pendingOutcome() === 'Passed' ? 'Pass' : 'Rejection' }}</span>
-      </button>
+      </div>
     </div>
     }
 
   </div>
 </div>
 }
+
+<!-- ========================================================================= -->
+<!-- DEDICATED OFFER DRAFTING & CONTRACT MODAL                                 -->
+<!-- ========================================================================= -->
+@if (isOfferDrawerOpen() && offerInterview(); as target) {
+<app-offer-draft-modal
+  [isOpen]="isOfferDrawerOpen()"
+  [jobId]="target.jobId"
+  [matchId]="target.id"
+  [candidateName]="target.candidateName"
+  [candidateEmail]="target.candidateEmail"
+  [jobTitle]="target.jobTitle"
+  [seniorityLevel]="target.seniorityLevel"
+  [existingOffer]="target.offer"
+  (close)="closeOfferDrawer()"
+  (saved)="onOfferSaved($event)">
+</app-offer-draft-modal>
+}
+

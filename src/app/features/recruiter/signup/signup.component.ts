@@ -37,6 +37,7 @@ export class SignupComponent {
   companyIndustry = '';
   companyTagline = '';
   companyEmail = '';
+  companyPhone = '';
   companyPassword = '';
   companyConfirmPassword = '';
   agreeCompanyTerms = false;
@@ -270,6 +271,11 @@ export class SignupComponent {
       return;
     }
 
+    if (!this.companyPhone.trim()) {
+      this.errorMessage = 'Please enter a telephone number.';
+      return;
+    }
+
     if (!this.companyPassword) {
       this.errorMessage = 'Please enter a password.';
       return;
@@ -292,6 +298,7 @@ export class SignupComponent {
 
     this.isLoading = true;
     const emailClean = this.companyEmail.trim();
+    const phoneClean = this.companyPhone.trim();
 
     this.apiService.signupCompany({
       companyName: this.companyName.trim(),
@@ -299,6 +306,8 @@ export class SignupComponent {
       industry: this.companyIndustry,
       tagline: this.companyTagline.trim(),
       email: emailClean,
+      phone: phoneClean,
+      telephone: phoneClean,
       password: this.companyPassword,
       logoData: this.logoPreviewUrl || null
     }).subscribe({
@@ -307,6 +316,8 @@ export class SignupComponent {
         this.pendingUser = {
           workEmail: emailClean,
           companyName: this.companyName.trim(),
+          phone: phoneClean,
+          telephone: phoneClean,
           accountType: 'company',
           token: res?.access_token
         };
@@ -336,8 +347,12 @@ export class SignupComponent {
       next: (res) => {
         this.isVerifyingOtp = false;
         const userToLogin = res?.user || this.pendingUser || { workEmail: this.otpEmail };
-        // Save accountType state explicitly
-        userToLogin.accountType = this.pendingUser?.accountType || userToLogin.account_type || 'solo';
+        // Save accountType & telephone state explicitly
+        userToLogin.accountType = this.pendingUser?.accountType || userToLogin.account_type || 'company';
+        if (this.pendingUser?.phone) {
+          userToLogin.phone = userToLogin.phone || this.pendingUser.phone;
+          userToLogin.telephone = userToLogin.telephone || this.pendingUser.telephone;
+        }
         this.authService.loginRecruiter(userToLogin);
         this.router.navigate(['/recruiter/onboarding']);
       },

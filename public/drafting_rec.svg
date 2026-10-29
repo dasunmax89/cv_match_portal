@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <rect width="100" height="100" rx="24" fill="#E5F6FD" />
+  <g fill="none" stroke="#0288D1" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Notepad Body -->
+    <path d="M 48 79 H 28 A 4 4 0 0 1 24 75 V 29 A 4 4 0 0 1 28 25 H 62 A 4 4 0 0 1 66 29 V 58" />
+    
+    <!-- Spirals at top -->
+    <path d="M 30 16 V 24 M 40 16 V 24 M 50 16 V 24 M 60 16 V 24" />
+    
+    <!-- Lines on paper -->
+    <path d="M 34 40 H 56 M 34 52 H 56 M 34 64 H 46" />
+    
+    <!-- Pencil -->
+    <path d="M 54 82 L 57 69 L 79 47 L 89 57 L 67 79 Z" />
+    
+    <!-- Pencil eraser band -->
+    <line x1="73" y1="53" x2="83" y2="63" />
+    
+    <!-- Pencil wood tip line -->
+    <line x1="57" y1="69" x2="67" y2="79" />
+  </g>
+</svg>

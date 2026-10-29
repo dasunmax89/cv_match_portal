@@ -13,7 +13,12 @@ import {
   CandidateApplication,
   RecruiterInterviewsOverviewResponse,
   InterviewDecisionRequest,
-  SaveInterviewNotesRequest
+  SaveInterviewNotesRequest,
+  CreateOfferRequest,
+  SignOfferRequest,
+  DeclineOfferRequest,
+  UpdateCommissionRequest,
+  ManagementPlacementsResponse
 } from '../models/candidate.models';
 import { hashPasswordClient } from '../utils/crypto.utils';
 
@@ -44,6 +49,14 @@ export class ApiService {
         this.http.post(`${this.baseUrl}/auth/login`, { email, password_hash: passwordHash })
       )
     );
+  }
+
+  loginWithGoogle(credential: string, role: string = 'candidate', accessToken?: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/auth/google`, {
+      credential,
+      access_token: accessToken,
+      role
+    });
   }
 
   signup(email: string, password: string, fullName?: string, extraData?: any): Observable<any> {
@@ -90,9 +103,12 @@ export class ApiService {
     tagline: string;
     email: string;
     password: string;
+    phone?: string;
+    telephone?: string;
     logoData?: string | null;
   }): Observable<any> {
     const rawPass = data.password || '';
+    const phoneVal = (data.phone || data.telephone || '').trim();
     return from(hashPasswordClient(rawPass)).pipe(
       switchMap(passwordHash =>
         this.http.post(`${this.baseUrl}/auth/signup/company`, {
@@ -101,6 +117,8 @@ export class ApiService {
           industry: data.industry,
           tagline: data.tagline,
           email: data.email,
+          phone: phoneVal,
+          telephone: phoneVal,
           password_hash: passwordHash,
           logo_data: data.logoData
         })
@@ -317,6 +335,52 @@ export class ApiService {
 
   confirmInvitePayment(inviteId: string): Observable<any> {
     return this.http.post(`${this.baseUrl}/payment/confirm-invite/${encodeURIComponent(inviteId)}`, {});
+  }
+
+  // --- Recruiter Pro Subscription & Payrexx Payments ---
+  getSubscriptionStatus(email?: string, userId?: string): Observable<any> {
+    const params = new URLSearchParams();
+    if (email) params.set('email', email);
+    if (userId) params.set('user_id', userId);
+    return this.http.get<any>(`${this.baseUrl}/auth/subscription-status?${params.toString()}`);
+  }
+
+  createSubscriptionPaylink(email: string, userId?: string, companyId?: string): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/payment/create-subscription-paylink`, {
+      email,
+      user_id: userId || email,
+      company_id: companyId
+    });
+  }
+
+  confirmSubscriptionPayment(email: string, userId?: string, paymentRef?: string, companyId?: string): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/payment/confirm-subscription`, {
+      email,
+      user_id: userId || email,
+      payment_ref: paymentRef,
+      company_id: companyId
+    });
+  }
+
+  // --- Contract Offers & Commission Management ---
+  createContractOffer(jobId: string, matchId: string, payload: CreateOfferRequest): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/recruiter/jobs/${encodeURIComponent(jobId)}/matches/${encodeURIComponent(matchId)}/offer`, payload);
+  }
+
+  candidateSignOffer(matchId: string, payload: SignOfferRequest): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/candidate/matches/${encodeURIComponent(matchId)}/offer/sign`, payload);
+  }
+
+  candidateDeclineOffer(matchId: string, payload: DeclineOfferRequest): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/candidate/matches/${encodeURIComponent(matchId)}/offer/decline`, payload);
+  }
+
+  getManagementPlacements(): Observable<ManagementPlacementsResponse> {
+    return this.http.get<ManagementPlacementsResponse>(`${this.baseUrl}/admin/placements`);
+  }
+
+  updatePlacementCommission(matchId: string, payload: UpdateCommissionRequest): Observable<any> {
+    return this.http.patch<any>(`${this.baseUrl}/admin/placements/${encodeURIComponent(matchId)}/commission`, payload);
   }
 
 

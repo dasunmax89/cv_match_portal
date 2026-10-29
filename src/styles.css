@@ -4,6 +4,43 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ==============================================================================
+   Mint & Teal Design System
+   Brand Palette:
+     - Light mint:   #E3FDFD (Background accents, empty states)
+     - Pale aqua:    #CBF1F5 (Subtle surfaces, selected filters, info panels)
+     - Mint teal:    #A6E3E9 (Soft accent, badges, progress markers)
+     - Teal:         #71C9CE (Interactive accents, highlights, selected items)
+     - Dark teal:    #244653 (Primary brand, buttons, key headings, active nav)
+   Typography & Neutrals:
+     - Primary text:   #172B32 (Dark readable neutral)
+     - Secondary text: #4E6770 (Muted neutral with strong contrast)
+     - Page Background:#F8FBFA (Light neutral surface)
+     - Borders:        #D5EDED (Subtle pale teal divider)
+   ============================================================================== */
+
+:root {
+  --color-mint-light: #E3FDFD;
+  --color-pale-aqua: #CBF1F5;
+  --color-mint-teal: #A6E3E9;
+  --color-teal: #71C9CE;
+  --color-dark-teal: #244653;
+  --color-dark-teal-hover: #1b353f;
+  --color-text-primary: #172B32;
+  --color-text-secondary: #4E6770;
+  --color-border-subtle: #D5EDED;
+  --color-bg-page: #F8FBFA;
+
+  /* Backward-compatible variables mapped to Mint & Teal */
+  --primary: #244653;
+  --primary-hover: #1b353f;
+  --secondary: #71C9CE;
+  --accent: #A6E3E9;
+  --border-color: #D5EDED;
+  --bg-card: #ffffff;
+  --text-main: #172B32;
+  --text-muted: #4E6770;
+}
 
 * {
   box-sizing: border-box;
@@ -14,46 +51,43 @@ html, body {
   padding: 0;
   height: 100%;
   font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background-color: #f1f5f9;
-  color: #1e293b;
+  background-color: var(--color-bg-page);
+  color: var(--color-text-primary);
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Global design system variables */
-:root {
-  --primary: #0d6efd;
-  --primary-hover: #0b5ed7;
-  --border-color: #ced4da;
-  --bg-card: #ffffff;
-  --text-main: #1e293b;
-  --text-muted: #64748b;
+/* Accessible focus ring across all interactive controls */
+:focus-visible {
+  outline: 2px solid var(--color-teal);
+  outline-offset: 2px;
 }
 
-/* Custom scrollbars */
+/* Custom scrollbars in Mint & Teal tones */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #F8FBFA;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 4px;
+  background: #C4E8EC;
+  border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #A6E3E9;
 }
 
-/* Custom styled select dropdowns matching input theme */
+/* Custom styled select dropdowns */
 select {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23244653' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
   background-repeat: no-repeat;
   background-position: right 0.75rem center;
   background-size: 1em 1em;
@@ -61,6 +95,42 @@ select {
 }
 
 select:focus {
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234f46e5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2371C9CE' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
 }
 
+/* Utility Design System Classes */
+@layer components {
+  /* Primary Action Button (Dark Teal) */
+  .btn-mint-primary {
+    @apply bg-[#244653] hover:bg-[#1b353f] text-white font-semibold transition-all duration-150 shadow-xs focus-visible:ring-2 focus-visible:ring-[#71C9CE] focus-visible:ring-offset-2;
+  }
+
+  /* Secondary Action Button (Pale Aqua with Dark Teal text) */
+  .btn-mint-secondary {
+    @apply bg-[#CBF1F5] hover:bg-[#A6E3E9] text-[#244653] font-semibold border border-[#A6E3E9] transition-all duration-150 focus-visible:ring-2 focus-visible:ring-[#71C9CE];
+  }
+
+  /* Outline Button */
+  .btn-mint-outline {
+    @apply bg-white hover:bg-[#E3FDFD] text-[#244653] font-semibold border border-[#D5EDED] hover:border-[#71C9CE] transition-all duration-150;
+  }
+
+  /* Surface Cards */
+  .card-mint {
+    @apply bg-white border border-[#D5EDED] rounded-xl shadow-2xs;
+  }
+
+  /* AI Match & Score Badges */
+  .badge-ai-high {
+    @apply bg-[#CBF1F5] text-[#244653] border border-[#71C9CE] font-bold text-xs px-2.5 py-1 rounded-full;
+  }
+
+  .badge-ai-mid {
+    @apply bg-[#E3FDFD] text-[#244653] border border-[#A6E3E9] font-semibold text-xs px-2.5 py-1 rounded-full;
+  }
+
+  /* Subtle Information Panels */
+  .panel-mint-info {
+    @apply bg-[#E3FDFD] border border-[#A6E3E9] text-[#244653] rounded-xl p-4;
+  }
+}

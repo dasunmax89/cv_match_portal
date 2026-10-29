@@ -60,8 +60,8 @@ export class CompanyProfileComponent implements OnInit {
     'Technical Recruiter',
     'Talent Acquisition Lead',
     'Hiring Manager',
-    'Founder / Executive',
-    'HR Generalist'
+    'Management / Executive',
+    'HR Specialist'
   ];
 
   industryOptions = [
@@ -85,9 +85,12 @@ export class CompanyProfileComponent implements OnInit {
 
   focusOptions = [
     'Engineering & Tech',
-    'Sales & Business Development',
+    'Sales & Marketing',
     'Product & Design',
     'Operations & HR',
+    'Finance',
+    'Corporate',
+    'Management',
     'All Departments'
   ];
 
@@ -103,10 +106,74 @@ export class CompanyProfileComponent implements OnInit {
   ];
   sentInvites: SentTeamInvite[] = [];
   isLoadingInvites = false;
+  isRedirectingToPayrexx = false;
 
   ngOnInit() {
     this.loadUserData();
     this.loadSentInvites();
+    this.refreshSubscription();
+  }
+
+  get isTrial(): boolean {
+    return this.authService.isTrial();
+  }
+
+  get isPaymentDone(): boolean {
+    return this.authService.isPaymentDone();
+  }
+
+  get isTrialExpired(): boolean {
+    return this.authService.isTrialExpired();
+  }
+
+  get trialDaysRemaining(): number {
+    return this.authService.trialDaysRemaining();
+  }
+
+  get subscriptionInfo(): any {
+    return this.authService.recruiterUser()?.subscription;
+  }
+
+  refreshSubscription() {
+    const user = this.authService.recruiterUser();
+    if (!user) return;
+    const email = this.workEmail || user.workEmail || user.work_email || user.email || '';
+    const userId = user.id || email;
+    this.apiService.getSubscriptionStatus(email, userId).subscribe({
+      next: (sub) => {
+        if (sub) {
+          this.authService.updateRecruiterSubscription(sub);
+        }
+      },
+      error: () => {}
+    });
+  }
+
+  openPayrexxPayment() {
+    const user = this.authService.recruiterUser();
+    if (!user) return;
+    const email = this.workEmail || user.workEmail || user.work_email || user.email || '';
+    const userId = user.id || email;
+    const companyId = user.companyId || user.company_id;
+
+    this.isRedirectingToPayrexx = true;
+    this.errorMessage.set(null);
+
+    this.apiService.createSubscriptionPaylink(email, userId, companyId).subscribe({
+      next: (res) => {
+        this.isRedirectingToPayrexx = false;
+        const payUrl = res?.payment_url || res?.paylink;
+        if (payUrl) {
+          window.location.href = payUrl;
+        } else {
+          this.errorMessage.set('Could not generate Payrexx checkout link. Please try again.');
+        }
+      },
+      error: (err) => {
+        this.isRedirectingToPayrexx = false;
+        this.errorMessage.set(err?.error?.detail || err?.message || 'Failed to initiate Payrexx checkout.');
+      }
+    });
   }
 
   loadUserData() {
@@ -245,7 +312,7 @@ export class CompanyProfileComponent implements OnInit {
     const alreadySent = this.sentInvites.find(i => (i.email || '').toLowerCase() === emailClean);
     if (alreadySent) {
       invite.status = 'error';
-      invite.errorMessage = alreadySent.status === 'Completed' 
+      invite.errorMessage = alreadySent.status === 'Completed'
         ? `An invitation to ${emailClean} has already been accepted.`
         : `An invitation to ${emailClean} is already pending payment.`;
       return;

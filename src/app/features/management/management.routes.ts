@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { ManagementLayout } from '../../layout/management-layout/management-layout.component';
 import { Login } from './login/login.component';
 import { Dashboard } from './dashboard/dashboard.component';
+import { ManagementPlacementsComponent } from './placements/placements.component';
 import { managementAuthGuard } from '../../core/guards/partition-auth.guard';
 
 export const managementRoutes: Routes = [
@@ -18,6 +19,10 @@ export const managementRoutes: Routes = [
       {
         path: 'dashboard',
         component: Dashboard
+      },
+      {
+        path: 'placements',
+        component: ManagementPlacementsComponent
       }
     ]
   }

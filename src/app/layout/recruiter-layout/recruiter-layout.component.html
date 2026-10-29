@@ -1,6 +1,6 @@
-<div class="min-h-screen bg-slate-50 flex flex-col font-sans text-slate-800">
+<div class="min-h-screen bg-[#F8FBFA] flex flex-col font-sans text-[#172B32]">
   <!-- Minimalist Light Enterprise Recruiter Header -->
-  <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
+  <header class="bg-white border-b border-[#D5EDED] sticky top-0 z-50 shadow-2xs">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
 
       <!-- Brand Logo -->
@@ -9,40 +9,75 @@
           <img src="logo.png" alt="Magic Match Logo"
             class="w-18 h-18 object-contain group-hover:scale-105 transition-transform" />
           <div class="flex flex-col">
-            <span class="font-bold text-slate-900 leading-none text-lg tracking-tight">Magic Match</span>
-            <span class="text-[10px] font-semibold text-sky-600 uppercase tracking-widest leading-none mt-0.5">Recruiter
+            <span class="font-bold text-[#172B32] leading-none text-lg tracking-tight">Magic Match</span>
+            <span class="text-[10px] font-bold text-[#71C9CE] uppercase tracking-widest leading-none mt-0.5">Recruiter
               Workspace</span>
           </div>
         </a>
 
         <!-- Navigation Links -->
         <nav class="hidden md:flex items-center space-x-1 ml-8">
-          <a routerLink="/recruiter/jobs" routerLinkActive="bg-sky-50 text-sky-700 font-semibold"
-            class="px-3.5 py-2 rounded-lg text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          <a routerLink="/recruiter/jobs" routerLinkActive="bg-[#CBF1F5] text-[#244653] font-bold shadow-2xs"
+            class="px-3.5 py-2 rounded-lg text-sm font-medium text-[#4E6770] hover:text-[#244653] hover:bg-[#E3FDFD]/60 transition-colors">
             Job Listings
           </a>
-          <a routerLink="/recruiter/candidates" routerLinkActive="bg-sky-50 text-sky-700 font-semibold"
-            class="px-3.5 py-2 rounded-lg text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          <a routerLink="/recruiter/candidates" routerLinkActive="bg-[#CBF1F5] text-[#244653] font-bold shadow-2xs"
+            class="px-3.5 py-2 rounded-lg text-sm font-medium text-[#4E6770] hover:text-[#244653] hover:bg-[#E3FDFD]/60 transition-colors">
             Candidates
           </a>
-          <a routerLink="/recruiter/interviews" routerLinkActive="bg-sky-50 text-sky-700 font-semibold"
-            class="px-3.5 py-2 rounded-lg text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          <a routerLink="/recruiter/interviews" routerLinkActive="bg-[#CBF1F5] text-[#244653] font-bold shadow-2xs"
+            class="px-3.5 py-2 rounded-lg text-sm font-medium text-[#4E6770] hover:text-[#244653] hover:bg-[#E3FDFD]/60 transition-colors">
             Interviews
           </a>
-          <a routerLink="/recruiter/create" routerLinkActive="bg-sky-50 text-sky-700 font-semibold"
-            class="px-3.5 py-2 rounded-lg text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          <a routerLink="/recruiter/create" routerLinkActive="bg-[#244653] text-white font-bold"
+            class="px-3.5 py-2 rounded-lg text-sm font-semibold text-[#244653] bg-[#E3FDFD] border border-[#A6E3E9] hover:bg-[#CBF1F5] transition-colors ml-2">
             + Post Job
           </a>
         </nav>
       </div>
 
       <!-- User Menu & Recruiter Auth Dropdown -->
-      <div class="flex items-center space-x-4">
+      <div class="flex items-center space-x-3">
         @if (authService.isRecruiterLoggedIn()) {
+
+        <!-- Trial Notification Pill in Top Bar -->
+        @if (isTrial) {
+          <button (click)="openPayrexxPayment()" [disabled]="isRedirectingToPayrexx"
+            class="group inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-50 to-[#CBF1F5] hover:from-amber-100 hover:to-[#A6E3E9] border border-[#A6E3E9] text-[#244653] shadow-2xs hover:shadow-xs transition-all cursor-pointer text-xs"
+            title="Your 30-Day Free Trial is Active. Click to add payment via Payrexx.">
+            <span class="relative flex h-2 w-2 shrink-0">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+            </span>
+            <span class="font-semibold text-[11px] sm:text-xs">30-Day Trial: <strong class="text-[#244653] font-bold">{{ trialDaysRemaining }} days left</strong></span>
+            <span class="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#244653] group-hover:bg-[#1B353F] text-white text-[10px] font-bold tracking-wide transition-colors">
+              {{ isRedirectingToPayrexx ? 'Connecting...' : 'Pay with Payrexx' }}
+              <svg class="w-3 h-3 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            </span>
+          </button>
+        } @else if (isTrialExpired) {
+          <button (click)="openPayrexxPayment()" [disabled]="isRedirectingToPayrexx"
+            class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-800 shadow-2xs transition-all cursor-pointer text-xs font-bold"
+            title="Trial expired. Click to add payment via Payrexx">
+            <span class="w-2 h-2 rounded-full bg-rose-600 shrink-0"></span>
+            <span class="text-[11px] sm:text-xs">Trial Expired</span>
+            <span class="px-2 py-0.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white text-[10px] font-bold transition-colors">
+              {{ isRedirectingToPayrexx ? 'Connecting...' : 'Pay via Payrexx' }}
+            </span>
+          </button>
+        } @else if (isPaymentDone) {
+          <div class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#CBF1F5] border border-[#71C9CE] text-[#244653] text-xs font-semibold">
+            <svg class="w-3.5 h-3.5 text-[#244653] shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+            </svg>
+            <span>Pro Workspace (Active)</span>
+          </div>
+        }
+
         <div class="relative">
           <!-- Round Profile Picture Button -->
           <button (click)="toggleDropdown($event)" type="button"
-            class="relative w-10 h-10 rounded-full border-2 border-sky-500 hover:border-sky-600 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 transition-all cursor-pointer flex items-center justify-center overflow-hidden bg-sky-600 text-white font-bold text-xs"
+            class="relative w-10 h-10 rounded-full border-2 border-[#71C9CE] hover:border-[#244653] shadow-xs focus:outline-none focus:ring-2 focus:ring-[#71C9CE] focus:ring-offset-2 transition-all cursor-pointer flex items-center justify-center overflow-hidden bg-[#244653] text-white font-bold text-xs"
             aria-expanded="false" aria-haspopup="true">
             @if (authService.recruiterUser()?.profileImage || authService.recruiterUser()?.profile_image) {
             <img [src]="authService.recruiterUser()?.profileImage || authService.recruiterUser()?.profile_image"
@@ -55,11 +90,11 @@
           <!-- Dropdown Menu -->
           @if (isDropdownOpen) {
           <div
-            class="absolute right-0 mt-2 w-60 bg-white rounded-2xl border border-slate-200 shadow-xl py-2 z-50 animate-in fade-in zoom-in-95 duration-150">
+            class="absolute right-0 mt-2 w-64 bg-white rounded-2xl border border-[#D5EDED] shadow-xl py-2 z-50 animate-in fade-in zoom-in-95 duration-150">
             <!-- User Details Header -->
-            <div class="px-4 py-3 border-b border-slate-100 flex items-center gap-3">
+            <div class="px-4 py-3 border-b border-[#D5EDED] flex items-center gap-3">
               <div
-                class="w-9 h-9 rounded-full bg-sky-600 text-white font-bold flex items-center justify-center text-xs shrink-0 overflow-hidden">
+                class="w-9 h-9 rounded-full bg-[#244653] text-white font-bold flex items-center justify-center text-xs shrink-0 overflow-hidden">
                 @if (authService.recruiterUser()?.profileImage || authService.recruiterUser()?.profile_image) {
                 <img [src]="authService.recruiterUser()?.profileImage || authService.recruiterUser()?.profile_image"
                   alt="Profile" class="w-full h-full object-cover" />
@@ -68,23 +103,54 @@
                 }
               </div>
               <div class="truncate">
-                <p class="text-xs font-bold text-slate-900 truncate">
+                <p class="text-xs font-bold text-[#172B32] truncate">
                   {{ authService.recruiterUser()?.companyName || authService.recruiterUser()?.company_name ||
                   authService.recruiterUser()?.fullName || 'Recruiter Workspace' }}
                 </p>
-                <p class="text-[11px] text-slate-500 truncate">
+                <p class="text-[11px] text-[#4E6770] truncate">
                   {{ authService.recruiterUser()?.workEmail || authService.recruiterUser()?.work_email ||
                   authService.recruiterUser()?.email }}
                 </p>
               </div>
             </div>
 
+            <!-- Subscription / Trial Status Banner inside dropdown -->
+            <div class="px-4 py-2.5 bg-[#F8FBFA] border-b border-[#D5EDED] text-xs">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-[#4E6770]">Current Plan</span>
+                @if (isTrial) {
+                  <span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-bold text-[10px]">30-Day Trial</span>
+                } @else if (isPaymentDone) {
+                  <span class="px-2 py-0.5 rounded-full bg-[#CBF1F5] text-[#244653] border border-[#71C9CE] font-bold text-[10px]">Pro (Active)</span>
+                } @else {
+                  <span class="px-2 py-0.5 rounded-full bg-rose-100 text-rose-800 font-bold text-[10px]">Expired</span>
+                }
+              </div>
+              @if (isTrial) {
+                <p class="text-[11px] text-[#4E6770] mt-1">
+                  <strong class="text-[#244653]">{{ trialDaysRemaining }} days</strong> remaining. Payment pending.
+                </p>
+                <button (click)="openPayrexxPayment()" [disabled]="isRedirectingToPayrexx"
+                  class="mt-2 w-full py-1.5 px-3 rounded-lg bg-[#244653] hover:bg-[#1B353F] text-white font-bold text-[11px] shadow-2xs transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+                  <span>{{ isRedirectingToPayrexx ? 'Connecting to Payrexx...' : 'Add Payment via Payrexx' }}</span>
+                </button>
+              } @else if (isTrialExpired) {
+                <p class="text-[11px] text-rose-600 mt-1 font-semibold">
+                  Trial concluded. Please add payment.
+                </p>
+                <button (click)="openPayrexxPayment()" [disabled]="isRedirectingToPayrexx"
+                  class="mt-2 w-full py-1.5 px-3 rounded-lg bg-rose-600 hover:bg-rose-700 text-white font-bold text-[11px] shadow-2xs transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+                  <span>{{ isRedirectingToPayrexx ? 'Connecting to Payrexx...' : 'Pay with Payrexx' }}</span>
+                </button>
+              }
+            </div>
+
             <!-- Menu Links -->
             <div class="py-1">
               <!-- Candidates Directory -->
               <button (click)="navigateTo('/recruiter/candidates')" type="button"
-                class="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 hover:text-sky-700 flex items-center gap-2.5 transition-colors cursor-pointer">
-                <svg class="w-4 h-4 text-slate-400 group-hover:text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                class="w-full text-left px-4 py-2 text-xs font-medium text-[#172B32] hover:bg-[#E3FDFD] hover:text-[#244653] flex items-center gap-2.5 transition-colors cursor-pointer">
+                <svg class="w-4 h-4 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
                 Candidates Directory
@@ -92,8 +158,8 @@
 
               <!-- Scheduled Interviews -->
               <button (click)="navigateTo('/recruiter/interviews')" type="button"
-                class="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 hover:text-sky-700 flex items-center gap-2.5 transition-colors cursor-pointer">
-                <svg class="w-4 h-4 text-slate-400 group-hover:text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                class="w-full text-left px-4 py-2 text-xs font-medium text-[#172B32] hover:bg-[#E3FDFD] hover:text-[#244653] flex items-center gap-2.5 transition-colors cursor-pointer">
+                <svg class="w-4 h-4 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
                 Scheduled Interviews
@@ -101,9 +167,8 @@
 
               <!-- Company Profile -->
               <button (click)="navigateTo('/recruiter/profile')" type="button"
-                class="w-full text-left px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 hover:text-sky-700 flex items-center gap-2.5 transition-colors cursor-pointer">
-                <svg class="w-4 h-4 text-slate-400 group-hover:text-sky-600" fill="none" stroke="currentColor"
-                  viewBox="0 0 24 24">
+                class="w-full text-left px-4 py-2 text-xs font-medium text-[#172B32] hover:bg-[#E3FDFD] hover:text-[#244653] flex items-center gap-2.5 transition-colors cursor-pointer">
+                <svg class="w-4 h-4 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                 </svg>
@@ -111,7 +176,7 @@
               </button>
             </div>
 
-            <div class="border-t border-slate-100 pt-1">
+            <div class="border-t border-[#D5EDED] pt-1">
               <!-- Signout -->
               <button (click)="logout()" type="button"
                 class="w-full text-left px-4 py-2 text-xs font-semibold text-rose-600 hover:bg-rose-50 flex items-center gap-2.5 transition-colors cursor-pointer">
@@ -127,7 +192,7 @@
         </div>
         } @else {
         <a routerLink="/recruiter/login"
-          class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-sky-700 bg-sky-50 hover:bg-sky-100 rounded-lg border border-sky-200 transition-colors">
+          class="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-[#244653] bg-[#CBF1F5] hover:bg-[#A6E3E9] rounded-lg border border-[#71C9CE] transition-colors">
           Recruiter Sign In
         </a>
         }
@@ -141,13 +206,13 @@
   </main>
 
   <!-- Minimalist Recruiter Footer -->
-  <footer class="bg-white border-t border-slate-200 py-6">
-    <div class="max-w-7xl mx-auto px-4 text-center sm:flex sm:justify-between sm:text-left text-xs text-slate-500">
+  <footer class="bg-white border-t border-[#D5EDED] py-6">
+    <div class="max-w-7xl mx-auto px-4 text-center sm:flex sm:justify-between sm:text-left text-xs text-[#4E6770]">
       <p>&copy; 2026 Magic Match Inc. Talent Acquisition & Automated Matching Engine.</p>
       <div class="mt-2 sm:mt-0 space-x-4">
-        <a href="#" class="hover:text-slate-800">Recruiter Docs</a>
-        <a href="#" class="hover:text-slate-800">ATS Integrations</a>
-        <a href="#" class="hover:text-slate-800">Support</a>
+        <a href="#" class="hover:text-[#244653]">Recruiter Docs</a>
+        <a href="#" class="hover:text-[#244653]">ATS Integrations</a>
+        <a href="#" class="hover:text-[#244653]">Support</a>
       </div>
     </div>
   </footer>

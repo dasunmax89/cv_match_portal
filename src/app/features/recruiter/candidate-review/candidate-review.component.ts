@@ -5,11 +5,12 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ApiService } from '../../../core/services/api.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { CandidateMatch, JobResponse } from '../../../core/models/candidate.models';
+import { OfferDraftModalComponent } from '../offer-draft-modal/offer-draft-modal.component';
 
 @Component({
   selector: 'app-candidate-review',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, OfferDraftModalComponent],
   templateUrl: './candidate-review.component.html',
   styleUrls: ['./candidate-review.component.css']
 })
@@ -69,6 +70,10 @@ export class CandidateReviewComponent implements OnInit {
   scheduleError = signal<string | null>(null);
   scheduleSuccessMessage = signal<string | null>(null);
   minDate = signal<string>('');
+
+  // --- Offer Drafting Modal State ---
+  isOfferModalOpen = signal<boolean>(false);
+  offerTargetCandidate = signal<CandidateMatch | null>(null);
 
   // --- Toast Notification State ---
   toastMessage = signal<string | null>(null);
@@ -170,17 +175,17 @@ export class CandidateReviewComponent implements OnInit {
   }
 
   getScoreColor(score: number | undefined): string {
-    if (score === undefined || score === null) return 'text-slate-400';
-    if (score >= 75) return 'text-emerald-500';
-    if (score >= 50) return 'text-amber-500';
-    return 'text-rose-500';
+    if (score === undefined || score === null) return 'text-[#4E6770]';
+    if (score >= 75) return 'text-[#244653]';
+    if (score >= 50) return 'text-[#244653]';
+    return 'text-rose-600';
   }
 
   getScoreBg(score: number | undefined): string {
-    if (score === undefined || score === null) return 'bg-slate-300';
-    if (score >= 75) return 'bg-emerald-500';
-    if (score >= 50) return 'bg-amber-500';
-    return 'bg-rose-500';
+    if (score === undefined || score === null) return 'bg-[#D5EDED]';
+    if (score >= 75) return 'bg-[#71C9CE]';
+    if (score >= 50) return 'bg-[#A6E3E9]';
+    return 'bg-rose-400';
   }
   
   getDisplayVerdict(candidate?: CandidateMatch | null): string {
@@ -191,19 +196,19 @@ export class CandidateReviewComponent implements OnInit {
   }
 
   getVerdictBadgeClass(verdict: string | undefined): string {
-    if (!verdict || verdict === 'Pending') return 'bg-slate-100 text-slate-600 border-slate-200';
-    if (verdict === 'Rejected') return 'bg-rose-100 text-rose-800 border-rose-300';
-    if (verdict === 'Shortlisted') return 'bg-emerald-100 text-emerald-800 border-emerald-300';
-    if (verdict === 'Strong Match') return 'bg-emerald-100 text-emerald-800 border-emerald-200';
-    if (verdict === 'Moderate Match') return 'bg-amber-100 text-amber-800 border-amber-200';
-    return 'bg-rose-100 text-rose-800 border-rose-200';
+    if (!verdict || verdict === 'Pending') return 'bg-[#F8FBFA] text-[#4E6770] border-[#D5EDED]';
+    if (verdict === 'Rejected') return 'bg-rose-50 text-rose-800 border-rose-200';
+    if (verdict === 'Shortlisted') return 'bg-[#CBF1F5] text-[#244653] border-[#71C9CE] font-bold';
+    if (verdict === 'Strong Match') return 'bg-[#CBF1F5] text-[#244653] border-[#71C9CE] font-bold';
+    if (verdict === 'Moderate Match') return 'bg-[#E3FDFD] text-[#244653] border-[#A6E3E9] font-semibold';
+    return 'bg-rose-50 text-rose-700 border-rose-200';
   }
 
   getBehavioralVerdictBadgeClass(verdict: string | undefined): string {
-    if (!verdict) return 'bg-slate-100 text-slate-600 border-slate-200';
-    if (verdict === 'RECOMMENDED_FOR_CLIENT_ROUND') return 'bg-emerald-100 text-emerald-800 border-emerald-200';
-    if (verdict === 'NEEDS_PROBING') return 'bg-amber-100 text-amber-800 border-amber-200';
-    return 'bg-rose-100 text-rose-800 border-rose-200';
+    if (!verdict) return 'bg-[#F8FBFA] text-[#4E6770] border-[#D5EDED]';
+    if (verdict === 'RECOMMENDED_FOR_CLIENT_ROUND') return 'bg-[#CBF1F5] text-[#244653] border-[#71C9CE] font-bold';
+    if (verdict === 'NEEDS_PROBING') return 'bg-[#E3FDFD] text-[#244653] border-[#A6E3E9] font-semibold';
+    return 'bg-rose-50 text-rose-700 border-rose-200';
   }
 
   reject(candidate?: CandidateMatch) {
@@ -419,6 +424,54 @@ export class CandidateReviewComponent implements OnInit {
     if (!candidate.candidate_answers) return null;
     const ans = candidate.candidate_answers.find(a => a.question_id === questionId);
     return ans ? ans.selected_key : null;
+  }
+
+  // --- Offer Drafting Actions ---
+  openOfferModal(candidate?: CandidateMatch, event?: MouseEvent) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    const target = candidate || this.currentCandidate;
+    if (!target) return;
+    this.offerTargetCandidate.set(target);
+    this.isOfferModalOpen.set(true);
+  }
+
+  closeOfferModal() {
+    this.isOfferModalOpen.set(false);
+    this.offerTargetCandidate.set(null);
+  }
+
+  onOfferSaved(event: { match: any; isDraft: boolean }) {
+    const target = this.offerTargetCandidate();
+    if (!target) return;
+
+    const updated = event.match || {
+      ...target,
+      status: event.isDraft ? 'Offer Drafting' : 'Offer Extended',
+      offer: event.match?.offer || target.offer
+    };
+
+    this.candidates.update(list => list.map(c => c.id === target.id ? { ...c, ...updated } : c));
+    if (this.selectedTableCandidate()?.id === target.id) {
+      this.selectedTableCandidate.update(c => c ? { ...c, ...updated } : null);
+    }
+    this.showToast(
+      event.isDraft 
+        ? `Offer draft saved for ${target.candidateName} (Candidate not notified)` 
+        : `Official employment offer dispatched to ${target.candidateName}!`,
+      'success'
+    );
+  }
+
+  getInitials(name?: string): string {
+    if (!name) return 'C';
+    const parts = name.trim().split(/\s+/);
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+    return name.slice(0, 2).toUpperCase();
   }
 }
 
