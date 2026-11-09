@@ -1,31 +1,31 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 font-sans">
 
   <!-- Header Section -->
-  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80">
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-white p-6 rounded-2xl shadow-xs border border-[#D5EDED]">
     <div class="flex items-center space-x-3.5">
-      <span class="p-3 bg-gradient-to-br from-sky-50 to-indigo-50 text-sky-600 rounded-xl border border-sky-100 shadow-2xs">
+      <span class="p-3 bg-[#E3FDFD] text-[#244653] rounded-xl border border-[#A6E3E9] shadow-2xs">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
             d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
         </svg>
       </span>
       <div>
-        <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Scheduled Interviews</h1>
-        <p class="text-sm text-slate-500 mt-0.5">Manage, conduct, and record outcome decisions for all candidate interviews grouped by job requisitions.</p>
+        <h1 class="text-2xl font-extrabold text-[#172B32] tracking-tight">Scheduled Interviews</h1>
+        <p class="text-sm text-[#4E6770] mt-0.5">Manage, conduct, and record outcome decisions for all candidate interviews grouped by job requisitions.</p>
       </div>
     </div>
 
     <div class="flex items-center space-x-2.5">
       <button (click)="expandAll()" type="button"
-        class="px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl text-xs font-semibold shadow-2xs transition-colors cursor-pointer">
+        class="px-3.5 py-2 bg-white hover:bg-[#F8FBFA] text-[#244653] border border-[#D5EDED] rounded-xl text-xs font-semibold shadow-2xs transition-colors cursor-pointer">
         Expand All
       </button>
       <button (click)="collapseAll()" type="button"
-        class="px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl text-xs font-semibold shadow-2xs transition-colors cursor-pointer">
+        class="px-3.5 py-2 bg-white hover:bg-[#F8FBFA] text-[#244653] border border-[#D5EDED] rounded-xl text-xs font-semibold shadow-2xs transition-colors cursor-pointer">
         Collapse All
       </button>
       <a routerLink="/recruiter/candidates"
-        class="inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-700 hover:to-indigo-700 text-white font-semibold rounded-xl text-xs shadow-md shadow-sky-500/20 transition-all">
+        class="inline-flex items-center justify-center px-4 py-2 bg-[#244653] hover:bg-[#1A343E] text-white font-semibold rounded-xl text-xs shadow-xs transition-all">
         Candidates Directory
       </a>
     </div>
@@ -35,23 +35,23 @@
   @if (overviewData(); as overview) {
   <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3.5">
     <!-- Total Scheduled -->
-    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-2xs">
+    <div class="bg-white p-4 rounded-2xl border border-[#D5EDED] shadow-2xs">
       <div class="flex items-center justify-between">
-        <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Total</span>
+        <span class="text-[11px] font-bold uppercase tracking-wider text-[#4E6770]">Total</span>
         <img src="total_rec.svg" alt="" aria-hidden="true" class="w-8 h-8 shrink-0">
       </div>
-      <p class="text-xl font-black text-slate-900 mt-1.5">{{ overview.totalScheduled }}</p>
-      <span class="text-[10px] text-slate-500 mt-0.5 block truncate">All interviews</span>
+      <p class="text-xl font-black text-[#172B32] mt-1.5">{{ overview.totalScheduled }}</p>
+      <span class="text-[10px] text-[#4E6770] mt-0.5 block truncate">All interviews</span>
     </div>
 
     <!-- Happening Today -->
-    <div class="bg-white p-4 rounded-2xl border border-sky-100 shadow-2xs">
+    <div class="bg-white p-4 rounded-2xl border border-[#71C9CE] shadow-2xs">
       <div class="flex items-center justify-between">
-        <span class="text-[11px] font-bold uppercase tracking-wider text-sky-700">Today</span>
+        <span class="text-[11px] font-bold uppercase tracking-wider text-[#244653]">Today</span>
         <img src="today_rec.svg" alt="" aria-hidden="true" class="w-8 h-8 shrink-0">
       </div>
-      <p class="text-xl font-black text-sky-900 mt-1.5">{{ overview.happeningToday }}</p>
-      <span class="text-[10px] text-sky-600 mt-0.5 block truncate">Scheduled today</span>
+      <p class="text-xl font-black text-[#244653] mt-1.5">{{ overview.happeningToday }}</p>
+      <span class="text-[10px] text-[#244653]/80 mt-0.5 block truncate">Scheduled today</span>
     </div>
 
     <!-- Needs Evaluation -->
@@ -65,43 +65,43 @@
     </div>
 
     <!-- Total Passed -->
-    <div class="bg-white p-4 rounded-2xl border border-emerald-100 shadow-2xs">
+    <div class="bg-white p-4 rounded-2xl border border-[#71C9CE] shadow-2xs bg-[#CBF1F5]/10">
       <div class="flex items-center justify-between">
-        <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-700">Passed</span>
+        <span class="text-[11px] font-bold uppercase tracking-wider text-[#244653]">Passed</span>
         <img src="passed_rec.svg" alt="" aria-hidden="true" class="w-8 h-8 shrink-0">
       </div>
-      <p class="text-xl font-black text-emerald-900 mt-1.5">{{ overview.totalPassed }}</p>
-      <span class="text-[10px] text-emerald-600 mt-0.5 block truncate">Ready for offer</span>
+      <p class="text-xl font-black text-[#244653] mt-1.5">{{ overview.totalPassed }}</p>
+      <span class="text-[10px] text-[#244653]/80 mt-0.5 block truncate">Ready for offer</span>
     </div>
 
     <!-- Offers in Drafting (New Stage) -->
-    <div class="bg-white p-4 rounded-2xl border border-sky-200 shadow-2xs">
+    <div class="bg-white p-4 rounded-2xl border border-[#A6E3E9] shadow-2xs">
       <div class="flex items-center justify-between">
-        <span class="text-[11px] font-bold uppercase tracking-wider text-sky-700">Drafting</span>
+        <span class="text-[11px] font-bold uppercase tracking-wider text-[#244653]">Drafting</span>
         <img src="drafting_rec.svg" alt="" aria-hidden="true" class="w-8 h-8 shrink-0">
       </div>
-      <p class="text-xl font-black text-sky-900 mt-1.5">{{ overview.totalOffersDrafting ?? 0 }}</p>
-      <span class="text-[10px] text-sky-600 mt-0.5 block truncate">Draft preparation</span>
+      <p class="text-xl font-black text-[#244653] mt-1.5">{{ overview.totalOffersDrafting ?? 0 }}</p>
+      <span class="text-[10px] text-[#4E6770] mt-0.5 block truncate">Draft preparation</span>
     </div>
 
     <!-- Offers Extended -->
-    <div class="bg-white p-4 rounded-2xl border border-indigo-200 shadow-2xs">
+    <div class="bg-white p-4 rounded-2xl border border-[#244653] shadow-2xs">
       <div class="flex items-center justify-between">
-        <span class="text-[11px] font-bold uppercase tracking-wider text-indigo-700">Extended</span>
+        <span class="text-[11px] font-bold uppercase tracking-wider text-[#244653]">Extended</span>
         <img src="extended_rec.svg" alt="" aria-hidden="true" class="w-8 h-8 shrink-0">
       </div>
-      <p class="text-xl font-black text-indigo-900 mt-1.5">{{ overview.totalOffersExtended ?? 0 }}</p>
-      <span class="text-[10px] text-indigo-600 mt-0.5 block truncate">Dispatched to candidate</span>
+      <p class="text-xl font-black text-[#244653] mt-1.5">{{ overview.totalOffersExtended ?? 0 }}</p>
+      <span class="text-[10px] text-[#4E6770] mt-0.5 block truncate">Dispatched to candidate</span>
     </div>
 
     <!-- Contracts Signed -->
-    <div class="bg-white p-4 rounded-2xl border border-emerald-200 shadow-2xs">
+    <div class="bg-white p-4 rounded-2xl border border-[#71C9CE] shadow-2xs bg-[#CBF1F5]/20">
       <div class="flex items-center justify-between">
-        <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-800">Signed</span>
+        <span class="text-[11px] font-bold uppercase tracking-wider text-[#244653]">Signed</span>
         <img src="signed_rec.svg" alt="" aria-hidden="true" class="w-8 h-8 shrink-0">
       </div>
-      <p class="text-xl font-black text-emerald-950 mt-1.5">{{ overview.totalOffersAccepted ?? 0 }}</p>
-      <span class="text-[10px] text-emerald-700 mt-0.5 block truncate">Placement fee active</span>
+      <p class="text-xl font-black text-[#244653] mt-1.5">{{ overview.totalOffersAccepted ?? 0 }}</p>
+      <span class="text-[10px] text-[#244653] mt-0.5 block truncate">Placement fee active</span>
     </div>
   </div>
   }
@@ -111,54 +111,54 @@
     <!-- Search Input -->
     <div class="relative flex-1 max-w-md">
       <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-        <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-5 h-5 text-[#4E6770]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
         </svg>
       </div>
       <input type="text" [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)"
         placeholder="Filter by candidate, email, or job title..."
-        class="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all text-sm shadow-2xs">
+        class="w-full pl-10 pr-4 py-2.5 bg-white border border-[#D5EDED] rounded-xl text-[#172B32] placeholder-[#4E6770]/60 focus:outline-none focus:ring-2 focus:ring-[#71C9CE]/20 focus:border-[#71C9CE] transition-all text-sm shadow-2xs">
     </div>
 
     <!-- Filter Pills -->
-    <div class="flex items-center gap-1.5 bg-slate-200/60 p-1 rounded-xl border border-slate-200 self-start md:self-auto overflow-x-auto">
+    <div class="flex items-center gap-1.5 bg-[#E3FDFD]/60 p-1 rounded-xl border border-[#D5EDED] self-start md:self-auto overflow-x-auto">
       <button (click)="activeFilter.set('all')"
-        [ngClass]="activeFilter() === 'all' ? 'bg-white shadow-xs text-sky-700 font-bold' : 'text-slate-600 hover:text-slate-900'"
+        [ngClass]="activeFilter() === 'all' ? 'bg-[#244653] text-[#CBF1F5] font-bold shadow-xs' : 'text-[#4E6770] hover:text-[#172B32]'"
         class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer">
         All
       </button>
       <button (click)="activeFilter.set('today_upcoming')"
-        [ngClass]="activeFilter() === 'today_upcoming' ? 'bg-white shadow-xs text-sky-700 font-bold' : 'text-slate-600 hover:text-slate-900'"
+        [ngClass]="activeFilter() === 'today_upcoming' ? 'bg-[#244653] text-[#CBF1F5] font-bold shadow-xs' : 'text-[#4E6770] hover:text-[#172B32]'"
         class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer">
         Today / Upcoming
       </button>
       <button (click)="activeFilter.set('needs_eval')"
-        [ngClass]="activeFilter() === 'needs_eval' ? 'bg-white shadow-xs text-amber-800 font-bold' : 'text-slate-600 hover:text-slate-900'"
+        [ngClass]="activeFilter() === 'needs_eval' ? 'bg-white shadow-xs text-amber-800 font-bold border border-amber-300' : 'text-[#4E6770] hover:text-[#172B32]'"
         class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer">
         Needs Feedback
       </button>
       <button (click)="activeFilter.set('passed')"
-        [ngClass]="activeFilter() === 'passed' ? 'bg-white shadow-xs text-emerald-800 font-bold' : 'text-slate-600 hover:text-slate-900'"
+        [ngClass]="activeFilter() === 'passed' ? 'bg-[#CBF1F5] text-[#244653] border border-[#71C9CE] font-bold shadow-xs' : 'text-[#4E6770] hover:text-[#172B32]'"
         class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer">
         Passed
       </button>
       <button (click)="activeFilter.set('offers_drafting')"
-        [ngClass]="activeFilter() === 'offers_drafting' ? 'bg-white shadow-xs text-sky-800 font-bold' : 'text-slate-600 hover:text-slate-900'"
+        [ngClass]="activeFilter() === 'offers_drafting' ? 'bg-[#E3FDFD] text-[#244653] border border-[#A6E3E9] font-bold shadow-xs' : 'text-[#4E6770] hover:text-[#172B32]'"
         class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer">
         Drafting ({{ overviewData()?.totalOffersDrafting ?? 0 }})
       </button>
       <button (click)="activeFilter.set('offers_extended')"
-        [ngClass]="activeFilter() === 'offers_extended' ? 'bg-white shadow-xs text-indigo-800 font-bold' : 'text-slate-600 hover:text-slate-900'"
+        [ngClass]="activeFilter() === 'offers_extended' ? 'bg-[#244653] text-[#CBF1F5] font-bold shadow-xs' : 'text-[#4E6770] hover:text-[#172B32]'"
         class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer">
         Extended ({{ overviewData()?.totalOffersExtended ?? 0 }})
       </button>
       <button (click)="activeFilter.set('offers_accepted')"
-        [ngClass]="activeFilter() === 'offers_accepted' ? 'bg-white shadow-xs text-emerald-800 font-bold' : 'text-slate-600 hover:text-slate-900'"
+        [ngClass]="activeFilter() === 'offers_accepted' ? 'bg-[#CBF1F5] text-[#244653] border border-[#71C9CE] font-bold shadow-xs' : 'text-[#4E6770] hover:text-[#172B32]'"
         class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer">
         Signed ({{ overviewData()?.totalOffersAccepted ?? 0 }})
       </button>
       <button (click)="activeFilter.set('failed')"
-        [ngClass]="activeFilter() === 'failed' ? 'bg-white shadow-xs text-rose-800 font-bold' : 'text-slate-600 hover:text-slate-900'"
+        [ngClass]="activeFilter() === 'failed' ? 'bg-white shadow-xs text-rose-800 font-bold border border-rose-300' : 'text-[#4E6770] hover:text-[#172B32]'"
         class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer">
         Unsuccessful
       </button>
@@ -167,20 +167,20 @@
 
   <!-- Loading State -->
   @if (isLoading()) {
-  <div class="flex flex-col items-center justify-center py-24 bg-white rounded-2xl border border-slate-200 shadow-2xs space-y-4">
-    <div class="w-12 h-12 border-4 border-sky-200 border-t-sky-600 rounded-full animate-spin"></div>
-    <p class="text-sm font-semibold text-slate-600">Loading scheduled interviews...</p>
+  <div class="flex flex-col items-center justify-center py-24 bg-white rounded-2xl border border-[#D5EDED] shadow-2xs space-y-4">
+    <div class="w-12 h-12 border-4 border-[#CBF1F5] border-t-[#244653] rounded-full animate-spin"></div>
+    <p class="text-sm font-semibold text-[#4E6770]">Loading scheduled interviews...</p>
   </div>
   }
 
   <!-- Empty State -->
   @else if (filteredGroups().length === 0) {
-  <div class="bg-white rounded-2xl border border-slate-200 shadow-2xs p-12 text-center space-y-4">
-    <div class="w-16 h-16 rounded-2xl bg-sky-50 text-sky-600 flex items-center justify-center mx-auto text-2xl">
+  <div class="bg-white rounded-2xl border border-[#D5EDED] shadow-2xs p-12 text-center space-y-4">
+    <div class="w-16 h-16 rounded-2xl bg-[#E3FDFD] text-[#244653] border border-[#A6E3E9] flex items-center justify-center mx-auto text-2xl">
       📅
     </div>
-    <h3 class="text-lg font-bold text-slate-900">No scheduled interviews found</h3>
-    <p class="text-sm text-slate-500 max-w-md mx-auto">
+    <h3 class="text-lg font-bold text-[#172B32]">No scheduled interviews found</h3>
+    <p class="text-sm text-[#4E6770] max-w-md mx-auto">
       @if (searchQuery() || activeFilter() !== 'all') {
       No scheduled interviews match your current search or tab filters. Try resetting the filter.
       } @else {
@@ -188,7 +188,7 @@
       }
     </p>
     <div class="pt-2">
-      <a routerLink="/recruiter/jobs" class="inline-flex items-center px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-xl text-sm font-semibold shadow-sm transition-colors">
+      <a routerLink="/recruiter/jobs" class="inline-flex items-center px-4 py-2 bg-[#244653] hover:bg-[#1A343E] text-white rounded-xl text-sm font-semibold shadow-xs transition-colors">
         Browse Job Listings
       </a>
     </div>
@@ -199,14 +199,14 @@
   @else {
   <div class="space-y-6">
     @for (group of filteredGroups(); track group.jobId) {
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-2xs overflow-hidden transition-all">
+    <div class="bg-white rounded-2xl border border-[#D5EDED] shadow-2xs overflow-hidden transition-all">
       <!-- Accordion Header -->
       <div (click)="toggleJob(group.jobId)"
-        class="p-5 bg-gradient-to-r from-slate-50 to-white border-b border-slate-100 flex items-center justify-between cursor-pointer hover:bg-slate-100/60 transition-colors select-none">
+        class="p-5 bg-gradient-to-r from-[#F8FBFA] to-white border-b border-[#D5EDED] flex items-center justify-between cursor-pointer hover:bg-[#E3FDFD]/20 transition-colors select-none">
         
         <div class="flex items-center space-x-3.5">
           <!-- Chevron Indicator -->
-          <button type="button" class="text-slate-400 hover:text-slate-700 transition-transform duration-200"
+          <button type="button" class="text-[#4E6770] hover:text-[#172B32] transition-transform duration-200"
             [class.rotate-90]="expandedJobs().has(group.jobId)">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -215,37 +215,37 @@
 
           <div>
             <div class="flex items-center space-x-2.5">
-              <h2 class="text-lg font-extrabold text-slate-900 tracking-tight">{{ group.jobTitle }}</h2>
+              <h2 class="text-lg font-extrabold text-[#172B32] tracking-tight">{{ group.jobTitle }}</h2>
               @if (group.seniorityLevel) {
-              <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-slate-200/70 text-slate-700">
+              <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-[#E3FDFD] text-[#244653] border border-[#A6E3E9]">
                 {{ group.seniorityLevel }}
               </span>
               }
             </div>
-            <p class="text-xs text-slate-500 mt-0.5">Job ID: <span class="font-mono text-slate-600">{{ group.jobId }}</span></p>
+            <p class="text-xs text-[#4E6770] mt-0.5">Job ID: <span class="font-mono text-[#172B32]">{{ group.jobId }}</span></p>
           </div>
         </div>
 
         <!-- Pill Badges Summary -->
         <div class="flex items-center space-x-3">
           <div class="hidden sm:flex items-center space-x-2 text-xs">
-            <span class="px-2.5 py-1 rounded-lg bg-sky-50 text-sky-700 font-semibold border border-sky-100">
+            <span class="px-2.5 py-1 rounded-lg bg-[#E3FDFD] text-[#244653] font-semibold border border-[#A6E3E9]">
               {{ group.interviews.length }} {{ group.interviews.length === 1 ? 'Interview' : 'Interviews' }}
             </span>
             @if (group.passedInterviews > 0) {
-            <span class="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 font-semibold border border-emerald-100">
+            <span class="px-2.5 py-1 rounded-lg bg-[#CBF1F5] text-[#244653] font-semibold border border-[#71C9CE]">
               {{ group.passedInterviews }} Passed
             </span>
             }
             @if (group.failedInterviews > 0) {
-            <span class="px-2.5 py-1 rounded-lg bg-rose-50 text-rose-700 font-semibold border border-rose-100">
+            <span class="px-2.5 py-1 rounded-lg bg-rose-50 text-rose-700 font-semibold border border-rose-200">
               {{ group.failedInterviews }} Unsuccessful
             </span>
             }
           </div>
 
           <a [routerLink]="['/recruiter/jobs', group.jobId]" (click)="$event.stopPropagation()"
-            class="text-xs font-semibold text-sky-600 hover:text-sky-800 hover:underline px-2 py-1">
+            class="text-xs font-semibold text-[#244653] hover:text-[#71C9CE] hover:underline px-2 py-1">
             Review Matching &rarr;
           </a>
         </div>
@@ -253,10 +253,10 @@
 
       <!-- Accordion Body: Candidate Interviews Table -->
       @if (expandedJobs().has(group.jobId)) {
-      <div class="divide-y divide-slate-100 overflow-x-auto">
+      <div class="divide-y divide-[#D5EDED] overflow-x-auto">
         <table class="w-full text-left border-collapse">
           <thead>
-            <tr class="bg-slate-50/70 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+            <tr class="bg-[#F8FBFA] text-[11px] font-bold uppercase tracking-wider text-[#4E6770] border-b border-[#D5EDED]">
               <th class="py-3 px-5">Candidate</th>
               <th class="py-3 px-4">AI Screening Score</th>
               <th class="py-3 px-4">Scheduled Date & Time</th>
@@ -265,18 +265,18 @@
               <th class="py-3 px-5 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-slate-100 text-sm">
+          <tbody class="divide-y divide-[#D5EDED] text-sm">
             @for (item of group.interviews; track item.id) {
-            <tr class="hover:bg-slate-50/80 transition-colors group">
+            <tr class="hover:bg-[#F8FBFA] transition-colors group">
               <!-- Candidate Identity -->
               <td class="py-4 px-5">
                 <div class="flex items-center space-x-3">
-                  <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-600 to-indigo-600 text-white font-black text-xs flex items-center justify-center shrink-0 shadow-2xs">
+                  <div class="w-10 h-10 rounded-xl bg-[#244653] text-[#CBF1F5] font-black text-xs flex items-center justify-center shrink-0 shadow-2xs border border-[#71C9CE]/30">
                     {{ getInitials(item.candidateName) }}
                   </div>
                   <div>
-                    <h4 class="font-bold text-slate-900 group-hover:text-sky-700 transition-colors">{{ item.candidateName }}</h4>
-                    <p class="text-xs text-slate-500">{{ item.candidateEmail }}</p>
+                    <h4 class="font-bold text-[#172B32] group-hover:text-[#244653] transition-colors">{{ item.candidateName }}</h4>
+                    <p class="text-xs text-[#4E6770]">{{ item.candidateEmail }}</p>
                   </div>
                 </div>
               </td>
@@ -289,7 +289,7 @@
                     {{ item.overall_match_score !== undefined ? item.overall_match_score + '%' : 'Pending' }}
                   </span>
                   @if (item.fit_verdict) {
-                  <span class="text-xs text-slate-600 font-medium">{{ item.fit_verdict }}</span>
+                  <span class="text-xs text-[#4E6770] font-medium">{{ item.fit_verdict }}</span>
                   }
                 </div>
               </td>
@@ -297,13 +297,13 @@
               <!-- Schedule Time -->
               <td class="py-4 px-4 whitespace-nowrap">
                 <div class="flex flex-col">
-                  <span class="font-bold text-slate-800 text-xs flex items-center gap-1.5">
-                    <svg class="w-4 h-4 text-sky-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <span class="font-bold text-[#172B32] text-xs flex items-center gap-1.5">
+                    <svg class="w-4 h-4 text-[#71C9CE] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                     {{ formatDisplayDate(item.interview?.scheduled_at) }}
                   </span>
-                  <span class="text-xs text-slate-500 font-mono ml-5">
+                  <span class="text-xs text-[#4E6770] font-mono ml-5">
                     {{ formatDisplayTime(item.interview?.scheduled_at) }}
                   </span>
                 </div>
@@ -314,7 +314,7 @@
                 @if (item.interview?.location; as loc) {
                   @if (loc.startsWith('http://') || loc.startsWith('https://')) {
                   <a [href]="loc" target="_blank" rel="noopener noreferrer"
-                    class="inline-flex items-center gap-1.5 text-xs font-semibold text-sky-600 hover:text-sky-800 hover:underline truncate max-w-xs"
+                    class="inline-flex items-center gap-1.5 text-xs font-semibold text-[#244653] hover:text-[#71C9CE] hover:underline truncate max-w-xs"
                     [title]="loc">
                     <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -322,12 +322,12 @@
                     Join Video Link
                   </a>
                   } @else {
-                  <span class="text-xs text-slate-700 truncate block font-medium" [title]="loc">
+                  <span class="text-xs text-[#172B32] truncate block font-medium" [title]="loc">
                     📍 {{ loc }}
                   </span>
                   }
                 } @else {
-                  <span class="text-xs text-slate-400 italic">Remote / Online</span>
+                  <span class="text-xs text-[#4E6770] italic">Remote / Online</span>
                 }
               </td>
 
@@ -352,9 +352,9 @@
                   @if (item.offer) {
                     @if (item.offer.status === 'Accepted') {
                     <button (click)="openOfferDrawer(item, $event)" type="button"
-                      class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-xl text-xs font-bold transition-all shadow-2xs cursor-pointer"
+                      class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#CBF1F5] hover:bg-[#A6E3E9] text-[#244653] border border-[#71C9CE] rounded-xl text-xs font-bold transition-all shadow-2xs cursor-pointer"
                       title="Contract signed by candidate! Click to view contract terms & commission">
-                      <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg class="w-3.5 h-3.5 text-[#244653]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                       <span>Contract Signed</span>
@@ -367,36 +367,29 @@
                     </button>
                     } @else if (item.offer.status === 'Draft' || item.status === 'Offer Drafting') {
                     <button (click)="openOfferDrawer(item, $event)" type="button"
-                      class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-300 rounded-xl text-xs font-bold transition-all shadow-2xs cursor-pointer"
+                      class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#E3FDFD] hover:bg-[#CBF1F5] text-[#244653] border border-[#A6E3E9] rounded-xl text-xs font-bold transition-all shadow-2xs cursor-pointer"
                       title="Offer saved as draft (candidate has not been notified). Click to edit or dispatch.">
-                      <svg class="w-3.5 h-3.5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg class="w-3.5 h-3.5 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                       </svg>
                       <span>📝 Offer Drafting</span>
                     </button>
                     } @else {
                     <button (click)="openOfferDrawer(item, $event)" type="button"
-                      class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-900 border border-indigo-300 rounded-xl text-xs font-bold transition-all shadow-2xs cursor-pointer"
+                      class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#244653] hover:bg-[#1A343E] text-[#CBF1F5] border border-[#244653] rounded-xl text-xs font-bold transition-all shadow-2xs cursor-pointer"
                       title="Contract offer dispatched and pending candidate signature. Click to review or update">
-                      <img src="extended_rec.svg" alt="" aria-hidden="true" class="w-4 h-4 shrink-0">
+                      <svg class="w-3.5 h-3.5 text-[#CBF1F5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
                       <span>Offer Extended</span>
                     </button>
                     }
-                  } @else if (item.interview?.outcome === 'Passed' || item.status === 'Interview Passed' || item.status === 'Passed' || item.status === 'Offer Extended' || item.status === 'Offered' || item.status === 'Offer Drafting') {
+                  } @else if (item.interview?.outcome === 'Passed' || item.status === 'Interview Passed') {
                     <button (click)="openOfferDrawer(item, $event)" type="button"
-                      class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-xl text-xs font-extrabold shadow-xs hover:shadow-md transition-all cursor-pointer"
-                      title="Candidate passed interview! Click to draft contract offer">
-                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                      </svg>
-                      <span>Draft Offer</span>
-                    </button>
-                  } @else if (item.interview?.outcome !== 'Failed' && item.status !== 'Rejected' && item.status !== 'Interview Failed') {
-                    <button (click)="openOfferDrawer(item, $event)" type="button"
-                      class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-xl text-xs font-bold transition-all shadow-2xs hover:shadow-xs cursor-pointer"
-                      title="Directly prepare and draft employment contract offer for this candidate">
-                      <svg class="w-3.5 h-3.5 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#244653] hover:bg-[#1A343E] text-white rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer"
+                      title="Candidate cleared interview! Click to generate and dispatch formal employment contract">
+                      <svg class="w-3.5 h-3.5 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                       </svg>
                       <span>Draft Offer</span>
                     </button>
@@ -404,8 +397,8 @@
 
                   <!-- Evaluation Button -->
                   <button (click)="openEvaluationDrawer(item, $event)" type="button"
-                    class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-white hover:bg-sky-50 text-sky-700 border border-sky-200 hover:border-sky-300 rounded-xl text-xs font-bold transition-all shadow-2xs hover:shadow-xs cursor-pointer">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-white hover:bg-[#E3FDFD] text-[#244653] border border-[#D5EDED] hover:border-[#71C9CE] rounded-xl text-xs font-bold transition-all shadow-2xs cursor-pointer">
+                    <svg class="w-3.5 h-3.5 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                     </svg>
                     <span>{{ item.interview?.outcome ? 'View / Edit Results' : 'Evaluate Candidate' }}</span>
@@ -429,21 +422,21 @@
 <!-- INTERVIEW EVALUATION DRAWER (Right Slide-Over)                             -->
 <!-- ========================================================================= -->
 @if (isDrawerOpen() && selectedInterview(); as interview) {
-<div class="fixed inset-0 z-50 overflow-hidden bg-slate-900/50 backdrop-blur-xs flex justify-end animate-in fade-in duration-200"
+<div class="fixed inset-0 z-50 overflow-hidden bg-[#244653]/60 backdrop-blur-xs flex justify-end animate-in fade-in duration-200"
      (click)="closeEvaluationDrawer()">
-  <div class="relative w-full max-w-2xl bg-white shadow-2xl h-full flex flex-col z-10 animate-in slide-in-from-right duration-200 border-l border-slate-200"
+  <div class="relative w-full max-w-2xl bg-white shadow-2xl h-full flex flex-col z-10 animate-in slide-in-from-right duration-200 border-l border-[#D5EDED]"
        (click)="$event.stopPropagation()">
     
     <!-- STEP 1: EVALUATION SCORECARD HEADER -->
     @if (drawerStep() === 'evaluation') {
-    <div class="px-6 py-5 border-b border-slate-200 bg-slate-50 flex items-center justify-between shrink-0">
+    <div class="px-6 py-5 border-b border-[#D5EDED] bg-[#F8FBFA] flex items-center justify-between shrink-0">
       <div class="flex items-center space-x-3">
-        <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-sky-600 to-indigo-600 text-white font-black text-sm flex items-center justify-center shrink-0 shadow-xs">
+        <div class="w-11 h-11 rounded-xl bg-[#244653] text-[#CBF1F5] font-black text-sm flex items-center justify-center shrink-0 shadow-xs border border-[#71C9CE]/30">
           {{ getInitials(interview.candidateName) }}
         </div>
         <div>
           <div class="flex items-center space-x-2">
-            <h3 class="text-lg font-extrabold text-slate-900">{{ interview.candidateName }}</h3>
+            <h3 class="text-lg font-extrabold text-[#172B32]">{{ interview.candidateName }}</h3>
             @let badge = getOutcomeInfo(interview);
             <span class="text-[10px] font-bold px-2 py-0.5 rounded-md border inline-flex items-center gap-1" [ngClass]="badge.css">
               @if (badge.icon.endsWith('.svg')) {
@@ -452,29 +445,29 @@
               {{ badge.label }}
             </span>
             @if (interview.offer) {
-            <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 border border-amber-300">
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-[#E3FDFD] text-[#244653] border border-[#A6E3E9]">
               Offer {{ interview.offer.status }}
             </span>
             }
           </div>
-          <p class="text-xs text-slate-500 mt-0.5">
-            Role: <span class="font-bold text-slate-700">{{ interview.jobTitle }}</span> &bull; {{ interview.candidateEmail }}
+          <p class="text-xs text-[#4E6770] mt-0.5">
+            Role: <span class="font-bold text-[#172B32]">{{ interview.jobTitle }}</span> &bull; {{ interview.candidateEmail }}
           </p>
         </div>
       </div>
 
       <div class="flex items-center space-x-2">
         <button (click)="openOfferDrawer(interview, $event)" type="button"
-          class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-xl text-xs font-bold transition-all shadow-2xs hover:shadow-xs cursor-pointer"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#CBF1F5] hover:bg-[#A6E3E9] text-[#244653] border border-[#71C9CE] rounded-xl text-xs font-bold transition-all shadow-2xs cursor-pointer"
           title="Open employment contract offer drawer">
-          <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-3.5 h-3.5 text-[#244653]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
           <span>{{ interview.offer ? 'View Contract' : 'Offer Contract' }}</span>
         </button>
 
         <button (click)="closeEvaluationDrawer()" type="button"
-          class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-200 flex items-center justify-center transition-colors cursor-pointer">
+          class="w-8 h-8 rounded-lg text-[#4E6770] hover:text-[#172B32] hover:bg-[#E3FDFD] flex items-center justify-center transition-colors cursor-pointer">
           ✕
         </button>
       </div>
@@ -483,11 +476,11 @@
 
     <!-- STEP 2: CONFIRMATION & EMAIL PREVIEW HEADER -->
     @else {
-    <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between shrink-0"
-         [ngClass]="pendingOutcome() === 'Passed' ? 'bg-emerald-50/90 text-emerald-950' : 'bg-rose-50/90 text-rose-950'">
+    <div class="px-6 py-4 border-b border-[#D5EDED] flex items-center justify-between shrink-0"
+         [ngClass]="pendingOutcome() === 'Passed' ? 'bg-[#CBF1F5]/80 text-[#244653]' : 'bg-rose-50/90 text-rose-950'">
       <div class="flex items-center space-x-3">
         <button (click)="backToEvaluation()" type="button"
-          class="px-2.5 py-1.5 rounded-lg bg-white/80 hover:bg-white text-slate-700 text-xs font-bold border border-slate-200 shadow-2xs flex items-center gap-1 transition-all cursor-pointer">
+          class="px-2.5 py-1.5 rounded-lg bg-white/80 hover:bg-white text-[#244653] text-xs font-bold border border-[#D5EDED] shadow-2xs flex items-center gap-1 transition-all cursor-pointer">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
           </svg>
@@ -504,7 +497,7 @@
       </div>
 
       <button (click)="closeEvaluationDrawer()" type="button"
-        class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-700 flex items-center justify-center transition-colors cursor-pointer">
+        class="w-8 h-8 rounded-lg text-[#4E6770] hover:text-[#172B32] flex items-center justify-center transition-colors cursor-pointer">
         ✕
       </button>
     </div>
@@ -512,7 +505,7 @@
 
     <!-- Feedback Alerts -->
     @if (decisionSuccess()) {
-    <div class="mx-6 mt-4 p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold rounded-xl flex items-center gap-2">
+    <div class="mx-6 mt-4 p-3 bg-[#CBF1F5] border border-[#71C9CE] text-[#244653] text-xs font-semibold rounded-xl flex items-center gap-2">
       <span>✓</span>
       <span>{{ decisionSuccess() }}</span>
     </div>
@@ -531,14 +524,14 @@
     <div class="flex-1 overflow-y-auto p-6 space-y-6">
 
       <!-- Schedule Quick Info Card -->
-      <div class="p-4 bg-sky-50/70 border border-sky-100 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div class="p-4 bg-[#E3FDFD]/50 border border-[#A6E3E9] rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div class="space-y-1">
-          <span class="text-[10px] font-bold uppercase tracking-wider text-sky-700">Scheduled Session</span>
-          <p class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-[#244653]">Scheduled Session</span>
+          <p class="text-xs font-bold text-[#172B32] flex items-center gap-1.5">
             📅 {{ formatDisplayDate(interview.interview?.scheduled_at) }} at {{ formatDisplayTime(interview.interview?.scheduled_at) }}
           </p>
           @if (interview.interview?.location; as loc) {
-          <p class="text-xs text-slate-600 truncate">
+          <p class="text-xs text-[#4E6770] truncate">
             📍 {{ loc }}
           </p>
           }
@@ -546,7 +539,7 @@
 
         @if (interview.resumeUrl) {
         <a [href]="interview.resumeUrl" target="_blank" rel="noopener noreferrer"
-          class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white text-sky-700 border border-sky-200 hover:border-sky-300 rounded-xl text-xs font-bold transition-all shadow-2xs shrink-0 self-start sm:self-auto">
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white text-[#244653] border border-[#D5EDED] hover:border-[#71C9CE] rounded-xl text-xs font-bold transition-all shadow-2xs shrink-0 self-start sm:self-auto">
           📄 View Original CV
         </a>
         }
@@ -555,35 +548,35 @@
       <!-- AI Screening Insights & Client Interview Probes Section -->
       <div class="space-y-3">
         <div class="flex items-center justify-between">
-          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500">AI Screening & Interview Probes</h4>
+          <h4 class="text-xs font-bold uppercase tracking-wider text-[#4E6770]">AI Screening & Interview Probes</h4>
           <span class="text-xs font-bold px-2 py-0.5 rounded-md" [ngClass]="getScoreColor(interview.overall_match_score)">
             {{ interview.overall_match_score }}% Match
           </span>
         </div>
 
         @if (interview.behavioral_archetype) {
-        <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs">
-          <span class="font-bold text-slate-700">Behavioral Archetype:</span>
-          <span class="font-semibold text-indigo-700 ml-1.5">{{ interview.behavioral_archetype }}</span>
+        <div class="p-3 bg-[#F8FBFA] border border-[#D5EDED] rounded-xl text-xs">
+          <span class="font-bold text-[#172B32]">Behavioral Archetype:</span>
+          <span class="font-semibold text-[#244653] ml-1.5">{{ interview.behavioral_archetype }}</span>
         </div>
         }
 
         <!-- AI Probes Checklist -->
         @if (interview.client_interview_probes && interview.client_interview_probes.length > 0) {
-        <div class="bg-indigo-50/60 border border-indigo-100 rounded-2xl p-4 space-y-2.5">
+        <div class="bg-[#E3FDFD]/60 border border-[#A6E3E9] rounded-2xl p-4 space-y-2.5">
           <div class="flex items-center gap-1.5">
             <span class="text-sm">🎯</span>
-            <span class="text-xs font-bold text-indigo-900">Recommended Interview Questions to Probe:</span>
+            <span class="text-xs font-bold text-[#244653]">Recommended Interview Questions to Probe:</span>
           </div>
-          <p class="text-[11px] text-indigo-700 leading-relaxed">
+          <p class="text-[11px] text-[#4E6770] leading-relaxed">
             Click to check off questions as you discuss them with the candidate during the call:
           </p>
           <div class="space-y-2 pt-1">
             @for (probe of interview.client_interview_probes; track probe) {
-            <label class="flex items-start gap-2.5 p-2 bg-white rounded-xl border border-indigo-100 cursor-pointer hover:bg-indigo-50/40 transition-colors">
+            <label class="flex items-start gap-2.5 p-2 bg-white rounded-xl border border-[#D5EDED] cursor-pointer hover:bg-[#F8FBFA] transition-colors">
               <input type="checkbox" [checked]="checkedProbes().has(probe)" (change)="toggleProbe(probe)"
-                class="mt-0.5 w-4 h-4 text-indigo-600 rounded-md border-slate-300 focus:ring-indigo-500">
-              <span class="text-xs text-slate-800 leading-relaxed" [class.line-through]="checkedProbes().has(probe)" [class.text-slate-400]="checkedProbes().has(probe)">
+                class="mt-0.5 w-4 h-4 text-[#244653] rounded-md border-[#D5EDED] focus:ring-[#71C9CE]">
+              <span class="text-xs text-[#172B32] leading-relaxed" [class.line-through]="checkedProbes().has(probe)" [class.text-[#4E6770]]="checkedProbes().has(probe)">
                 {{ probe }}
               </span>
             </label>
@@ -594,15 +587,15 @@
       </div>
 
       <!-- Candidate Evaluation Scorecard Form -->
-      <div class="space-y-5 pt-2 border-t border-slate-200">
+      <div class="space-y-5 pt-2 border-t border-[#D5EDED]">
         <div>
-          <h4 class="text-sm font-extrabold text-slate-900">Record Interview Results</h4>
-          <p class="text-xs text-slate-500 mt-0.5">Rate key competencies, log team feedback, and capture candidate-facing notes.</p>
+          <h4 class="text-sm font-extrabold text-[#172B32]">Record Interview Results</h4>
+          <p class="text-xs text-[#4E6770] mt-0.5">Rate key competencies, log team feedback, and capture candidate-facing notes.</p>
         </div>
 
         <!-- Overall Rating (1 to 5 Stars) -->
-        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 space-y-2">
-          <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Overall Impression Rating</label>
+        <div class="bg-[#F8FBFA] p-4 rounded-2xl border border-[#D5EDED] space-y-2">
+          <label class="block text-xs font-bold text-[#172B32] uppercase tracking-wider">Overall Impression Rating</label>
           <div class="flex items-center space-x-2">
             @for (star of [1, 2, 3, 4, 5]; track star) {
             <button (click)="rating.set(star)" type="button"
@@ -611,7 +604,7 @@
               ★
             </button>
             }
-            <span class="text-xs font-bold text-slate-700 ml-3">
+            <span class="text-xs font-bold text-[#172B32] ml-3">
               {{ rating() }} / 5 ({{ rating() >= 4 ? 'Strong Recommendation' : rating() === 3 ? 'Average Fit' : 'Not Recommended' }})
             </span>
           </div>
@@ -620,75 +613,75 @@
         <!-- Competency Score Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <!-- Technical Score -->
-          <div class="p-3 bg-white border border-slate-200 rounded-xl space-y-1.5">
-            <span class="text-[11px] font-bold text-slate-600 block">Technical Capability</span>
+          <div class="p-3 bg-white border border-[#D5EDED] rounded-xl space-y-1.5">
+            <span class="text-[11px] font-bold text-[#172B32] block">Technical Capability</span>
             <div class="flex items-center justify-between">
               <input type="range" min="1" max="5" [ngModel]="technicalScore()" (ngModelChange)="technicalScore.set($event)"
-                class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-sky-600">
-              <span class="ml-2 font-bold text-xs text-sky-700 shrink-0">{{ technicalScore() }}/5</span>
+                class="w-full h-1.5 bg-[#D5EDED] rounded-lg appearance-none cursor-pointer accent-[#71C9CE]">
+              <span class="ml-2 font-bold text-xs text-[#244653] shrink-0">{{ technicalScore() }}/5</span>
             </div>
           </div>
 
           <!-- Culture Fit Score -->
-          <div class="p-3 bg-white border border-slate-200 rounded-xl space-y-1.5">
-            <span class="text-[11px] font-bold text-slate-600 block">Culture & Values</span>
+          <div class="p-3 bg-white border border-[#D5EDED] rounded-xl space-y-1.5">
+            <span class="text-[11px] font-bold text-[#172B32] block">Culture & Values</span>
             <div class="flex items-center justify-between">
               <input type="range" min="1" max="5" [ngModel]="cultureScore()" (ngModelChange)="cultureScore.set($event)"
-                class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
-              <span class="ml-2 font-bold text-xs text-indigo-700 shrink-0">{{ cultureScore() }}/5</span>
+                class="w-full h-1.5 bg-[#D5EDED] rounded-lg appearance-none cursor-pointer accent-[#71C9CE]">
+              <span class="ml-2 font-bold text-xs text-[#244653] shrink-0">{{ cultureScore() }}/5</span>
             </div>
           </div>
 
           <!-- Communication Score -->
-          <div class="p-3 bg-white border border-slate-200 rounded-xl space-y-1.5">
-            <span class="text-[11px] font-bold text-slate-600 block">Communication</span>
+          <div class="p-3 bg-white border border-[#D5EDED] rounded-xl space-y-1.5">
+            <span class="text-[11px] font-bold text-[#172B32] block">Communication</span>
             <div class="flex items-center justify-between">
               <input type="range" min="1" max="5" [ngModel]="communicationScore()" (ngModelChange)="communicationScore.set($event)"
-                class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600">
-              <span class="ml-2 font-bold text-xs text-emerald-700 shrink-0">{{ communicationScore() }}/5</span>
+                class="w-full h-1.5 bg-[#D5EDED] rounded-lg appearance-none cursor-pointer accent-[#71C9CE]">
+              <span class="ml-2 font-bold text-xs text-[#244653] shrink-0">{{ communicationScore() }}/5</span>
             </div>
           </div>
         </div>
 
         <!-- Confidential Internal Team Notes -->
         <div class="space-y-1.5">
-          <label class="block text-xs font-bold text-slate-700 flex items-center justify-between">
+          <label class="block text-xs font-bold text-[#172B32] flex items-center justify-between">
             <span>🔒 Confidential Hiring Team Notes (Internal Only)</span>
-            <span class="text-[10px] text-slate-400 font-normal">Never shared with candidate</span>
+            <span class="text-[10px] text-[#4E6770] font-normal">Never shared with candidate</span>
           </label>
           <textarea [ngModel]="internalNotes()" (ngModelChange)="internalNotes.set($event)" rows="3"
             placeholder="Record technical depth observations, compensation discussions, red flags, or team feedback..."
-            class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 text-xs focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all"></textarea>
+            class="w-full px-3.5 py-2.5 bg-white border border-[#D5EDED] rounded-xl text-[#172B32] placeholder-[#4E6770]/60 text-xs focus:ring-2 focus:ring-[#71C9CE]/20 focus:border-[#71C9CE] transition-all outline-none"></textarea>
         </div>
 
         <!-- Candidate Feedback -->
         <div class="space-y-1.5">
-          <label class="block text-xs font-bold text-slate-700 flex items-center justify-between">
+          <label class="block text-xs font-bold text-[#172B32] flex items-center justify-between">
             <span>💬 Constructive Candidate Feedback</span>
-            <span class="text-[10px] text-slate-400 font-normal">Included in candidate update notification</span>
+            <span class="text-[10px] text-[#4E6770] font-normal">Included in candidate update notification</span>
           </label>
           <textarea [ngModel]="candidateFeedback()" (ngModelChange)="candidateFeedback.set($event)" rows="3"
             placeholder="Key highlights, strengths, or actionable areas for improvement..."
-            class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 text-xs focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all"></textarea>
+            class="w-full px-3.5 py-2.5 bg-white border border-[#D5EDED] rounded-xl text-[#172B32] placeholder-[#4E6770]/60 text-xs focus:ring-2 focus:ring-[#71C9CE]/20 focus:border-[#71C9CE] transition-all outline-none"></textarea>
         </div>
       </div>
 
     </div>
 
     <!-- Step 1 Footer Actions -->
-    <div class="p-5 border-t border-slate-200 bg-slate-50 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
+    <div class="p-5 border-t border-[#D5EDED] bg-[#F8FBFA] flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
       <button (click)="saveDraftNotes()" type="button" [disabled]="isActionLoading()"
-        class="w-full sm:w-auto px-4 py-2.5 bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-xl text-xs font-bold transition-all shadow-2xs cursor-pointer disabled:opacity-50">
+        class="w-full sm:w-auto px-4 py-2.5 bg-white hover:bg-[#F8FBFA] text-[#244653] border border-[#D5EDED] rounded-xl text-xs font-bold transition-all shadow-2xs cursor-pointer disabled:opacity-50">
         💾 Save Draft Notes
       </button>
 
       <div class="w-full sm:w-auto flex flex-wrap items-center gap-2">
         <!-- Direct Offer Contract Button -->
         <button (click)="openOfferDrawer(interview, $event)" type="button"
-          class="px-4 py-2.5 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white rounded-xl text-xs font-extrabold shadow-md shadow-emerald-500/20 transition-all cursor-pointer"
+          class="px-4 py-2.5 bg-[#CBF1F5] hover:bg-[#A6E3E9] text-[#244653] border border-[#71C9CE] rounded-xl text-xs font-extrabold shadow-2xs transition-all cursor-pointer"
           title="Open employment contract offer drawer">
           <span class="flex items-center gap-1.5">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-3.5 h-3.5 text-[#244653]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
             <span>{{ interview.offer ? 'Manage Contract' : 'Offer Contract' }}</span>
@@ -703,7 +696,7 @@
 
         <!-- Pass Interview Button -->
         <button (click)="openDecisionConfirmation('Passed')" type="button" [disabled]="isActionLoading()"
-          class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-extrabold shadow-md shadow-emerald-500/20 transition-all cursor-pointer disabled:opacity-50">
+          class="px-5 py-2.5 bg-[#244653] hover:bg-[#1A343E] text-white rounded-xl text-xs font-extrabold shadow-xs transition-all cursor-pointer disabled:opacity-50">
           ✓ Pass Interview &rarr;
         </button>
       </div>
@@ -718,18 +711,18 @@
 
       <!-- Outcome Banner -->
       @if (pendingOutcome() === 'Passed') {
-      <div class="p-5 bg-gradient-to-br from-emerald-600 to-teal-700 rounded-2xl text-white shadow-md space-y-2">
+      <div class="p-5 bg-[#244653] rounded-2xl text-white shadow-xs space-y-2 border border-[#71C9CE]">
         <div class="flex items-center space-x-2.5">
-          <span class="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center font-black text-sm">✓</span>
-          <span class="text-xs font-bold uppercase tracking-wider text-emerald-100">Step 2: Review & Send Notification</span>
+          <span class="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center font-black text-sm text-[#CBF1F5]">✓</span>
+          <span class="text-xs font-bold uppercase tracking-wider text-[#CBF1F5]">Step 2: Review & Send Notification</span>
         </div>
         <h3 class="text-xl font-extrabold text-white">Interview Cleared & Candidate Advanced</h3>
-        <p class="text-xs text-emerald-100 leading-relaxed">
+        <p class="text-xs text-[#CBF1F5] leading-relaxed">
           <strong>{{ interview.candidateName }}</strong> will be marked as <span class="underline font-bold">Interview Passed</span>. You can review the email notification and add personal next steps below.
         </p>
       </div>
       } @else {
-      <div class="p-5 bg-gradient-to-br from-rose-600 to-rose-700 rounded-2xl text-white shadow-md space-y-2">
+      <div class="p-5 bg-rose-600 rounded-2xl text-white shadow-xs space-y-2">
         <div class="flex items-center space-x-2.5">
           <span class="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center font-black text-sm">✕</span>
           <span class="text-xs font-bold uppercase tracking-wider text-rose-100">Step 2: Polite Closure & Retention</span>
@@ -742,44 +735,44 @@
       }
 
       <!-- Scorecard Summary Chip -->
-      <div class="p-4 bg-slate-50 border border-slate-200 rounded-2xl space-y-2">
+      <div class="p-4 bg-[#F8FBFA] border border-[#D5EDED] rounded-2xl space-y-2">
         <div class="flex items-center justify-between">
-          <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">Evaluation Summary</span>
+          <span class="text-xs font-bold text-[#172B32] uppercase tracking-wider">Evaluation Summary</span>
           <span class="text-xs font-bold px-2 py-0.5 rounded-md"
-            [ngClass]="pendingOutcome() === 'Passed' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'">
+            [ngClass]="pendingOutcome() === 'Passed' ? 'bg-[#CBF1F5] text-[#244653] border border-[#71C9CE]' : 'bg-rose-100 text-rose-800'">
             {{ pendingOutcome() === 'Passed' ? 'Passed ★ ' + rating() + '/5' : 'Failed ★ ' + rating() + '/5' }}
           </span>
         </div>
         <div class="grid grid-cols-3 gap-2 pt-1 text-center text-xs">
-          <div class="p-2 bg-white rounded-xl border border-slate-200">
-            <span class="text-[10px] text-slate-400 block font-semibold">Technical</span>
-            <span class="font-bold text-slate-800">{{ technicalScore() }}/5</span>
+          <div class="p-2 bg-white rounded-xl border border-[#D5EDED]">
+            <span class="text-[10px] text-[#4E6770] block font-semibold">Technical</span>
+            <span class="font-bold text-[#172B32]">{{ technicalScore() }}/5</span>
           </div>
-          <div class="p-2 bg-white rounded-xl border border-slate-200">
-            <span class="text-[10px] text-slate-400 block font-semibold">Culture</span>
-            <span class="font-bold text-slate-800">{{ cultureScore() }}/5</span>
+          <div class="p-2 bg-white rounded-xl border border-[#D5EDED]">
+            <span class="text-[10px] text-[#4E6770] block font-semibold">Culture</span>
+            <span class="font-bold text-[#172B32]">{{ cultureScore() }}/5</span>
           </div>
-          <div class="p-2 bg-white rounded-xl border border-slate-200">
-            <span class="text-[10px] text-slate-400 block font-semibold">Communication</span>
-            <span class="font-bold text-slate-800">{{ communicationScore() }}/5</span>
+          <div class="p-2 bg-white rounded-xl border border-[#D5EDED]">
+            <span class="text-[10px] text-[#4E6770] block font-semibold">Communication</span>
+            <span class="font-bold text-[#172B32]">{{ communicationScore() }}/5</span>
           </div>
         </div>
       </div>
 
       <!-- Candidate Notification Settings -->
-      <div class="space-y-4 pt-2 border-t border-slate-200">
+      <div class="space-y-4 pt-2 border-t border-[#D5EDED]">
         <div>
-          <h4 class="text-sm font-extrabold text-slate-900">Candidate Email Notification</h4>
-          <p class="text-xs text-slate-500 mt-0.5">Control whether and how the candidate is notified about this outcome.</p>
+          <h4 class="text-sm font-extrabold text-[#172B32]">Candidate Email Notification</h4>
+          <p class="text-xs text-[#4E6770] mt-0.5">Control whether and how the candidate is notified about this outcome.</p>
         </div>
 
         <!-- Toggle Checkbox -->
-        <label class="flex items-start gap-3 p-3.5 rounded-xl border border-slate-200 bg-slate-50/80 cursor-pointer hover:bg-slate-100/60 transition-colors">
+        <label class="flex items-start gap-3 p-3.5 rounded-xl border border-[#D5EDED] bg-[#F8FBFA] cursor-pointer hover:bg-[#E3FDFD]/30 transition-colors">
           <input type="checkbox" [ngModel]="notifyCandidate()" (ngModelChange)="notifyCandidate.set($event)"
-            class="mt-0.5 w-4 h-4 text-sky-600 rounded-md border-slate-300 focus:ring-sky-500">
+            class="mt-0.5 w-4 h-4 text-[#244653] rounded-md border-[#D5EDED] focus:ring-[#71C9CE]">
           <div class="flex flex-col">
-            <span class="text-xs font-bold text-slate-900">Send candidate notification email immediately</span>
-            <span class="text-[11px] text-slate-500 mt-0.5">Delivered via SMTP to <strong class="text-slate-700">{{ interview.candidateEmail }}</strong></span>
+            <span class="text-xs font-bold text-[#172B32]">Send candidate notification email immediately</span>
+            <span class="text-[11px] text-[#4E6770] mt-0.5">Delivered via SMTP to <strong class="text-[#172B32]">{{ interview.candidateEmail }}</strong></span>
           </div>
         </label>
 
@@ -787,19 +780,19 @@
         @if (notifyCandidate()) {
         <div class="space-y-2">
           <div class="flex items-center justify-between">
-            <label class="text-xs font-bold text-slate-700">
+            <label class="text-xs font-bold text-[#172B32]">
               Message Content / Next Steps Preview:
             </label>
-            <span class="text-[11px] text-sky-600 font-medium">Editable before sending</span>
+            <span class="text-[11px] text-[#244653] font-semibold">Editable before sending</span>
           </div>
           
-          <div class="p-3 bg-slate-100/70 border border-slate-200 rounded-t-xl text-xs text-slate-700 font-mono">
+          <div class="p-3 bg-[#F8FBFA] border border-[#D5EDED] rounded-t-xl text-xs text-[#172B32] font-mono">
             <strong>Subject:</strong> {{ pendingOutcome() === 'Passed' ? 'Great News! Interview Cleared: ' + interview.jobTitle : 'Application Update: ' + interview.jobTitle }}
           </div>
           <textarea [ngModel]="customEmailMessage()" (ngModelChange)="customEmailMessage.set($event)" rows="5"
-            class="w-full px-3.5 py-2.5 bg-white border border-t-0 border-slate-200 rounded-b-xl text-slate-900 text-xs focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all font-sans leading-relaxed"></textarea>
+            class="w-full px-3.5 py-2.5 bg-white border border-t-0 border-[#D5EDED] rounded-b-xl text-[#172B32] text-xs focus:ring-2 focus:ring-[#71C9CE]/20 focus:border-[#71C9CE] transition-all font-sans leading-relaxed outline-none"></textarea>
 
-          <p class="text-[11px] text-slate-500 italic">
+          <p class="text-[11px] text-[#4E6770] italic">
             @if (pendingOutcome() === 'Passed') {
             💡 The candidate will receive a celebratory email containing this custom note and their interview highlights.
             } @else {
@@ -813,21 +806,21 @@
     </div>
 
     <!-- Step 2 Footer Actions -->
-    <div class="p-5 border-t border-slate-200 bg-slate-50 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
+    <div class="p-5 border-t border-[#D5EDED] bg-[#F8FBFA] flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
       <button (click)="backToEvaluation()" type="button" [disabled]="isActionLoading()"
-        class="w-full sm:w-auto px-4 py-2.5 bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-xl text-xs font-semibold transition-all cursor-pointer">
+        class="w-full sm:w-auto px-4 py-2.5 bg-white hover:bg-[#F8FBFA] text-[#244653] border border-[#D5EDED] rounded-xl text-xs font-semibold transition-all cursor-pointer">
         &larr; Back to Scorecard
       </button>
 
       <div class="w-full sm:w-auto flex flex-wrap items-center justify-end gap-2.5">
         @if (pendingOutcome() === 'Passed') {
         <button (click)="confirmDecision(false)" type="button" [disabled]="isActionLoading()"
-          class="px-4 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-xl text-xs font-bold transition-all cursor-pointer disabled:opacity-50">
+          class="px-4 py-2.5 bg-[#E3FDFD] hover:bg-[#CBF1F5] text-[#244653] border border-[#A6E3E9] rounded-xl text-xs font-bold transition-all cursor-pointer disabled:opacity-50">
           Confirm Pass Notice
         </button>
 
         <button (click)="confirmDecision(true)" type="button" [disabled]="isActionLoading()"
-          class="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white rounded-xl text-xs font-extrabold shadow-md shadow-emerald-500/20 transition-all cursor-pointer disabled:opacity-50">
+          class="inline-flex items-center gap-2 px-5 py-2.5 bg-[#244653] hover:bg-[#1A343E] text-white rounded-xl text-xs font-extrabold shadow-xs transition-all cursor-pointer disabled:opacity-50">
           @if (isActionLoading()) {
           <span class="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
           }
@@ -835,7 +828,7 @@
         </button>
         } @else {
         <button (click)="confirmDecision(false)" type="button" [disabled]="isActionLoading()"
-          class="inline-flex items-center gap-2 px-6 py-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-extrabold shadow-md shadow-rose-500/20 transition-all cursor-pointer disabled:opacity-50">
+          class="inline-flex items-center gap-2 px-6 py-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-extrabold shadow-xs transition-all cursor-pointer disabled:opacity-50">
           @if (isActionLoading()) {
           <span class="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
           }
@@ -867,4 +860,3 @@
   (saved)="onOfferSaved($event)">
 </app-offer-draft-modal>
 }
-

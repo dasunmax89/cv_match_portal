@@ -1,59 +1,59 @@
 @if (isOpen) {
-<div class="fixed inset-0 z-[60] overflow-hidden bg-slate-900/60 backdrop-blur-xs flex justify-end animate-in fade-in duration-200"
+<div class="fixed inset-0 z-[60] overflow-hidden bg-[#244653]/60 backdrop-blur-xs flex justify-end animate-in fade-in duration-200"
      (click)="handleClose()">
-  <div class="relative w-full max-w-3xl bg-white shadow-2xl h-full flex flex-col z-10 animate-in slide-in-from-right duration-200 border-l border-slate-200"
+  <div class="relative w-full max-w-3xl bg-white shadow-2xl h-full flex flex-col z-10 animate-in slide-in-from-right duration-200 border-l border-[#D5EDED]"
        (click)="$event.stopPropagation()">
 
     <!-- Header Section -->
-    <div class="px-6 py-5 border-b border-slate-200 bg-gradient-to-r from-slate-50 via-white to-emerald-50/40 flex items-center justify-between shrink-0">
+    <div class="px-6 py-5 border-b border-[#D5EDED] bg-gradient-to-r from-[#F8FBFA] via-white to-[#E3FDFD]/50 flex items-center justify-between shrink-0">
       <div class="flex items-center space-x-3.5">
-        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-700 text-white font-black text-sm flex items-center justify-center shrink-0 shadow-md shadow-emerald-500/20">
+        <div class="w-12 h-12 rounded-2xl bg-[#244653] text-[#CBF1F5] font-black text-sm flex items-center justify-center shrink-0 shadow-xs border border-[#71C9CE]/30">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
         </div>
         <div>
           <div class="flex items-center space-x-2.5">
-            <h3 class="text-lg font-extrabold text-slate-900">Employment Contract Studio</h3>
+            <h3 class="text-lg font-extrabold text-[#172B32]">Employment Contract Studio</h3>
             @if (existingOffer) {
               <span class="text-[10px] font-bold px-2 py-0.5 rounded-full border"
-                [ngClass]="existingOffer.status === 'Accepted' ? 'bg-emerald-50 text-emerald-800 border-emerald-300' : (existingOffer.status === 'Draft' ? 'bg-sky-50 text-sky-800 border-sky-300' : (existingOffer.status === 'Declined' ? 'bg-rose-50 text-rose-800 border-rose-300' : 'bg-amber-50 text-amber-800 border-amber-300'))">
+                [ngClass]="existingOffer.status === 'Accepted' ? 'bg-[#CBF1F5] text-[#244653] border-[#71C9CE]' : (existingOffer.status === 'Draft' ? 'bg-[#E3FDFD] text-[#244653] border-[#A6E3E9]' : (existingOffer.status === 'Declined' ? 'bg-rose-50 text-rose-800 border-rose-300' : 'bg-[#FEF9C3] text-[#854D0E] border-[#FEF08A]'))">
                 {{ existingOffer.status === 'Accepted' ? '✓ Accepted & Signed' : (existingOffer.status === 'Draft' ? '📝 Saved Draft' : (existingOffer.status === 'Declined' ? '✕ Offer Declined' : 'Pending Signature')) }}
               </span>
             } @else {
-              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-300">
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#F8FBFA] text-[#4E6770] border border-[#D5EDED]">
                 New Contract Draft
               </span>
             }
           </div>
-          <p class="text-xs text-slate-500 mt-0.5">
-            Candidate: <span class="font-bold text-slate-800">{{ candidateName }}</span> 
-            @if (candidateEmail) { <span class="text-slate-400">({{ candidateEmail }})</span> } 
-            &bull; Role: <span class="font-semibold text-slate-700">{{ jobTitle || 'Job Requisition' }}</span>
+          <p class="text-xs text-[#4E6770] mt-0.5">
+            Candidate: <span class="font-bold text-[#172B32]">{{ candidateName }}</span> 
+            @if (candidateEmail) { <span class="text-[#4E6770]/80">({{ candidateEmail }})</span> } 
+            &bull; Role: <span class="font-semibold text-[#172B32]">{{ jobTitle || 'Job Requisition' }}</span>
           </p>
         </div>
       </div>
 
       <div class="flex items-center space-x-2">
         <button (click)="handleClose()" type="button"
-          class="w-9 h-9 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 flex items-center justify-center transition-colors cursor-pointer text-lg font-bold">
+          class="w-9 h-9 rounded-xl text-[#4E6770] hover:text-[#172B32] hover:bg-[#E3FDFD] flex items-center justify-center transition-colors cursor-pointer text-lg font-bold">
           ✕
         </button>
       </div>
     </div>
 
     <!-- Navigation Tabs: Edit Terms vs Contract Document Preview -->
-    <div class="px-6 pt-3 pb-2 bg-slate-50/80 border-b border-slate-200 flex items-center justify-between shrink-0">
-      <div class="inline-flex p-1 bg-slate-200/80 rounded-xl space-x-1 text-xs font-bold">
+    <div class="px-6 pt-3 pb-2 bg-[#F8FBFA] border-b border-[#D5EDED] flex items-center justify-between shrink-0">
+      <div class="inline-flex p-1 bg-[#E3FDFD]/60 border border-[#D5EDED] rounded-xl space-x-1 text-xs font-bold">
         <button (click)="activeTab.set('terms')" type="button"
           class="px-4 py-1.5 rounded-lg transition-all flex items-center gap-1.5 cursor-pointer"
-          [ngClass]="activeTab() === 'terms' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-600 hover:text-slate-900'">
+          [ngClass]="activeTab() === 'terms' ? 'bg-[#244653] text-[#CBF1F5] shadow-xs' : 'text-[#4E6770] hover:text-[#172B32]'">
           <span>⚙️</span>
           <span>Offer Terms & Compensation</span>
         </button>
         <button (click)="activeTab.set('preview')" type="button"
           class="px-4 py-1.5 rounded-lg transition-all flex items-center gap-1.5 cursor-pointer"
-          [ngClass]="activeTab() === 'preview' ? 'bg-white text-emerald-800 shadow-xs' : 'text-slate-600 hover:text-slate-900'">
+          [ngClass]="activeTab() === 'preview' ? 'bg-[#CBF1F5] text-[#244653] border border-[#71C9CE] shadow-xs' : 'text-[#4E6770] hover:text-[#172B32]'">
           <span>📄</span>
           <span>Formal Contract Document Preview</span>
         </button>
@@ -61,8 +61,8 @@
 
       @if (activeTab() === 'preview') {
       <button (click)="printContractPreview()" type="button"
-        class="text-xs text-slate-600 hover:text-slate-900 font-semibold flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white border border-slate-200 hover:border-slate-300 shadow-2xs transition-all cursor-pointer">
-        <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        class="text-xs text-[#244653] hover:text-[#172B32] font-semibold flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white border border-[#D5EDED] hover:border-[#71C9CE] shadow-2xs transition-all cursor-pointer">
+        <svg class="w-3.5 h-3.5 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
         </svg>
         Print / PDF
@@ -75,8 +75,8 @@
 
       <!-- Alerts & Messages -->
       @if (successMessage()) {
-      <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center gap-2.5 animate-in fade-in">
-        <svg class="w-5 h-5 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div class="p-4 rounded-xl bg-[#CBF1F5] border border-[#71C9CE] text-[#244653] text-xs font-semibold flex items-center gap-2.5 animate-in fade-in">
+        <svg class="w-5 h-5 text-[#244653] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
         <span>{{ successMessage() }}</span>
@@ -100,9 +100,9 @@
 
         <!-- 1. Compensation Package & Currency -->
         <div class="space-y-3.5">
-          <div class="flex items-center justify-between border-b border-slate-100 pb-2">
-            <h4 class="text-xs font-black uppercase tracking-wider text-slate-500">1. Compensation & Currency</h4>
-            <span class="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+          <div class="flex items-center justify-between border-b border-[#D5EDED] pb-2">
+            <h4 class="text-xs font-black uppercase tracking-wider text-[#4E6770]">1. Compensation & Currency</h4>
+            <span class="text-[11px] font-semibold text-[#244653] bg-[#E3FDFD] px-2.5 py-0.5 rounded-full border border-[#A6E3E9]">
               Configurable Currencies
             </span>
           </div>
@@ -110,9 +110,9 @@
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
             <!-- Currency Selection -->
             <div class="space-y-1">
-              <label class="block text-xs font-bold text-slate-700">Currency</label>
+              <label class="block text-xs font-bold text-[#172B32]">Currency</label>
               <select [ngModel]="offerCurrency()" (ngModelChange)="offerCurrency.set($event)"
-                class="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all cursor-pointer">
+                class="w-full px-3 py-2.5 bg-white border border-[#D5EDED] rounded-xl text-xs font-semibold text-[#172B32] focus:ring-2 focus:ring-[#71C9CE]/20 focus:border-[#71C9CE] transition-all cursor-pointer outline-none">
                 @for (c of popularCurrencies; track c.code) {
                 <option [value]="c.code">{{ c.code }} - {{ c.label || c.name }} ({{ c.symbol }})</option>
                 }
@@ -121,37 +121,37 @@
 
             <!-- Base Salary -->
             <div class="space-y-1">
-              <label class="block text-xs font-bold text-slate-700">
+              <label class="block text-xs font-bold text-[#172B32]">
                 Annual Base Salary <span class="text-rose-500">*</span>
               </label>
               <div class="relative">
-                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-xs font-bold text-slate-400">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-xs font-bold text-[#4E6770]">
                   {{ getCurrencySymbol(offerCurrency()) }}
                 </span>
                 <input type="number" [ngModel]="offerSalary()" (ngModelChange)="offerSalary.set($event)"
                   placeholder="120000" min="1000" step="5000"
-                  class="w-full pl-9 pr-3 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all" />
+                  class="w-full pl-9 pr-3 py-2.5 bg-white border border-[#D5EDED] rounded-xl text-xs font-bold text-[#172B32] focus:ring-2 focus:ring-[#71C9CE]/20 focus:border-[#71C9CE] transition-all outline-none" />
               </div>
             </div>
 
             <!-- Bonus / Allowances -->
             <div class="space-y-1">
-              <label class="block text-xs font-bold text-slate-700">Bonus / Allowances (Yr 1)</label>
+              <label class="block text-xs font-bold text-[#172B32]">Bonus / Allowances (Yr 1)</label>
               <div class="relative">
-                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-xs font-bold text-slate-400">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-xs font-bold text-[#4E6770]">
                   {{ getCurrencySymbol(offerCurrency()) }}
                 </span>
                 <input type="number" [ngModel]="offerBonus()" (ngModelChange)="offerBonus.set($event)"
                   placeholder="0" min="0" step="1000"
-                  class="w-full pl-9 pr-3 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all" />
+                  class="w-full pl-9 pr-3 py-2.5 bg-white border border-[#D5EDED] rounded-xl text-xs font-bold text-[#172B32] focus:ring-2 focus:ring-[#71C9CE]/20 focus:border-[#71C9CE] transition-all outline-none" />
               </div>
             </div>
           </div>
 
           <!-- Total 1st-Year Package Callout -->
-          <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between text-xs">
-            <span class="text-slate-600 font-medium">Total First-Year Package Value:</span>
-            <span class="font-black text-slate-900 text-sm">
+          <div class="p-3 bg-[#F8FBFA] border border-[#D5EDED] rounded-xl flex items-center justify-between text-xs">
+            <span class="text-[#4E6770] font-medium">Total First-Year Package Value:</span>
+            <span class="font-black text-[#172B32] text-sm">
               {{ formatCurrency(totalPackageValue(), offerCurrency()) }} / year
             </span>
           </div>
@@ -159,25 +159,25 @@
 
         <!-- 2. Target Timeline & Contract Type -->
         <div class="space-y-3.5">
-          <div class="flex items-center justify-between border-b border-slate-100 pb-2">
-            <h4 class="text-xs font-black uppercase tracking-wider text-slate-500">2. Target Timeline & Contract Type</h4>
+          <div class="flex items-center justify-between border-b border-[#D5EDED] pb-2">
+            <h4 class="text-xs font-black uppercase tracking-wider text-[#4E6770]">2. Target Timeline & Contract Type</h4>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
             <!-- Target Start Date -->
             <div class="space-y-1">
-              <label class="block text-xs font-bold text-slate-700">
+              <label class="block text-xs font-bold text-[#172B32]">
                 Target Start Date <span class="text-rose-500">*</span>
               </label>
               <input type="date" [ngModel]="offerStartDate()" (ngModelChange)="offerStartDate.set($event)"
-                class="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all" />
+                class="w-full px-3 py-2.5 bg-white border border-[#D5EDED] rounded-xl text-xs font-semibold text-[#172B32] focus:ring-2 focus:ring-[#71C9CE]/20 focus:border-[#71C9CE] transition-all outline-none" />
             </div>
 
             <!-- Contract Type -->
             <div class="space-y-1">
-              <label class="block text-xs font-bold text-slate-700">Contract Type</label>
+              <label class="block text-xs font-bold text-[#172B32]">Contract Type</label>
               <select [ngModel]="offerContractType()" (ngModelChange)="offerContractType.set($event)"
-                class="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all cursor-pointer">
+                class="w-full px-3 py-2.5 bg-white border border-[#D5EDED] rounded-xl text-xs font-semibold text-[#172B32] focus:ring-2 focus:ring-[#71C9CE]/20 focus:border-[#71C9CE] transition-all cursor-pointer outline-none">
                 <option value="Full-Time Permanent">Full-Time Permanent</option>
                 <option value="Fixed-Term Contract">Fixed-Term Contract</option>
                 <option value="Contractor / Freelance">Contractor / Freelance</option>
@@ -187,9 +187,9 @@
 
             <!-- Probation Period -->
             <div class="space-y-1">
-              <label class="block text-xs font-bold text-slate-700">Probation Period</label>
+              <label class="block text-xs font-bold text-[#172B32]">Probation Period</label>
               <select [ngModel]="offerProbationMonths()" (ngModelChange)="offerProbationMonths.set($event)"
-                class="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all cursor-pointer">
+                class="w-full px-3 py-2.5 bg-white border border-[#D5EDED] rounded-xl text-xs font-semibold text-[#172B32] focus:ring-2 focus:ring-[#71C9CE]/20 focus:border-[#71C9CE] transition-all cursor-pointer outline-none">
                 <option [value]="0">No Probation</option>
                 <option [value]="1">1 Month</option>
                 <option [value]="3">3 Months (Standard)</option>
@@ -200,64 +200,64 @@
         </div>
 
         <!-- 3. Company CC Email Field (Channel Partner) -->
-        <div class="space-y-2 p-4 bg-gradient-to-r from-sky-50/70 via-indigo-50/50 to-slate-50 border border-sky-200 rounded-2xl">
+        <div class="space-y-2 p-4 bg-[#E3FDFD]/50 border border-[#A6E3E9] rounded-2xl">
           <div class="flex items-center justify-between">
-            <label class="block text-xs font-black text-slate-900 flex items-center gap-1.5">
+            <label class="block text-xs font-black text-[#172B32] flex items-center gap-1.5">
               <span>🏢</span>
               <span>Hiring Company / Client Representative CC Email</span>
             </label>
-            <span class="text-[10px] font-bold text-sky-800 bg-sky-100/80 px-2 py-0.5 rounded-md border border-sky-200">
+            <span class="text-[10px] font-bold text-[#244653] bg-[#CBF1F5] px-2 py-0.5 rounded-md border border-[#71C9CE]">
               In The Channel
             </span>
           </div>
 
           <div class="relative">
-            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
+            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-[#4E6770]">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
             </span>
             <input type="email" [ngModel]="offerCompanyCc()" (ngModelChange)="offerCompanyCc.set($event)"
               placeholder="e.g. hr-contracts@clientcompany.com or hiring-manager@acme.ch"
-              class="w-full pl-9 pr-3 py-2.5 bg-white border border-sky-300 rounded-xl text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all placeholder:text-slate-400" />
+              class="w-full pl-9 pr-3 py-2.5 bg-white border border-[#D5EDED] rounded-xl text-xs font-semibold text-[#172B32] focus:ring-2 focus:ring-[#71C9CE]/20 focus:border-[#71C9CE] transition-all placeholder:text-[#4E6770]/60 outline-none" />
           </div>
 
-          <p class="text-[11px] text-slate-600 leading-relaxed">
+          <p class="text-[11px] text-[#4E6770] leading-relaxed">
             <strong>Keep the hiring client in the communication loop:</strong> When saved as draft or dispatched, the contract details and automated signature notifications will automatically CC this company contact.
           </p>
         </div>
 
         <!-- 4. Special Clauses, Welcome Message & Perks -->
         <div class="space-y-1.5">
-          <label class="block text-xs font-bold text-slate-700 flex items-center justify-between">
+          <label class="block text-xs font-bold text-[#172B32] flex items-center justify-between">
             <span>Special Clauses, Welcome Message & Perks</span>
-            <span class="text-[10px] text-slate-400 font-normal">Included in candidate contract letter</span>
+            <span class="text-[10px] text-[#4E6770] font-normal">Included in candidate contract letter</span>
           </label>
           <textarea [ngModel]="offerNotes()" (ngModelChange)="offerNotes.set($event)" rows="3"
             placeholder="e.g. Remote work flexibility, equipment allowance, 25 days paid annual leave, relocation assistance..."
-            class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 text-xs focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"></textarea>
+            class="w-full px-3.5 py-2.5 bg-white border border-[#D5EDED] rounded-xl text-[#172B32] placeholder-[#4E6770]/60 text-xs focus:ring-2 focus:ring-[#71C9CE]/20 focus:border-[#71C9CE] transition-all outline-none"></textarea>
         </div>
 
         <!-- 5. Placement Commission Notice -->
-        <div class="p-4 bg-slate-900 text-white rounded-2xl border border-slate-800 space-y-2.5">
+        <div class="p-4 bg-[#244653] text-white rounded-2xl border border-[#71C9CE]/40 space-y-2.5 shadow-xs">
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-2">
-              <span class="p-1 bg-emerald-500/20 text-emerald-400 rounded-lg text-xs font-black">10%</span>
+              <span class="p-1 bg-[#CBF1F5] text-[#244653] rounded-lg text-xs font-black">10%</span>
               <span class="text-xs font-extrabold text-white">Magic Match Placement Commission</span>
             </div>
-            <span class="text-xs font-bold text-emerald-400">
+            <span class="text-xs font-bold text-[#CBF1F5]">
               {{ formatCurrency(offerCommissionAmount(), offerCurrency()) }}
             </span>
           </div>
 
-          <p class="text-[11px] text-slate-400 leading-relaxed">
+          <p class="text-[11px] text-[#CBF1F5]/80 leading-relaxed">
             Upon candidate e-signature, this placement is logged as completed. Magic Match invoices the 10% fee directly with a 30-day net payment schedule.
           </p>
 
           <label class="flex items-start space-x-2 pt-1 cursor-pointer select-none">
             <input type="checkbox" [ngModel]="agreeToCommissionTerms()" (ngModelChange)="agreeToCommissionTerms.set($event)"
-              class="mt-0.5 rounded border-slate-700 text-emerald-600 focus:ring-emerald-500 bg-slate-800 cursor-pointer" />
-            <span class="text-xs text-slate-300 font-medium leading-tight">
+              class="mt-0.5 rounded border-[#71C9CE] text-[#71C9CE] focus:ring-[#71C9CE] bg-[#1A343E] cursor-pointer" />
+            <span class="text-xs text-[#CBF1F5] font-medium leading-tight">
               I acknowledge authorization to draft this offer and confirm Magic Match's placement commission terms.
             </span>
           </label>
@@ -272,54 +272,54 @@
       @else {
       <div class="space-y-6">
 
-        <div class="p-8 bg-white border-2 border-slate-200 rounded-2xl shadow-sm font-serif text-slate-900 text-xs leading-relaxed space-y-5 print:border-none print:shadow-none">
+        <div class="p-8 bg-white border border-[#D5EDED] rounded-2xl shadow-2xs font-serif text-[#172B32] text-xs leading-relaxed space-y-5 print:border-none print:shadow-none">
           
           <!-- Document Header -->
-          <div class="border-b-2 border-slate-900 pb-4 flex items-start justify-between">
+          <div class="border-b-2 border-[#244653] pb-4 flex items-start justify-between">
             <div>
-              <h2 class="text-lg font-black tracking-wider uppercase font-sans text-slate-900">
+              <h2 class="text-lg font-black tracking-wider uppercase font-sans text-[#244653]">
                 OFFICIAL EMPLOYMENT AGREEMENT
               </h2>
-              <p class="text-xs text-slate-600 font-sans mt-0.5">
+              <p class="text-xs text-[#4E6770] font-sans mt-0.5">
                 Facilitated via Magic Match Recruitment Platform
               </p>
             </div>
             <div class="text-right font-sans text-xs">
-              <span class="font-bold text-slate-800">Date:</span> {{ todayDateFormatted() }}<br>
-              <span class="text-slate-500">Contract Ref:</span> 
-              <span class="font-mono text-[11px] text-slate-700">{{ existingOffer?.offer_id || 'DRAFT-MM-OFFER' }}</span>
+              <span class="font-bold text-[#172B32]">Date:</span> {{ todayDateFormatted() }}<br>
+              <span class="text-[#4E6770]">Contract Ref:</span> 
+              <span class="font-mono text-[11px] text-[#244653] font-semibold">{{ existingOffer?.offer_id || 'DRAFT-MM-OFFER' }}</span>
             </div>
           </div>
 
           <!-- Parties -->
-          <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200 font-sans space-y-2 text-xs">
+          <div class="p-3.5 bg-[#F8FBFA] rounded-xl border border-[#D5EDED] font-sans space-y-2 text-xs">
             <div class="grid grid-cols-2 gap-4">
               <div>
-                <span class="font-bold text-slate-400 uppercase text-[10px] block">EMPLOYER / HIRING ENTITY:</span>
-                <span class="font-bold text-slate-900">{{ companyName || 'Client Organization' }}</span>
-                <span class="text-slate-500 block text-[11px]">(Represented by Authorized Recruiter)</span>
+                <span class="font-bold text-[#4E6770] uppercase text-[10px] block">EMPLOYER / HIRING ENTITY:</span>
+                <span class="font-bold text-[#172B32]">{{ companyName || 'Client Organization' }}</span>
+                <span class="text-[#4E6770] block text-[11px]">(Represented by Authorized Recruiter)</span>
                 @if (offerCompanyCc()) {
-                  <span class="text-sky-800 font-semibold block text-[11px] mt-0.5">
+                  <span class="text-[#244653] font-semibold block text-[11px] mt-0.5">
                     🏢 Company In Channel: {{ offerCompanyCc() }}
                   </span>
                 }
               </div>
               <div>
-                <span class="font-bold text-slate-400 uppercase text-[10px] block">EMPLOYEE / CANDIDATE:</span>
-                <span class="font-bold text-slate-900">{{ candidateName }}</span>
-                <span class="text-slate-500 block text-[11px]">{{ candidateEmail || 'Candidate Email' }}</span>
+                <span class="font-bold text-[#4E6770] uppercase text-[10px] block">EMPLOYEE / CANDIDATE:</span>
+                <span class="font-bold text-[#172B32]">{{ candidateName }}</span>
+                <span class="text-[#4E6770] block text-[11px]">{{ candidateEmail || 'Candidate Email' }}</span>
               </div>
             </div>
           </div>
 
           <!-- Formal Preamble -->
-          <p class="italic text-slate-700">
+          <p class="italic text-[#172B32]">
             This Employment Agreement (&ldquo;Agreement&rdquo;) sets forth the formal terms and conditions of employment offered to <strong>{{ candidateName }}</strong> for the position of <strong>{{ jobTitle || 'Job Requisition' }}</strong>.
           </p>
 
           <!-- Clause 1: Position & Reporting -->
           <div class="space-y-1">
-            <h5 class="font-sans font-bold text-xs text-slate-900 uppercase">1. Position & Scope of Role</h5>
+            <h5 class="font-sans font-bold text-xs text-[#244653] uppercase">1. Position & Scope of Role</h5>
             <p>
               The Employee is appointed to the role of <strong>{{ jobTitle || 'Position' }}</strong> (Seniority: {{ seniorityLevel || 'Mid-Senior' }}). The Employee shall perform duties customary to this position and adhere to professional industry standards and company governance.
             </p>
@@ -327,7 +327,7 @@
 
           <!-- Clause 2: Commencement & Contract Type -->
           <div class="space-y-1">
-            <h5 class="font-sans font-bold text-xs text-slate-900 uppercase">2. Commencement Date & Duration</h5>
+            <h5 class="font-sans font-bold text-xs text-[#244653] uppercase">2. Commencement Date & Duration</h5>
             <p>
               Employment shall commence on <strong>{{ offerStartDate() || 'Agreed Target Date' }}</strong>. 
               The engagement is structured as a <strong>{{ offerContractType() }}</strong> arrangement.
@@ -336,10 +336,10 @@
 
           <!-- Clause 3: Compensation & Remuneration -->
           <div class="space-y-1">
-            <h5 class="font-sans font-bold text-xs text-slate-900 uppercase">3. Compensation & Currency Terms</h5>
+            <h5 class="font-sans font-bold text-xs text-[#244653] uppercase">3. Compensation & Currency Terms</h5>
             <p>
               The Employer agrees to compensate the Employee an annual gross base salary of 
-              <strong class="text-emerald-950 font-bold bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
+              <strong class="text-[#244653] font-bold bg-[#CBF1F5] px-1.5 py-0.5 rounded border border-[#71C9CE]">
                 {{ formatCurrency(offerSalary(), offerCurrency()) }}
               </strong>, payable in twelve (12) equal monthly installments in accordance with standard payroll schedules.
               @if (offerBonus() > 0) {
@@ -350,7 +350,7 @@
 
           <!-- Clause 4: Probationary Period -->
           <div class="space-y-1">
-            <h5 class="font-sans font-bold text-xs text-slate-900 uppercase">4. Probationary Period</h5>
+            <h5 class="font-sans font-bold text-xs text-[#244653] uppercase">4. Probationary Period</h5>
             <p>
               @if (offerProbationMonths() > 0) {
               A probationary period of <strong>{{ offerProbationMonths() }} months</strong> shall apply from the commencement date, during which either party may terminate the engagement with two (2) weeks written notice.
@@ -363,8 +363,8 @@
           <!-- Clause 5: Special Terms & Perks -->
           @if (offerNotes()) {
           <div class="space-y-1">
-            <h5 class="font-sans font-bold text-xs text-slate-900 uppercase">5. Stipulations & Welcome Benefits</h5>
-            <p class="bg-slate-50 p-3 rounded-lg border border-slate-200 text-slate-800">
+            <h5 class="font-sans font-bold text-xs text-[#244653] uppercase">5. Stipulations & Welcome Benefits</h5>
+            <p class="bg-[#F8FBFA] p-3 rounded-lg border border-[#D5EDED] text-[#172B32]">
               {{ offerNotes() }}
             </p>
           </div>
@@ -372,7 +372,7 @@
 
           <!-- Clause 6: Confidentiality, GDPR & Intellectual Property -->
           <div class="space-y-1">
-            <h5 class="font-sans font-bold text-xs text-slate-900 uppercase">6. Confidentiality, Data Protection & IP</h5>
+            <h5 class="font-sans font-bold text-xs text-[#244653] uppercase">6. Confidentiality, Data Protection & IP</h5>
             <p>
               The Employee agrees to preserve the absolute confidentiality of Employer proprietary information and client data. In accordance with GDPR and applicable statutory regulations, all inventions and intellectual property created in the course of duties shall belong exclusively to the Employer.
             </p>
@@ -380,39 +380,39 @@
 
           <!-- Clause 7: Channel Verification & CC -->
           <div class="space-y-1">
-            <h5 class="font-sans font-bold text-xs text-slate-900 uppercase">7. Official Channel & Notice Record</h5>
+            <h5 class="font-sans font-bold text-xs text-[#244653] uppercase">7. Official Channel & Notice Record</h5>
             <p>
               All formal notices, electronic dispatches, and signature confirmations are synchronized across the Magic Match platform channel and copied to the authorized Hiring Entity contact:
-              <span class="font-mono bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200 font-bold text-slate-800">
+              <span class="font-mono bg-[#E3FDFD] px-1.5 py-0.5 rounded border border-[#A6E3E9] font-bold text-[#244653]">
                 {{ offerCompanyCc() || 'Company Direct Contact' }}
               </span>.
             </p>
           </div>
 
           <!-- Dual Signature Blocks -->
-          <div class="pt-6 border-t-2 border-slate-900 grid grid-cols-2 gap-8 font-sans">
+          <div class="pt-6 border-t-2 border-[#244653] grid grid-cols-2 gap-8 font-sans">
             <div class="space-y-4">
-              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">FOR THE EMPLOYING ENTITY:</span>
-              <div class="border-b border-slate-400 pb-1">
-                <span class="font-bold text-slate-800 text-xs">Magic Match Recruiter (Authorized Representative)</span>
+              <span class="text-[10px] font-bold text-[#4E6770] uppercase tracking-wider block">FOR THE EMPLOYING ENTITY:</span>
+              <div class="border-b border-[#D5EDED] pb-1">
+                <span class="font-bold text-[#172B32] text-xs">Magic Match Recruiter (Authorized Representative)</span>
               </div>
-              <div class="text-[10px] text-slate-500">
+              <div class="text-[10px] text-[#4E6770]">
                 Date: {{ todayDateFormatted() }}
               </div>
             </div>
 
             <div class="space-y-4">
-              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">ACCEPTED & AGREED BY CANDIDATE:</span>
-              <div class="border-b border-slate-400 pb-1 min-h-[22px]">
+              <span class="text-[10px] font-bold text-[#4E6770] uppercase tracking-wider block">ACCEPTED & AGREED BY CANDIDATE:</span>
+              <div class="border-b border-[#D5EDED] pb-1 min-h-[22px]">
                 @if (existingOffer?.status === 'Accepted') {
-                  <span class="font-mono font-bold text-emerald-800 text-xs">
+                  <span class="font-mono font-bold text-[#244653] text-xs">
                     ✓ Digitally Signed: {{ existingOffer?.signed_name || existingOffer?.signature_legal_name || candidateName }}
                   </span>
                 } @else {
-                  <span class="text-xs text-slate-400 italic">Pending Candidate E-Signature</span>
+                  <span class="text-xs text-[#4E6770] italic">Pending Candidate E-Signature</span>
                 }
               </div>
-              <div class="text-[10px] text-slate-500">
+              <div class="text-[10px] text-[#4E6770]">
                 @if (existingOffer?.status === 'Accepted') {
                   Signed on: {{ existingOffer?.signed_at | date:'medium' }}
                 } @else {
@@ -430,18 +430,18 @@
     </div>
 
     <!-- Footer Actions -->
-    <div class="p-5 border-t border-slate-200 bg-slate-50 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
+    <div class="p-5 border-t border-[#D5EDED] bg-[#F8FBFA] flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
       <button (click)="handleClose()" type="button" [disabled]="isSubmitting()"
-        class="w-full sm:w-auto px-4 py-2.5 bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-xl text-xs font-semibold transition-all cursor-pointer disabled:opacity-50">
+        class="w-full sm:w-auto px-4 py-2.5 bg-white hover:bg-[#F8FBFA] text-[#244653] border border-[#D5EDED] rounded-xl text-xs font-semibold transition-all cursor-pointer disabled:opacity-50">
         Close
       </button>
 
       <div class="w-full sm:w-auto flex flex-wrap items-center justify-end gap-2.5">
         <!-- Save as Draft Button -->
         <button (click)="saveDraft()" type="button" [disabled]="isSubmitting()"
-          class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 hover:border-slate-400 rounded-xl text-xs font-bold transition-all shadow-2xs cursor-pointer disabled:opacity-50">
+          class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-white hover:bg-[#E3FDFD] text-[#244653] border border-[#D5EDED] hover:border-[#71C9CE] rounded-xl text-xs font-bold transition-all shadow-2xs cursor-pointer disabled:opacity-50">
           @if (isSubmitting() && submittingMode() === 'draft') {
-          <span class="w-3.5 h-3.5 border-2 border-slate-700 border-t-transparent rounded-full animate-spin"></span>
+          <span class="w-3.5 h-3.5 border-2 border-[#244653] border-t-transparent rounded-full animate-spin"></span>
           } @else {
           <span>💾</span>
           }
@@ -450,7 +450,7 @@
 
         <!-- Dispatch Official Offer Button -->
         <button (click)="dispatchOffer()" type="button" [disabled]="isSubmitting() || !offerSalary() || !agreeToCommissionTerms()"
-          class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white rounded-xl text-xs font-extrabold shadow-md shadow-emerald-500/20 transition-all cursor-pointer disabled:opacity-50">
+          class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#244653] hover:bg-[#1A343E] text-white rounded-xl text-xs font-extrabold shadow-xs transition-all cursor-pointer disabled:opacity-50">
           @if (isSubmitting() && submittingMode() === 'dispatch') {
           <span class="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
           } @else {

@@ -425,21 +425,21 @@ export class RecruiterInterviewsComponent implements OnInit {
     if (offerStatus === 'Accepted' || item.status === 'Contract Signed') {
       return {
         label: 'Contract Signed',
-        css: 'bg-emerald-100 text-emerald-900 border-emerald-300 font-extrabold',
+        css: 'bg-[#CBF1F5] text-[#244653] border border-[#71C9CE] font-extrabold',
         icon: '✓'
       };
     }
     if (offerStatus === 'Offered' || item.status === 'Offer Extended' || item.status === 'Offered') {
       return {
         label: 'Offer Extended',
-        css: 'bg-indigo-50 text-indigo-800 border-indigo-300 font-bold',
+        css: 'bg-[#244653] text-[#CBF1F5] border border-[#244653] font-bold',
         icon: 'extended_rec.svg'
       };
     }
     if (offerStatus === 'Draft' || item.status === 'Offer Drafting') {
       return {
         label: 'Offer Drafting',
-        css: 'bg-sky-50 text-sky-800 border-sky-300 font-bold',
+        css: 'bg-[#E3FDFD] text-[#244653] border border-[#A6E3E9] font-bold',
         icon: '📝'
       };
     }
@@ -457,7 +457,7 @@ export class RecruiterInterviewsComponent implements OnInit {
     if (outcome === 'Passed' || status === 'Interview Passed' || status === 'Passed') {
       return {
         label: 'Passed ✓',
-        css: 'bg-emerald-50 text-emerald-800 border-emerald-300 font-bold',
+        css: 'bg-[#CBF1F5] text-[#244653] border border-[#71C9CE] font-bold',
         icon: '✓'
       };
     }
@@ -471,29 +471,29 @@ export class RecruiterInterviewsComponent implements OnInit {
     if (this.isPast(item.interview?.scheduled_at)) {
       return {
         label: 'Awaiting Results',
-        css: 'bg-amber-50 text-amber-800 border-amber-300 font-bold animate-pulse',
+        css: 'bg-[#FEF9C3] text-[#854D0E] border-[#FEF08A] font-bold animate-pulse',
         icon: 'feedback_rec.svg'
       };
     }
     if (this.isToday(item.interview?.scheduled_at)) {
       return {
         label: 'Today',
-        css: 'bg-sky-50 text-sky-800 border-sky-300 font-bold',
+        css: 'bg-[#CBF1F5] text-[#244653] border border-[#71C9CE] font-bold',
         icon: '📅'
       };
     }
     return {
       label: 'Upcoming',
-      css: 'bg-indigo-50 text-indigo-700 border-indigo-200',
+      css: 'bg-[#E3FDFD] text-[#244653] border border-[#A6E3E9]',
       icon: '🕒'
     };
   }
 
   getScoreColor(score?: number): string {
-    if (score === undefined || score === null) return 'text-slate-600 bg-slate-100 border-slate-200';
-    if (score >= 80) return 'text-emerald-700 bg-emerald-50 border-emerald-200 font-bold';
-    if (score >= 65) return 'text-sky-700 bg-sky-50 border-sky-200 font-semibold';
-    return 'text-amber-700 bg-amber-50 border-amber-200 font-medium';
+    if (score === undefined || score === null) return 'text-[#4E6770] bg-[#F8FBFA] border-[#D5EDED]';
+    if (score >= 80) return 'text-[#244653] bg-[#CBF1F5] border-[#71C9CE] font-bold';
+    if (score >= 65) return 'text-[#244653] bg-[#E3FDFD] border-[#A6E3E9] font-semibold';
+    return 'text-[#854D0E] bg-[#FEF9C3] border-[#FEF08A] font-medium';
   }
 
   getInitials(name?: string): string {

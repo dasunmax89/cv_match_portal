@@ -3,40 +3,40 @@
   <!-- Header for Onboarding Wizard -->
   <div class="mb-8 text-center">
     <span
-      class="px-3 py-1 bg-indigo-50 text-indigo-700 text-xs font-semibold rounded-full uppercase tracking-wider">Candidate
+      class="px-3.5 py-1 bg-[#CBF1F5] text-[#244653] border border-[#71C9CE]/50 text-xs font-bold rounded-full uppercase tracking-wider">Candidate
       Setup</span>
-    <h1 class="text-2xl font-bold text-slate-900 mt-2">Complete your Candidate Setup</h1>
-    <p class="text-sm text-slate-500 mt-1">Let our AI parse your CV and match your skills with top tech opportunities
+    <h1 class="text-2xl font-bold text-[#172B32] mt-2.5">Complete your Candidate Setup</h1>
+    <p class="text-sm text-[#4E6770] mt-1">Let our AI parse your CV and match your skills with top tech opportunities
     </p>
   </div>
 
   <!-- Wizard Progress Bar (2 Steps) -->
   <div class="mb-8 flex items-center justify-between relative px-4 max-w-lg mx-auto">
-    <div class="absolute left-12 right-12 top-1/2 -translate-y-1/2 h-0.5 bg-slate-200 -z-10"></div>
+    <div class="absolute left-12 right-12 top-1/2 -translate-y-1/2 h-0.5 bg-[#D5EDED] -z-10"></div>
 
     <div class="flex flex-col items-center">
       <div class="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold transition-colors"
-        [ngClass]="currentStep >= 1 ? 'bg-indigo-600 text-white shadow-sm ring-4 ring-indigo-50' : 'bg-slate-200 text-slate-500'">
+        [ngClass]="currentStep >= 1 ? 'bg-[#244653] text-white shadow-sm ring-4 ring-[#CBF1F5]' : 'bg-[#E3FDFD] text-[#4E6770] border border-[#D5EDED]'">
         1
       </div>
-      <span class="text-xs font-medium mt-1 text-slate-700">Resume & Auto-Parsed Details</span>
+      <span class="text-xs font-semibold mt-1.5" [ngClass]="currentStep >= 1 ? 'text-[#172B32]' : 'text-[#4E6770]'">Resume & Auto-Parsed Details</span>
     </div>
 
     <div class="flex flex-col items-center">
       <div class="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold transition-colors"
-        [ngClass]="currentStep >= 2 ? 'bg-indigo-600 text-white shadow-sm ring-4 ring-indigo-50' : 'bg-slate-200 text-slate-500'">
+        [ngClass]="currentStep >= 2 ? 'bg-[#244653] text-white shadow-sm ring-4 ring-[#CBF1F5]' : 'bg-[#E3FDFD] text-[#4E6770] border border-[#D5EDED]'">
         2
       </div>
-      <span class="text-xs font-medium mt-1 text-slate-700">Job Preferences</span>
+      <span class="text-xs font-semibold mt-1.5" [ngClass]="currentStep >= 2 ? 'text-[#172B32]' : 'text-[#4E6770]'">Job Preferences</span>
     </div>
   </div>
 
   <!-- Wizard Card Container -->
-  <div class="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
+  <div class="bg-white rounded-2xl border border-[#D5EDED] p-8 shadow-sm">
 
     @if (errorMessage) {
     <div
-      class="mb-6 p-4 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-700 flex items-center justify-between">
+      class="mb-6 p-4 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-800 flex items-center justify-between">
       <span class="flex items-center gap-2 font-medium">
         <svg class="w-4 h-4 text-rose-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -51,24 +51,24 @@
     <!-- STEP 1 (Resume Upload & Auto Parsing) -->
     @if (currentStep === 1) {
     <div class="space-y-6">
-      <h2 class="text-lg font-semibold text-slate-800 border-b border-slate-100 pb-3">Step 1: Upload Resume &
+      <h2 class="text-lg font-bold text-[#172B32] border-b border-[#D5EDED] pb-3">Step 1: Upload Resume &
         Auto-Populate Profile</h2>
 
       <!-- File Upload Area -->
       <div>
-        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">Upload Resume
+        <label class="block text-xs font-bold text-[#172B32] uppercase tracking-wider mb-2">Upload Resume
           (PDF/DOCX)</label>
         <div
-          class="border-2 border-dashed border-slate-200 hover:border-indigo-400 rounded-xl p-6 text-center cursor-pointer transition-colors bg-slate-50 relative">
+          class="border-2 border-dashed border-[#D5EDED] hover:border-[#71C9CE] rounded-xl p-6 text-center cursor-pointer transition-colors bg-[#F8FBFA] relative">
           <input type="file" (change)="onFileSelected($event)" accept=".pdf,.docx"
             class="absolute inset-0 opacity-0 cursor-pointer" />
-          <svg class="w-10 h-10 text-indigo-500 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-10 h-10 text-[#71C9CE] mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
           </svg>
           @if (isParsing) {
-          <div class="text-sm font-semibold text-indigo-600 animate-pulse flex items-center justify-center gap-2">
-            <svg class="animate-spin h-4 w-4 text-indigo-600" fill="none" viewBox="0 0 24 24">
+          <div class="text-sm font-semibold text-[#244653] animate-pulse flex items-center justify-center gap-2">
+            <svg class="animate-spin h-4 w-4 text-[#71C9CE]" fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
               <path class="opacity-75" fill="currentColor"
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
@@ -77,11 +77,16 @@
             AI is running Initial Assessment & auto-populating your profile...
           </div>
           } @else if (fileName) {
-          <p class="text-sm font-semibold text-indigo-600">{{ fileName }} uploaded & parsed successfully!</p>
+          <p class="text-sm font-bold text-[#244653] flex items-center justify-center gap-1.5">
+            <svg class="w-4 h-4 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            {{ fileName }} uploaded & parsed successfully!
+          </p>
           } @else {
-          <p class="text-sm font-medium text-slate-700">Drag and drop your CV here, or <span
-              class="text-indigo-600">browse files</span></p>
-          <p class="text-xs text-slate-400 mt-1">AI will automatically parse name, skills, experience, education, and
+          <p class="text-sm font-semibold text-[#172B32]">Drag and drop your CV here, or <span
+              class="text-[#244653] underline decoration-[#71C9CE] font-bold">browse files</span></p>
+          <p class="text-xs text-[#4E6770] mt-1">AI will automatically parse name, skills, experience, education, and
             work history</p>
           }
         </div>
@@ -89,18 +94,23 @@
 
       <!-- Initial AI Assessment Summary Box -->
       @if (initialAssessment) {
-      <div class="bg-indigo-50/50 border border-indigo-200 rounded-xl p-4 space-y-2">
+      <div class="bg-[#E3FDFD] border border-[#A6E3E9] rounded-xl p-4 space-y-2">
         <div class="flex items-center justify-between">
-          <span class="text-xs font-bold text-indigo-900 uppercase tracking-wider">AI Assessment Summary</span>
-          <span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[11px] font-bold rounded-full">Fit Score: {{
+          <span class="text-xs font-bold text-[#244653] uppercase tracking-wider flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            AI Assessment Summary
+          </span>
+          <span class="px-2.5 py-0.5 bg-[#CBF1F5] text-[#244653] border border-[#71C9CE] text-[11px] font-bold rounded-full">Fit Score: {{
             initialAssessment.initial_fit_rating }}/100</span>
         </div>
-        <p class="text-xs text-slate-700 italic">"{{ initialAssessment.executive_summary }}"</p>
+        <p class="text-xs text-[#172B32] italic">"{{ initialAssessment.executive_summary }}"</p>
         @if (initialAssessment.key_strengths?.length) {
         <div class="flex flex-wrap gap-1 mt-1">
           @for (str of initialAssessment.key_strengths; track str) {
           <span
-            class="px-2 py-0.5 bg-white text-indigo-700 border border-indigo-200 text-[10px] font-medium rounded-md">✓
+            class="px-2 py-0.5 bg-white text-[#244653] border border-[#A6E3E9] text-[10px] font-semibold rounded-md">✓
             {{ str }}</span>
           }
         </div>
@@ -111,120 +121,119 @@
       <!-- Auto-Populated Basic Information -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">First Name</label>
+          <label class="block text-xs font-bold text-[#172B32] uppercase tracking-wider mb-1">First Name</label>
           <input type="text" [(ngModel)]="firstName" placeholder="Jane"
-            class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all" />
+            class="w-full px-3.5 py-2.5 bg-[#F8FBFA] border border-[#D5EDED] rounded-lg text-sm text-[#172B32] focus:outline-none focus:ring-2 focus:ring-[#71C9CE]/30 focus:border-[#71C9CE] focus:bg-white transition-all" />
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Last Name</label>
+          <label class="block text-xs font-bold text-[#172B32] uppercase tracking-wider mb-1">Last Name</label>
           <input type="text" [(ngModel)]="lastName" placeholder="Doe"
-            class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all" />
+            class="w-full px-3.5 py-2.5 bg-[#F8FBFA] border border-[#D5EDED] rounded-lg text-sm text-[#172B32] focus:outline-none focus:ring-2 focus:ring-[#71C9CE]/30 focus:border-[#71C9CE] focus:bg-white transition-all" />
         </div>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Email Address</label>
+          <label class="block text-xs font-bold text-[#172B32] uppercase tracking-wider mb-1">Email Address</label>
           <input type="email" [(ngModel)]="email" placeholder="jane@example.com"
-            class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all" />
+            class="w-full px-3.5 py-2.5 bg-[#F8FBFA] border border-[#D5EDED] rounded-lg text-sm text-[#172B32] focus:outline-none focus:ring-2 focus:ring-[#71C9CE]/30 focus:border-[#71C9CE] focus:bg-white transition-all" />
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Job Title</label>
+          <label class="block text-xs font-bold text-[#172B32] uppercase tracking-wider mb-1">Job Title</label>
           <input type="text" [(ngModel)]="jobTitle" placeholder="e.g. Senior Fullstack Engineer"
-            class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all" />
+            class="w-full px-3.5 py-2.5 bg-[#F8FBFA] border border-[#D5EDED] rounded-lg text-sm text-[#172B32] focus:outline-none focus:ring-2 focus:ring-[#71C9CE]/30 focus:border-[#71C9CE] focus:bg-white transition-all" />
         </div>
       </div>
 
       <div>
-        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Education
+        <label class="block text-xs font-bold text-[#172B32] uppercase tracking-wider mb-1">Education
           Background</label>
         <input type="text" [(ngModel)]="education" placeholder="e.g. B.S. Computer Science"
-          class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all" />
+          class="w-full px-3.5 py-2.5 bg-[#F8FBFA] border border-[#D5EDED] rounded-lg text-sm text-[#172B32] focus:outline-none focus:ring-2 focus:ring-[#71C9CE]/30 focus:border-[#71C9CE] focus:bg-white transition-all" />
       </div>
 
       <!-- Social & Professional Profiles Section -->
-      <div class="pt-2 border-t border-slate-100 space-y-3">
+      <div class="pt-2 border-t border-[#D5EDED] space-y-3">
         <div>
-          <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
-            <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <h3 class="text-xs font-bold text-[#172B32] uppercase tracking-wider flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
             </svg>
             Social & Professional Profiles
           </h3>
-          <p class="text-xs text-slate-500 mt-0.5">Add your professional and social links to stand out to employers</p>
+          <p class="text-xs text-[#4E6770] mt-0.5">Add your professional and social links to stand out to employers</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
           <!-- LinkedIn Profile -->
           <div>
             <div class="flex items-center justify-between mb-1">
-              <label class="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
+              <label class="text-xs font-bold text-[#172B32] flex items-center gap-1.5">
                 <svg class="w-3.5 h-3.5 text-[#0A66C2]" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
                 </svg>
                 LinkedIn Profile
               </label>
               @if (linkedinUrl) {
-                <a [href]="linkedinUrl" target="_blank" rel="noopener noreferrer" class="text-[11px] font-medium text-indigo-600 hover:underline">
+                <a [href]="linkedinUrl" target="_blank" rel="noopener noreferrer" class="text-[11px] font-semibold text-[#244653] hover:text-[#71C9CE] hover:underline">
                   Visit &nearr;
                 </a>
               }
             </div>
             <input type="url" [(ngModel)]="linkedinUrl" placeholder="https://linkedin.com/in/username"
-              class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all" />
+              class="w-full px-3 py-2 bg-[#F8FBFA] border border-[#D5EDED] rounded-lg text-xs text-[#172B32] placeholder-[#4E6770]/60 focus:outline-none focus:ring-2 focus:ring-[#71C9CE]/30 focus:border-[#71C9CE] focus:bg-white transition-all" />
           </div>
 
           <!-- Facebook Profile -->
           <div>
             <div class="flex items-center justify-between mb-1">
-              <label class="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
+              <label class="text-xs font-bold text-[#172B32] flex items-center gap-1.5">
                 <svg class="w-3.5 h-3.5 text-[#1877F2]" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                 </svg>
                 Facebook Profile
               </label>
               @if (facebookUrl) {
-                <a [href]="facebookUrl" target="_blank" rel="noopener noreferrer" class="text-[11px] font-medium text-indigo-600 hover:underline">
+                <a [href]="facebookUrl" target="_blank" rel="noopener noreferrer" class="text-[11px] font-semibold text-[#244653] hover:text-[#71C9CE] hover:underline">
                   Visit &nearr;
                 </a>
               }
             </div>
             <input type="url" [(ngModel)]="facebookUrl" placeholder="https://facebook.com/username"
-              class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all" />
+              class="w-full px-3 py-2 bg-[#F8FBFA] border border-[#D5EDED] rounded-lg text-xs text-[#172B32] placeholder-[#4E6770]/60 focus:outline-none focus:ring-2 focus:ring-[#71C9CE]/30 focus:border-[#71C9CE] focus:bg-white transition-all" />
           </div>
 
           <!-- TikTok Profile -->
           <div>
             <div class="flex items-center justify-between mb-1">
-              <label class="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
-                <svg class="w-3.5 h-3.5 text-slate-900" fill="currentColor" viewBox="0 0 24 24">
+              <label class="text-xs font-bold text-[#172B32] flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5 text-[#172B32]" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.24 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
                 </svg>
                 TikTok Profile
               </label>
               @if (tiktokUrl) {
-                <a [href]="tiktokUrl" target="_blank" rel="noopener noreferrer" class="text-[11px] font-medium text-indigo-600 hover:underline">
+                <a [href]="tiktokUrl" target="_blank" rel="noopener noreferrer" class="text-[11px] font-semibold text-[#244653] hover:text-[#71C9CE] hover:underline">
                   Visit &nearr;
                 </a>
               }
             </div>
             <input type="url" [(ngModel)]="tiktokUrl" placeholder="https://tiktok.com/@username"
-              class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all" />
+              class="w-full px-3 py-2 bg-[#F8FBFA] border border-[#D5EDED] rounded-lg text-xs text-[#172B32] placeholder-[#4E6770]/60 focus:outline-none focus:ring-2 focus:ring-[#71C9CE]/30 focus:border-[#71C9CE] focus:bg-white transition-all" />
           </div>
         </div>
       </div>
 
-
       <!-- Skills Matrix from AI Analysis Feed -->
       <div>
         <div class="flex items-center justify-between mb-2">
-          <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider">AI Extracted Key Skills</label>
+          <label class="block text-xs font-bold text-[#172B32] uppercase tracking-wider">AI Extracted Key Skills</label>
           @if (availableSkills.length > 0) {
           <span
-            class="px-2 py-0.5 bg-indigo-50 text-indigo-700 text-[11px] font-semibold rounded-full border border-indigo-100 flex items-center gap-1">
-            <svg class="w-3 h-3 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            class="px-2.5 py-0.5 bg-[#CBF1F5] text-[#244653] text-[11px] font-bold rounded-full border border-[#71C9CE]/50 flex items-center gap-1">
+            <svg class="w-3 h-3 text-[#244653]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
             {{ availableSkills.length }} Skills Extracted
@@ -236,8 +245,8 @@
         <div class="flex flex-wrap gap-2 mb-3">
           @for (skill of availableSkills; track skill) {
           <div
-            [ngClass]="selectedSkills.includes(skill) ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200'"
-            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border transition-colors">
+            [ngClass]="selectedSkills.includes(skill) ? 'bg-[#244653] text-white border-[#244653]' : 'bg-[#E3FDFD] text-[#244653] border-[#A6E3E9] hover:bg-[#CBF1F5]'"
+            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border transition-colors">
             <span (click)="toggleSkill(skill)" class="cursor-pointer">{{ skill }}</span>
             <button type="button" (click)="removeSkill(skill)"
               class="font-bold text-xs opacity-75 hover:opacity-100 hover:text-rose-300 focus:outline-none cursor-pointer ml-1"
@@ -248,17 +257,17 @@
           }
         </div>
         } @else {
-        <div class="p-4 border border-dashed border-slate-200 rounded-xl text-center bg-slate-50 mb-3">
-          <p class="text-xs text-slate-500 font-medium">No skills extracted yet. Upload your resume above or add custom skills below.</p>
+        <div class="p-4 border border-dashed border-[#D5EDED] rounded-xl text-center bg-[#F8FBFA] mb-3">
+          <p class="text-xs text-[#4E6770] font-medium">No skills extracted yet. Upload your resume above or add custom skills below.</p>
         </div>
         }
 
         <!-- Add Custom Skill Input -->
         <div class="flex items-center gap-2">
           <input type="text" [(ngModel)]="newSkillInput" (keyup.enter)="addCustomSkill()" placeholder="Add a skill (e.g. Python, Docker, React)..."
-            class="flex-1 px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all" />
+            class="flex-1 px-3.5 py-2 bg-[#F8FBFA] border border-[#D5EDED] rounded-lg text-xs text-[#172B32] focus:outline-none focus:ring-2 focus:ring-[#71C9CE]/30 focus:border-[#71C9CE] focus:bg-white transition-all" />
           <button type="button" (click)="addCustomSkill()"
-            class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold rounded-lg transition-colors cursor-pointer shrink-0">
+            class="px-4 py-2 bg-[#244653] hover:bg-[#1A343E] text-white text-xs font-bold rounded-lg transition-colors cursor-pointer shrink-0">
             + Add Skill
           </button>
         </div>
@@ -270,24 +279,24 @@
     <!-- STEP 2 (Job Preferences Wizard Step) -->
     @if (currentStep === 2) {
     <div class="space-y-6">
-      <h2 class="text-lg font-semibold text-slate-800 border-b border-slate-100 pb-3">Step 2: Career & Work Preferences
+      <h2 class="text-lg font-bold text-[#172B32] border-b border-[#D5EDED] pb-3">Step 2: Career & Work Preferences
       </h2>
 
       <div>
         <div class="flex justify-between items-center mb-2">
-          <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider">Years of Experience: <span
-              class="text-indigo-600 font-bold">{{ experienceYears }} Years</span></label>
+          <label class="block text-xs font-bold text-[#172B32] uppercase tracking-wider">Years of Experience: <span
+              class="text-[#244653] font-bold">{{ experienceYears }} Years</span></label>
         </div>
         <input type="range" min="0" max="20" [(ngModel)]="experienceYears"
-          class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600" />
+          class="w-full h-2 bg-[#D5EDED] rounded-lg appearance-none cursor-pointer accent-[#71C9CE]" />
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Work
+          <label class="block text-xs font-bold text-[#172B32] uppercase tracking-wider mb-1.5">Work
             Arrangement</label>
           <select [(ngModel)]="workArrangement"
-            class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all cursor-pointer">
+            class="w-full px-3.5 py-2.5 bg-[#F8FBFA] border border-[#D5EDED] rounded-lg text-sm text-[#172B32] focus:outline-none focus:ring-2 focus:ring-[#71C9CE]/30 focus:border-[#71C9CE] focus:bg-white transition-all cursor-pointer">
             <option value="Remote Preferred">Remote Preferred</option>
             <option value="Hybrid">Hybrid</option>
             <option value="On-site">On-site</option>
@@ -296,20 +305,20 @@
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Minimum Desired
+          <label class="block text-xs font-bold text-[#172B32] uppercase tracking-wider mb-1.5">Minimum Desired
             Salary (USD)</label>
           <input type="text" [(ngModel)]="minSalary" placeholder="$120,000 / year"
-            class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all" />
+            class="w-full px-3.5 py-2.5 bg-[#F8FBFA] border border-[#D5EDED] rounded-lg text-sm text-[#172B32] focus:outline-none focus:ring-2 focus:ring-[#71C9CE]/30 focus:border-[#71C9CE] focus:bg-white transition-all" />
         </div>
       </div>
     </div>
     }
 
     <!-- Footer Controls -->
-    <div class="mt-8 pt-4 border-t border-slate-100 flex items-center justify-between">
+    <div class="mt-8 pt-4 border-t border-[#D5EDED] flex items-center justify-between">
       @if (currentStep === 2) {
       <button (click)="prevStep()" type="button"
-        class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer">
+        class="px-4 py-2 text-sm font-semibold text-[#4E6770] hover:text-[#172B32] border border-[#D5EDED] rounded-lg hover:bg-[#F8FBFA] cursor-pointer transition-colors">
         ← Back
       </button>
       } @else {
@@ -318,12 +327,12 @@
 
       @if (currentStep === 1) {
       <button (click)="nextStep()" type="button"
-        class="px-5 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-sm cursor-pointer">
+        class="px-5 py-2.5 text-sm font-bold text-white bg-[#244653] hover:bg-[#1A343E] rounded-lg shadow-sm cursor-pointer transition-colors">
         Next Step: Job Preferences →
       </button>
       } @else {
       <button (click)="finishOnboarding()" type="button" [disabled]="isSubmitting"
-        class="px-6 py-2.5 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-sm transition-colors flex items-center gap-2 cursor-pointer disabled:opacity-50">
+        class="px-6 py-2.5 text-xs font-bold text-white bg-[#244653] hover:bg-[#1A343E] rounded-lg shadow-sm transition-colors flex items-center gap-2 cursor-pointer disabled:opacity-50">
         @if (isSubmitting) {
         <svg class="animate-spin h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24">
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>

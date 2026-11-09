@@ -1,15 +1,15 @@
 <div class="space-y-6">
   
   <!-- Dashboard Banner -->
-  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-5">
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#D5EDED] pb-5">
     <div>
-      <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Vendor Management Console</h1>
-      <p class="text-sm text-slate-500 mt-1">Manage recruiter company accounts, usage quotas, and platform status</p>
+      <h1 class="text-2xl font-bold text-[#172B32] tracking-tight">Vendor Management Console</h1>
+      <p class="text-sm text-[#4E6770] mt-1">Manage recruiter company accounts, usage quotas, and platform status</p>
     </div>
     
     <div class="flex items-center space-x-3">
-      <button (click)="openProvisionModal()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-lg shadow-sm transition-colors flex items-center">
-        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+      <button (click)="openProvisionModal()" class="px-4 py-2.5 bg-[#244653] hover:bg-[#1A343E] text-white text-xs font-bold rounded-lg shadow-sm transition-colors flex items-center cursor-pointer">
+        <svg class="w-4 h-4 mr-1.5 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
         Provision New Recruiter
       </button>
     </div>
@@ -18,60 +18,60 @@
   <!-- KPI Summary Grid -->
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
     <!-- Card 1 -->
-    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-      <div class="flex items-center justify-between text-slate-500 text-xs font-semibold uppercase tracking-wider">
+    <div class="bg-white p-5 rounded-2xl border border-[#D5EDED] shadow-xs">
+      <div class="flex items-center justify-between text-[#4E6770] text-xs font-bold uppercase tracking-wider">
         <span>Total Recruiters</span>
-        <span class="text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded font-bold">+12%</span>
+        <span class="text-[#244653] bg-[#CBF1F5] border border-[#71C9CE]/50 px-2 py-0.5 rounded-full font-bold">+12%</span>
       </div>
-      <div class="text-3xl font-extrabold text-slate-900 mt-2">{{ metrics.total_recruiters }}</div>
-      <p class="text-xs text-slate-400 mt-1">active tenant accounts</p>
+      <div class="text-3xl font-extrabold text-[#172B32] mt-2">{{ metrics.total_recruiters }}</div>
+      <p class="text-xs text-[#4E6770] mt-1">active tenant accounts</p>
     </div>
 
     <!-- Card 2 -->
-    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-      <div class="flex items-center justify-between text-slate-500 text-xs font-semibold uppercase tracking-wider">
+    <div class="bg-white p-5 rounded-2xl border border-[#D5EDED] shadow-xs">
+      <div class="flex items-center justify-between text-[#4E6770] text-xs font-bold uppercase tracking-wider">
         <span>Candidates Registered</span>
-        <span class="text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded font-bold">+24%</span>
+        <span class="text-[#244653] bg-[#CBF1F5] border border-[#71C9CE]/50 px-2 py-0.5 rounded-full font-bold">+24%</span>
       </div>
-      <div class="text-3xl font-extrabold text-slate-900 mt-2">{{ metrics.total_candidates | number }}</div>
-      <p class="text-xs text-slate-400 mt-1">active profile pool</p>
+      <div class="text-3xl font-extrabold text-[#172B32] mt-2">{{ metrics.total_candidates | number }}</div>
+      <p class="text-xs text-[#4E6770] mt-1">active profile pool</p>
     </div>
 
     <!-- Card 3 -->
-    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-      <div class="flex items-center justify-between text-slate-500 text-xs font-semibold uppercase tracking-wider">
+    <div class="bg-white p-5 rounded-2xl border border-[#D5EDED] shadow-xs">
+      <div class="flex items-center justify-between text-[#4E6770] text-xs font-bold uppercase tracking-wider">
         <span>AI Matches Computed</span>
-        <span class="text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded font-bold">Live</span>
+        <span class="text-[#244653] bg-[#E3FDFD] border border-[#A6E3E9] px-2 py-0.5 rounded-full font-bold">Live</span>
       </div>
-      <div class="text-3xl font-extrabold text-slate-900 mt-2">{{ metrics.matches_computed | number }}</div>
-      <p class="text-xs text-slate-400 mt-1">94.2% precision rating</p>
+      <div class="text-3xl font-extrabold text-[#172B32] mt-2">{{ metrics.matches_computed | number }}</div>
+      <p class="text-xs text-[#4E6770] mt-1">94.2% precision rating</p>
     </div>
 
     <!-- Card 4 -->
-    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-      <div class="flex items-center justify-between text-slate-500 text-xs font-semibold uppercase tracking-wider">
+    <div class="bg-white p-5 rounded-2xl border border-[#D5EDED] shadow-xs">
+      <div class="flex items-center justify-between text-[#4E6770] text-xs font-bold uppercase tracking-wider">
         <span>System SLA</span>
-        <span class="text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded font-bold">99.9%</span>
+        <span class="text-[#244653] bg-[#CBF1F5] border border-[#71C9CE]/50 px-2 py-0.5 rounded-full font-bold">99.9%</span>
       </div>
-      <div class="text-3xl font-extrabold text-slate-900 mt-2">{{ metrics.system_status }}</div>
-      <p class="text-xs text-slate-400 mt-1">FastAPI ML Cluster OK</p>
+      <div class="text-3xl font-extrabold text-[#172B32] mt-2">{{ metrics.system_status }}</div>
+      <p class="text-xs text-[#4E6770] mt-1">FastAPI ML Cluster OK</p>
     </div>
   </div>
 
   <!-- Accounts Table Section -->
-  <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+  <div class="bg-white rounded-2xl border border-[#D5EDED] shadow-xs overflow-hidden">
     <!-- Table Toolbar -->
-    <div class="p-4 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-      <h2 class="text-base font-bold text-slate-800">Recruiter Company Accounts</h2>
+    <div class="p-4 border-b border-[#D5EDED] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <h2 class="text-base font-bold text-[#172B32]">Recruiter Company Accounts</h2>
       
       <div class="relative w-full sm:w-72">
         <input 
           type="text" 
           [(ngModel)]="searchQuery"
           placeholder="Search by company or email..."
-          class="w-full pl-9 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+          class="w-full pl-9 pr-3 py-1.5 bg-[#F8FBFA] border border-[#D5EDED] rounded-lg text-xs text-[#172B32] placeholder-[#4E6770]/60 focus:outline-none focus:ring-2 focus:ring-[#71C9CE]/30 focus:border-[#71C9CE]"
         />
-        <svg class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <svg class="w-4 h-4 text-[#4E6770] absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
       </div>
     </div>
 
@@ -79,12 +79,12 @@
     <div class="overflow-x-auto">
       @if (isLoading) {
         <div class="py-16 text-center space-y-3 bg-white">
-          <div class="w-10 h-10 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin mx-auto"></div>
-          <p class="text-xs font-semibold text-slate-500">Loading recruiter company accounts...</p>
+          <div class="w-10 h-10 border-4 border-[#CBF1F5] border-t-[#244653] rounded-full animate-spin mx-auto"></div>
+          <p class="text-xs font-semibold text-[#4E6770]">Loading recruiter company accounts...</p>
         </div>
       } @else {
-        <table class="w-full text-left text-xs text-slate-600">
-          <thead class="bg-slate-50 text-slate-500 font-semibold border-b border-slate-200 uppercase tracking-wider text-[11px]">
+        <table class="w-full text-left text-xs text-[#172B32]">
+          <thead class="bg-[#F8FBFA] text-[#4E6770] font-bold border-b border-[#D5EDED] uppercase tracking-wider text-[11px]">
             <tr>
               <th class="py-3.5 px-4">Account ID</th>
               <th class="py-3.5 px-4">Company & Recruiter</th>
@@ -95,34 +95,34 @@
               <th class="py-3.5 px-4 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-slate-100">
+          <tbody class="divide-y divide-[#D5EDED]">
             @for (acc of filteredAccounts; track acc.id) {
-              <tr class="hover:bg-slate-50/80 transition-colors">
-                <td class="py-3.5 px-4 font-mono font-medium text-slate-500">{{ acc.id }}</td>
+              <tr class="hover:bg-[#F8FBFA] transition-colors">
+                <td class="py-3.5 px-4 font-mono font-medium text-[#4E6770]">{{ acc.id }}</td>
                 <td class="py-3.5 px-4">
-                  <div class="font-semibold text-slate-900 text-sm">{{ acc.company_name }}</div>
-                  <div class="text-slate-400 text-[11px]">{{ acc.recruiter_email }}</div>
+                  <div class="font-bold text-[#172B32] text-sm">{{ acc.company_name }}</div>
+                  <div class="text-[#4E6770] text-[11px]">{{ acc.recruiter_email }}</div>
                 </td>
                 <td class="py-3.5 px-4">
-                  <span class="px-2.5 py-1 rounded-md text-[11px] font-semibold border"
-                    [ngClass]="acc.plan === 'Enterprise' ? 'bg-purple-50 text-purple-700 border-purple-200' : (acc.plan === 'Growth' ? 'bg-sky-50 text-sky-700 border-sky-200' : 'bg-slate-100 text-slate-700 border-slate-200')">
+                  <span class="px-2.5 py-1 rounded-md text-[11px] font-bold border"
+                    [ngClass]="acc.plan === 'Enterprise' ? 'bg-[#CBF1F5] text-[#244653] border-[#71C9CE]/60' : (acc.plan === 'Growth' ? 'bg-[#E3FDFD] text-[#244653] border-[#A6E3E9]' : 'bg-slate-100 text-[#172B32] border-[#D5EDED]')">
                     {{ acc.plan }}
                   </span>
                 </td>
                 <td class="py-3.5 px-4">
-                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium"
-                    [ngClass]="acc.status === 'Active' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : (acc.status === 'Pending' ? 'bg-amber-50 text-amber-700 border border-amber-200' : 'bg-rose-50 text-rose-700 border border-rose-200')">
-                    <span class="w-1.5 h-1.5 rounded-full mr-1.5" [ngClass]="acc.status === 'Active' ? 'bg-emerald-500' : (acc.status === 'Pending' ? 'bg-amber-500' : 'bg-rose-500')"></span>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold border"
+                    [ngClass]="acc.status === 'Active' ? 'bg-[#CBF1F5] text-[#244653] border-[#71C9CE]' : (acc.status === 'Pending' ? 'bg-amber-50 text-amber-800 border-amber-200' : 'bg-rose-50 text-rose-800 border-rose-200')">
+                    <span class="w-1.5 h-1.5 rounded-full mr-1.5" [ngClass]="acc.status === 'Active' ? 'bg-[#71C9CE]' : (acc.status === 'Pending' ? 'bg-amber-500' : 'bg-rose-500')"></span>
                     {{ acc.status }}
                   </span>
                 </td>
-                <td class="py-3.5 px-4 text-center font-semibold text-slate-800">{{ acc.active_jobs }}</td>
-                <td class="py-3.5 px-4 text-center font-semibold text-slate-800">{{ acc.total_matches }}</td>
+                <td class="py-3.5 px-4 text-center font-bold text-[#172B32]">{{ acc.active_jobs }}</td>
+                <td class="py-3.5 px-4 text-center font-bold text-[#172B32]">{{ acc.total_matches }}</td>
                 <td class="py-3.5 px-4 text-right">
                   <button 
                     (click)="toggleStatus(acc)"
-                    class="px-2.5 py-1 text-[11px] font-medium rounded border border-slate-200 hover:bg-slate-100 transition-colors"
-                    [ngClass]="acc.status === 'Active' ? 'text-rose-600 hover:border-rose-300' : 'text-emerald-600 hover:border-emerald-300'">
+                    class="px-2.5 py-1 text-[11px] font-bold rounded border border-[#D5EDED] hover:bg-[#F8FBFA] transition-colors cursor-pointer"
+                    [ngClass]="acc.status === 'Active' ? 'text-rose-600 hover:border-rose-300' : 'text-[#244653] hover:border-[#71C9CE]'">
                     {{ acc.status === 'Active' ? 'Suspend' : 'Activate' }}
                   </button>
                 </td>
@@ -136,27 +136,27 @@
 
   <!-- Provisioning Modal -->
   @if (showProvisionModal) {
-    <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center z-50 p-4">
-      <div class="bg-white rounded-2xl border border-slate-200 max-w-md w-full p-6 shadow-xl space-y-4">
-        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-          <h3 class="text-lg font-bold text-slate-900">Provision Recruiter Tenant</h3>
-          <button (click)="closeProvisionModal()" class="text-slate-400 hover:text-slate-600">✕</button>
+    <div class="fixed inset-0 bg-[#244653]/40 backdrop-blur-xs flex items-center justify-center z-50 p-4">
+      <div class="bg-white rounded-2xl border border-[#D5EDED] max-w-md w-full p-6 shadow-xl space-y-4">
+        <div class="flex items-center justify-between border-b border-[#D5EDED] pb-3">
+          <h3 class="text-lg font-bold text-[#172B32]">Provision Recruiter Tenant</h3>
+          <button (click)="closeProvisionModal()" class="text-[#4E6770] hover:text-[#172B32] cursor-pointer">✕</button>
         </div>
 
         <div class="space-y-3">
           <div>
-            <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Company Name</label>
-            <input type="text" [(ngModel)]="newCompanyName" placeholder="e.g. Acme Software" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm" />
+            <label class="block text-xs font-bold text-[#172B32] uppercase mb-1">Company Name</label>
+            <input type="text" [(ngModel)]="newCompanyName" placeholder="e.g. Acme Software" class="w-full px-3 py-2 bg-[#F8FBFA] border border-[#D5EDED] rounded-lg text-sm text-[#172B32] focus:outline-none focus:ring-2 focus:ring-[#71C9CE]/30 focus:border-[#71C9CE]" />
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Recruiter Admin Email</label>
-            <input type="email" [(ngModel)]="newRecruiterEmail" placeholder="recruiter@acme.com" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm" />
+            <label class="block text-xs font-bold text-[#172B32] uppercase mb-1">Recruiter Admin Email</label>
+            <input type="email" [(ngModel)]="newRecruiterEmail" placeholder="recruiter@acme.com" class="w-full px-3 py-2 bg-[#F8FBFA] border border-[#D5EDED] rounded-lg text-sm text-[#172B32] focus:outline-none focus:ring-2 focus:ring-[#71C9CE]/30 focus:border-[#71C9CE]" />
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Subscription Tier</label>
-            <select [(ngModel)]="newPlan" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all cursor-pointer">
+            <label class="block text-xs font-bold text-[#172B32] uppercase mb-1">Subscription Tier</label>
+            <select [(ngModel)]="newPlan" class="w-full px-3.5 py-2 bg-[#F8FBFA] border border-[#D5EDED] rounded-lg text-sm text-[#172B32] focus:outline-none focus:ring-2 focus:ring-[#71C9CE]/30 focus:border-[#71C9CE] focus:bg-white transition-all cursor-pointer">
               <option>Enterprise</option>
               <option>Growth</option>
               <option>Starter</option>
@@ -164,9 +164,9 @@
           </div>
         </div>
 
-        <div class="flex items-center justify-end space-x-2 pt-2 border-t border-slate-100">
-          <button (click)="closeProvisionModal()" class="px-4 py-2 border border-slate-200 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50">Cancel</button>
-          <button (click)="submitProvisioning()" [disabled]="isProvisioning" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold flex items-center justify-center cursor-pointer disabled:opacity-50">
+        <div class="flex items-center justify-end space-x-2 pt-2 border-t border-[#D5EDED]">
+          <button (click)="closeProvisionModal()" class="px-4 py-2 border border-[#D5EDED] rounded-lg text-xs font-bold text-[#4E6770] hover:bg-[#F8FBFA] cursor-pointer">Cancel</button>
+          <button (click)="submitProvisioning()" [disabled]="isProvisioning" class="px-4 py-2 bg-[#244653] hover:bg-[#1A343E] text-white rounded-lg text-xs font-bold flex items-center justify-center cursor-pointer disabled:opacity-50 transition-colors">
             @if (isProvisioning) {
               <svg class="animate-spin w-4 h-4 mr-2 text-white" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>

@@ -74,20 +74,20 @@ export class RecruiterCandidatesComponent implements OnInit {
   }
 
   getScoreColor(score?: number): string {
-    if (score === undefined || score === null) return 'text-slate-600 bg-slate-100 border-slate-200';
-    if (score >= 80) return 'text-emerald-700 bg-emerald-50 border-emerald-200';
-    if (score >= 65) return 'text-indigo-700 bg-indigo-50 border-indigo-200';
-    return 'text-amber-700 bg-amber-50 border-amber-200';
+    if (score === undefined || score === null) return 'text-[#4E6770] bg-[#F8FBFA] border-[#D5EDED]';
+    if (score >= 80) return 'text-[#244653] bg-[#CBF1F5] border-[#71C9CE]';
+    if (score >= 65) return 'text-[#244653] bg-[#E3FDFD] border-[#A6E3E9]';
+    return 'text-[#854D0E] bg-[#FEF9C3] border-[#FEF08A]';
   }
 
   getVerdictBadge(verdict?: string): string {
-    if (!verdict) return 'bg-slate-100 text-slate-700 border-slate-200';
+    if (!verdict) return 'bg-[#F8FBFA] text-[#4E6770] border-[#D5EDED]';
     const v = verdict.toLowerCase();
-    if (v.includes('strong')) return 'bg-emerald-50 text-emerald-700 border-emerald-200';
-    if (v.includes('moderate')) return 'bg-indigo-50 text-indigo-700 border-indigo-200';
-    if (v.includes('shortlisted')) return 'bg-teal-50 text-teal-700 border-teal-200';
+    if (v.includes('strong')) return 'bg-[#CBF1F5] text-[#244653] border-[#71C9CE]';
+    if (v.includes('moderate')) return 'bg-[#E3FDFD] text-[#244653] border-[#A6E3E9]';
+    if (v.includes('shortlisted')) return 'bg-[#244653] text-[#CBF1F5] border-[#244653]';
     if (v.includes('rejected')) return 'bg-rose-50 text-rose-700 border-rose-200';
-    return 'bg-amber-50 text-amber-700 border-amber-200';
+    return 'bg-[#E3FDFD] text-[#244653] border-[#A6E3E9]';
   }
 
   getInitials(name?: string): string {

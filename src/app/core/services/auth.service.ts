@@ -24,7 +24,7 @@ export class AuthService {
 
   // --- Candidate Auth ---
   isCandidateLoggedIn(): boolean {
-    return !!this.candidateUser();
+    return !!this.candidateUser() && !!this.getToken();
   }
 
   hasCandidateProfile(): boolean {
@@ -33,24 +33,41 @@ export class AuthService {
   }
 
   loginCandidate(user: any) {
+    const existingToken = typeof window !== 'undefined' ? localStorage.getItem('portal_token') : null;
+    const token = user?.token || user?.access_token || existingToken;
+    if (token) {
+      user.token = token;
+      user.access_token = token;
+      if (typeof window !== 'undefined') localStorage.setItem('portal_token', token);
+    }
     this.candidateUser.set(user);
-    localStorage.setItem('candidate_user', JSON.stringify(user));
+    if (typeof window !== 'undefined') localStorage.setItem('candidate_user', JSON.stringify(user));
   }
 
   logoutCandidate() {
     this.candidateUser.set(null);
-    localStorage.removeItem('candidate_user');
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('candidate_user');
+      localStorage.removeItem('portal_token');
+    }
     this.router.navigate(['/candidate/login']);
   }
 
   // --- Recruiter Auth ---
   isRecruiterLoggedIn(): boolean {
-    return !!this.recruiterUser();
+    return !!this.recruiterUser() && !!this.getToken();
   }
 
   loginRecruiter(user: any) {
+    const existingToken = typeof window !== 'undefined' ? localStorage.getItem('portal_token') : null;
+    const token = user?.token || user?.access_token || existingToken;
+    if (token) {
+      user.token = token;
+      user.access_token = token;
+      if (typeof window !== 'undefined') localStorage.setItem('portal_token', token);
+    }
     this.recruiterUser.set(user);
-    localStorage.setItem('recruiter_user', JSON.stringify(user));
+    if (typeof window !== 'undefined') localStorage.setItem('recruiter_user', JSON.stringify(user));
   }
 
   updateRecruiterSubscription(sub: any) {
@@ -83,23 +100,59 @@ export class AuthService {
 
   logoutRecruiter() {
     this.recruiterUser.set(null);
-    localStorage.removeItem('recruiter_user');
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('recruiter_user');
+      localStorage.removeItem('portal_token');
+    }
     this.router.navigate(['/recruiter/login']);
   }
 
   // --- Management / Admin Auth ---
   isManagementLoggedIn(): boolean {
-    return !!this.managementUser();
+    return !!this.managementUser() && !!this.getToken();
   }
 
   loginManagement(user: any) {
+    const existingToken = typeof window !== 'undefined' ? localStorage.getItem('portal_token') : null;
+    const token = user?.token || user?.access_token || existingToken;
+    if (token) {
+      user.token = token;
+      user.access_token = token;
+      if (typeof window !== 'undefined') localStorage.setItem('portal_token', token);
+    }
     this.managementUser.set(user);
-    localStorage.setItem('management_user', JSON.stringify(user));
+    if (typeof window !== 'undefined') localStorage.setItem('management_user', JSON.stringify(user));
   }
 
   logoutManagement() {
     this.managementUser.set(null);
-    localStorage.removeItem('management_user');
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('management_user');
+      localStorage.removeItem('portal_token');
+    }
     this.router.navigate(['/management/login']);
+  }
+
+  getToken(): string | null {
+    if (typeof window === 'undefined') return null;
+    const directToken = localStorage.getItem('portal_token');
+    if (directToken) return directToken;
+
+    try {
+      const r = this.getStoredUser('recruiter_user');
+      if (r?.token || r?.access_token) return r.token || r.access_token;
+    } catch {}
+
+    try {
+      const c = this.getStoredUser('candidate_user');
+      if (c?.token || c?.access_token) return c.token || c.access_token;
+    } catch {}
+
+    try {
+      const m = this.getStoredUser('management_user');
+      if (m?.token || m?.access_token) return m.token || m.access_token;
+    } catch {}
+
+    return null;
   }
 }

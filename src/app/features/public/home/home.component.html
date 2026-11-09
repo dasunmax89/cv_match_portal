@@ -7,7 +7,7 @@
       <!-- Brand Logo: Magicmatch -->
       <a routerLink="/" class="flex items-center gap-3 group cursor-pointer">
         <img src="logo.png" alt="Magic Match Logo"
-          class="w-14 h-14 object-contain group-hover:scale-105 transition-transform" />
+          class="w-15 h-14 object-contain group-hover:scale-105 transition-transform" />
         <div>
           <div class="flex items-center gap-1">
             <span class="text-xl font-extrabold text-[#244653] tracking-tight">MAGIC</span>
@@ -40,27 +40,25 @@
   <!-- Top 4-Image Banner Carousel Section -->
   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4 w-full">
     <div class="relative rounded-2xl overflow-hidden shadow-md border border-[#D5EDED] bg-[#244653] group"
-         (mouseenter)="pauseAutoSlide()" (mouseleave)="resumeAutoSlide()">
-      
+      (mouseenter)="pauseAutoSlide()" (mouseleave)="resumeAutoSlide()">
+
       <!-- Slides Container -->
-      <div class="relative w-full aspect-[16/9] sm:aspect-[2/1] md:aspect-[21/9] min-h-[220px] max-h-[500px] overflow-hidden bg-[#244653]">
+      <div
+        class="relative w-full aspect-[16/9] sm:aspect-[2/1] md:aspect-[21/9] min-h-[220px] max-h-[500px] overflow-hidden bg-[#244653]">
         @for (b of banners; track b.id; let i = $index) {
-          <div class="absolute inset-0 transition-opacity duration-700 ease-in-out cursor-pointer"
-               [class.opacity-100]="currentSlide === i"
-               [class.opacity-0]="currentSlide !== i"
-               [class.pointer-events-auto]="currentSlide === i"
-               [class.pointer-events-none]="currentSlide !== i"
-               (click)="onBannerClick()">
-            <img [src]="b.image" [alt]="b.alt"
-                 class="w-full h-full object-cover object-center select-none" />
-          </div>
+        <div class="absolute inset-0 transition-opacity duration-700 ease-in-out cursor-pointer"
+          [class.opacity-100]="currentSlide === i" [class.opacity-0]="currentSlide !== i"
+          [class.pointer-events-auto]="currentSlide === i" [class.pointer-events-none]="currentSlide !== i"
+          (click)="onBannerClick()">
+          <img [src]="b.image" [alt]="b.alt" class="w-full h-full object-cover object-center select-none" />
+        </div>
         }
       </div>
 
       <!-- Left Arrow -->
       <button type="button" (click)="prevSlide(); $event.stopPropagation()"
-              class="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 hover:bg-white text-[#244653] shadow-md flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 hover:scale-105 z-20 focus-visible:ring-2 focus-visible:ring-[#71C9CE] cursor-pointer"
-              aria-label="Previous Banner">
+        class="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 hover:bg-white text-[#244653] shadow-md flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 hover:scale-105 z-20 focus-visible:ring-2 focus-visible:ring-[#71C9CE] cursor-pointer"
+        aria-label="Previous Banner">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
         </svg>
@@ -68,21 +66,22 @@
 
       <!-- Right Arrow -->
       <button type="button" (click)="nextSlide(); $event.stopPropagation()"
-              class="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 hover:bg-white text-[#244653] shadow-md flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 hover:scale-105 z-20 focus-visible:ring-2 focus-visible:ring-[#71C9CE] cursor-pointer"
-              aria-label="Next Banner">
+        class="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 hover:bg-white text-[#244653] shadow-md flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 hover:scale-105 z-20 focus-visible:ring-2 focus-visible:ring-[#71C9CE] cursor-pointer"
+        aria-label="Next Banner">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
         </svg>
       </button>
 
       <!-- Bottom Dots / Indicator Pills -->
-      <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2 z-20 bg-[#172B32]/70 backdrop-blur-xs px-3.5 py-1.5 rounded-full">
+      <div
+        class="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2 z-20 bg-[#172B32]/70 backdrop-blur-xs px-3.5 py-1.5 rounded-full">
         @for (b of banners; track b.id; let i = $index) {
-          <button type="button" (click)="goToSlide(i); $event.stopPropagation()"
-                  class="transition-all rounded-full focus:outline-none cursor-pointer"
-                  [ngClass]="currentSlide === i ? 'w-7 h-2 bg-[#71C9CE] shadow-xs' : 'w-2 h-2 bg-white/60 hover:bg-white'"
-                  [attr.aria-label]="'Go to slide ' + (i + 1)">
-          </button>
+        <button type="button" (click)="goToSlide(i); $event.stopPropagation()"
+          class="transition-all rounded-full focus:outline-none cursor-pointer"
+          [ngClass]="currentSlide === i ? 'w-7 h-2 bg-[#71C9CE] shadow-xs' : 'w-2 h-2 bg-white/60 hover:bg-white'"
+          [attr.aria-label]="'Go to slide ' + (i + 1)">
+        </button>
         }
       </div>
 
@@ -163,7 +162,8 @@
         <!-- Card 1: Candidate Feature -->
         <div
           class="p-8 bg-[#F8FBFA] rounded-2xl border border-[#D5EDED] shadow-2xs hover:shadow-md hover:border-[#71C9CE] transition-all space-y-4">
-          <div class="w-12 h-12 bg-[#E3FDFD] text-[#244653] border border-[#A6E3E9] rounded-xl flex items-center justify-center font-bold">
+          <div
+            class="w-12 h-12 bg-[#E3FDFD] text-[#244653] border border-[#A6E3E9] rounded-xl flex items-center justify-center font-bold">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -183,7 +183,8 @@
         <!-- Card 2: Recruiter Feature -->
         <div
           class="p-8 bg-[#F8FBFA] rounded-2xl border border-[#D5EDED] shadow-2xs hover:shadow-md hover:border-[#71C9CE] transition-all space-y-4">
-          <div class="w-12 h-12 bg-[#CBF1F5] text-[#244653] border border-[#71C9CE] rounded-xl flex items-center justify-center font-bold">
+          <div
+            class="w-12 h-12 bg-[#CBF1F5] text-[#244653] border border-[#71C9CE] rounded-xl flex items-center justify-center font-bold">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
@@ -202,7 +203,8 @@
         <!-- Card 3: Enterprise Feature -->
         <div
           class="p-8 bg-[#F8FBFA] rounded-2xl border border-[#D5EDED] shadow-2xs hover:shadow-md hover:border-[#71C9CE] transition-all space-y-4">
-          <div class="w-12 h-12 bg-[#A6E3E9] text-[#244653] border border-[#71C9CE] rounded-xl flex items-center justify-center font-bold">
+          <div
+            class="w-12 h-12 bg-[#A6E3E9] text-[#244653] border border-[#71C9CE] rounded-xl flex items-center justify-center font-bold">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />

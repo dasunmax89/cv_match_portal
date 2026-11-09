@@ -200,22 +200,22 @@ export class ManagementPlacementsComponent implements OnInit {
   getOfferStatusBadge(status?: string): { label: string; css: string } {
     switch ((status || '').toLowerCase()) {
       case 'accepted':
-        return { label: '✓ Contract Signed', css: 'bg-emerald-50 text-emerald-800 border-emerald-300' };
+        return { label: '✓ Contract Signed', css: 'bg-[#CBF1F5] text-[#244653] border-[#71C9CE] font-bold' };
       case 'offered':
-        return { label: '⏳ Offer Pending', css: 'bg-amber-50 text-amber-800 border-amber-300' };
+        return { label: '⏳ Offer Pending', css: 'bg-amber-50 text-amber-800 border-amber-300 font-bold' };
       case 'declined':
-        return { label: '✕ Declined', css: 'bg-rose-50 text-rose-800 border-rose-300' };
+        return { label: '✕ Declined', css: 'bg-rose-50 text-rose-800 border-rose-300 font-bold' };
       default:
-        return { label: status || 'Unknown', css: 'bg-slate-100 text-slate-700 border-slate-200' };
+        return { label: status || 'Unknown', css: 'bg-slate-100 text-[#172B32] border-[#D5EDED]' };
     }
   }
 
   getCommissionStatusBadge(status?: string): { label: string; css: string } {
     switch ((status || '').toLowerCase()) {
       case 'paid':
-        return { label: '✓ Commission Paid', css: 'bg-emerald-100 text-emerald-900 border-emerald-400 font-bold' };
+        return { label: '✓ Commission Paid', css: 'bg-[#CBF1F5] text-[#244653] border-[#71C9CE] font-bold' };
       case 'invoiced':
-        return { label: '📋 Invoiced (Net 30)', css: 'bg-sky-50 text-sky-800 border-sky-300 font-bold' };
+        return { label: '📋 Invoiced (Net 30)', css: 'bg-[#E3FDFD] text-[#244653] border-[#A6E3E9] font-bold' };
       default:
         return { label: '⏳ Pending Invoice', css: 'bg-amber-50 text-amber-800 border-amber-300 font-semibold' };
     }

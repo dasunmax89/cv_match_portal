@@ -287,6 +287,13 @@ export class Onboarding implements OnInit {
       return;
     }
 
+    if (!this.authService.getToken()) {
+      invite.status = 'error';
+      invite.errorMessage = 'Your session has expired. Please log in again.';
+      this.router.navigate(['/recruiter/login']);
+      return;
+    }
+
     invite.status = 'sending';
     invite.errorMessage = '';
 
@@ -306,7 +313,11 @@ export class Onboarding implements OnInit {
       },
       error: (err) => {
         invite.status = 'error';
-        invite.errorMessage = err?.error?.detail || err?.message || 'Failed to send invite.';
+        if (err?.status === 401) {
+          invite.errorMessage = 'Authentication session expired or invalid. Please refresh or log in again.';
+        } else {
+          invite.errorMessage = err?.error?.detail || err?.message || 'Failed to send invite.';
+        }
       }
     });
   }
@@ -314,6 +325,13 @@ export class Onboarding implements OnInit {
   finishOnboarding(action: 'create-jd' | 'dashboard') {
     this.isSubmitting = true;
     this.errorMessage = '';
+
+    if (!this.authService.getToken()) {
+      this.isSubmitting = false;
+      this.errorMessage = 'Your session has expired. Please log in again to complete onboarding.';
+      this.router.navigate(['/recruiter/login']);
+      return;
+    }
 
     const validInvites = this.isSoloRecruiter ? [] : this.teamInvites.filter(i => i.email && i.email.trim());
 
@@ -348,6 +366,8 @@ export class Onboarding implements OnInit {
           this.isSubmitting = false;
           this.authService.loginRecruiter({
             ...currentUser,
+            token: currentUser.token || currentUser.access_token || this.authService.getToken(),
+            access_token: currentUser.token || currentUser.access_token || this.authService.getToken(),
             fullName: this.fullName || currentUser.fullName || currentUser.full_name,
             workEmail: payload.recruiter_email,
             phone: this.phone,
@@ -396,7 +416,11 @@ export class Onboarding implements OnInit {
       },
       error: (err) => {
         this.isSubmitting = false;
-        this.errorMessage = err?.error?.detail || err?.message || 'Failed to save workspace configuration. Please try again.';
+        if (err?.status === 401) {
+          this.errorMessage = 'Authentication session expired or invalid. Please refresh or log in again.';
+        } else {
+          this.errorMessage = err?.error?.detail || err?.message || 'Failed to save workspace configuration. Please try again.';
+        }
       }
     });
   }

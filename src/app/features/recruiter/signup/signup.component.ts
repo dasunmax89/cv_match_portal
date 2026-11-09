@@ -319,7 +319,8 @@ export class SignupComponent {
           phone: phoneClean,
           telephone: phoneClean,
           accountType: 'company',
-          token: res?.access_token
+          token: res?.access_token,
+          access_token: res?.access_token
         };
         this.otpEmail = emailClean;
         this.isOtpStep = true;
@@ -347,11 +348,23 @@ export class SignupComponent {
       next: (res) => {
         this.isVerifyingOtp = false;
         const userToLogin = res?.user || this.pendingUser || { workEmail: this.otpEmail };
+        const token = res?.access_token || this.pendingUser?.token || this.pendingUser?.access_token;
+        userToLogin.token = token;
+        userToLogin.access_token = token;
+        userToLogin.workEmail = userToLogin.workEmail || userToLogin.email || this.otpEmail;
+        userToLogin.email = userToLogin.email || userToLogin.workEmail || this.otpEmail;
         // Save accountType & telephone state explicitly
         userToLogin.accountType = this.pendingUser?.accountType || userToLogin.account_type || 'company';
         if (this.pendingUser?.phone) {
           userToLogin.phone = userToLogin.phone || this.pendingUser.phone;
           userToLogin.telephone = userToLogin.telephone || this.pendingUser.telephone;
+        }
+        if (this.pendingUser?.companyName && !userToLogin.companyName) {
+          userToLogin.companyName = this.pendingUser.companyName;
+        }
+        if (this.pendingUser?.company_id && !userToLogin.company_id) {
+          userToLogin.company_id = this.pendingUser.company_id;
+          userToLogin.companyId = this.pendingUser.company_id;
         }
         this.authService.loginRecruiter(userToLogin);
         this.router.navigate(['/recruiter/onboarding']);

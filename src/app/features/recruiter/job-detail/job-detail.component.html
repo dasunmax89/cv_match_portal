@@ -3,7 +3,7 @@
   <!-- Back button & Header bar -->
   <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
     <button (click)="goBack()" 
-            class="inline-flex items-center text-sm font-semibold text-slate-600 hover:text-indigo-600 transition-colors w-fit">
+            class="inline-flex items-center text-sm font-semibold text-[#4E6770] hover:text-[#244653] transition-colors w-fit">
       <svg class="w-5 h-5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
       </svg>
@@ -12,7 +12,7 @@
 
     @if (job()) {
       <button (click)="evaluateCandidates()" 
-              class="inline-flex items-center justify-center px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white font-semibold rounded-xl shadow-md shadow-indigo-500/20 hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5">
+              class="inline-flex items-center justify-center px-5 py-2.5 bg-[#244653] hover:bg-[#1A343E] text-white font-semibold rounded-xl shadow-xs hover:shadow transition-all duration-200">
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
         </svg>
@@ -23,23 +23,23 @@
 
   <!-- Loading State -->
   @if (isLoading()) {
-    <div class="bg-white p-8 rounded-2xl border border-slate-200 animate-pulse space-y-6">
-      <div class="h-8 bg-slate-200 rounded w-1/3"></div>
-      <div class="h-4 bg-slate-150 rounded w-1/4"></div>
+    <div class="bg-white p-8 rounded-2xl border border-[#D5EDED] animate-pulse space-y-6">
+      <div class="h-8 bg-[#E3FDFD] rounded w-1/3"></div>
+      <div class="h-4 bg-[#F8FBFA] rounded w-1/4"></div>
       <div class="grid grid-cols-2 gap-4 pt-4">
-        <div class="h-16 bg-slate-100 rounded-xl"></div>
-        <div class="h-16 bg-slate-100 rounded-xl"></div>
+        <div class="h-16 bg-[#F8FBFA] rounded-xl"></div>
+        <div class="h-16 bg-[#F8FBFA] rounded-xl"></div>
       </div>
-      <div class="h-24 bg-slate-100 rounded-xl"></div>
+      <div class="h-24 bg-[#F8FBFA] rounded-xl"></div>
     </div>
   } @else if (error()) {
-    <div class="bg-red-50 border border-red-200 rounded-2xl p-8 text-center max-w-lg mx-auto">
-      <div class="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-3">
+    <div class="bg-rose-50 border border-rose-200 rounded-2xl p-8 text-center max-w-lg mx-auto">
+      <div class="w-12 h-12 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto mb-3">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
       </div>
-      <h3 class="text-base font-bold text-red-900 mb-1">Error Loading Job</h3>
-      <p class="text-xs text-red-700 mb-4">{{ error() }}</p>
-      <button (click)="goBack()" class="px-4 py-2 bg-red-600 text-white rounded-xl text-xs font-semibold hover:bg-red-700 transition-colors">
+      <h3 class="text-base font-bold text-rose-900 mb-1">Error Loading Job</h3>
+      <p class="text-xs text-rose-700 mb-4">{{ error() }}</p>
+      <button (click)="goBack()" class="px-4 py-2 bg-[#244653] text-white rounded-xl text-xs font-semibold hover:bg-[#1A343E] transition-colors">
         Return to Job List
       </button>
     </div>
@@ -48,51 +48,51 @@
     <div class="space-y-8">
 
       <!-- Job Banner Header -->
-      <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200/80 space-y-4">
+      <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-xs border border-[#D5EDED] space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-4">
           <div>
             <div class="flex items-center space-x-3 mb-1">
-              <span class="text-xs font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full border border-indigo-100">
+              <span class="text-xs font-bold uppercase tracking-wider text-[#244653] bg-[#E3FDFD] px-3 py-1 rounded-full border border-[#A6E3E9]">
                 Job Requisition
               </span>
-              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#CBF1F5] text-[#244653] border border-[#71C9CE]">
                 Active
               </span>
             </div>
-            <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">
+            <h1 class="text-3xl font-extrabold text-[#172B32] tracking-tight">
               {{ jobData.title || jobData.criteria?.title }}
             </h1>
           </div>
 
-          <div class="text-xs text-slate-400 font-medium">
+          <div class="text-xs text-[#4E6770] font-medium">
             Created {{ jobData.createdAt | date:'mediumDate' }}
           </div>
         </div>
 
         <!-- Summary Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4 border-t border-slate-100">
-          <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-            <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Seniority Level</p>
-            <p class="text-base font-bold text-slate-800 mt-1">{{ jobData.criteria?.seniority_level || 'Not Specified' }}</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4 border-t border-[#D5EDED]">
+          <div class="bg-[#F8FBFA] p-4 rounded-2xl border border-[#D5EDED]">
+            <p class="text-xs text-[#4E6770] font-semibold uppercase tracking-wider">Seniority Level</p>
+            <p class="text-base font-bold text-[#172B32] mt-1">{{ jobData.criteria?.seniority_level || 'Not Specified' }}</p>
           </div>
-          <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-            <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Min Experience</p>
-            <p class="text-base font-bold text-slate-800 mt-1">{{ jobData.criteria?.minimum_years_experience || '0' }}+ Years</p>
+          <div class="bg-[#F8FBFA] p-4 rounded-2xl border border-[#D5EDED]">
+            <p class="text-xs text-[#4E6770] font-semibold uppercase tracking-wider">Min Experience</p>
+            <p class="text-base font-bold text-[#172B32] mt-1">{{ jobData.criteria?.minimum_years_experience || '0' }}+ Years</p>
           </div>
-          <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-            <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Total Required Skills</p>
-            <p class="text-base font-bold text-slate-800 mt-1">{{ jobData.criteria?.required_skills?.length || 0 }} Skills</p>
+          <div class="bg-[#F8FBFA] p-4 rounded-2xl border border-[#D5EDED]">
+            <p class="text-xs text-[#4E6770] font-semibold uppercase tracking-wider">Total Required Skills</p>
+            <p class="text-base font-bold text-[#172B32] mt-1">{{ jobData.criteria?.required_skills?.length || 0 }} Skills</p>
           </div>
-          <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-            <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider">SJT Status</p>
-            <p class="text-base font-bold text-slate-800 mt-1">
+          <div class="bg-[#F8FBFA] p-4 rounded-2xl border border-[#D5EDED]">
+            <p class="text-xs text-[#4E6770] font-semibold uppercase tracking-wider">SJT Status</p>
+            <p class="text-base font-bold text-[#172B32] mt-1">
               @if (jobData.assessment?.questions?.length) {
-                <span class="text-emerald-600 inline-flex items-center gap-1">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                <span class="text-[#244653] inline-flex items-center gap-1 font-semibold">
+                  <svg class="w-4 h-4 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                   {{ jobData.assessment?.questions?.length }} Questions Active
                 </span>
               } @else {
-                <span class="text-amber-600">Not Generated</span>
+                <span class="text-amber-600 font-semibold">Not Generated</span>
               }
             </p>
           </div>
@@ -106,16 +106,16 @@
         <div class="lg:col-span-1 space-y-6">
           
           <!-- Key Skills Card -->
-          <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200/80 space-y-4">
-            <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
-              <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="bg-white p-6 rounded-3xl shadow-xs border border-[#D5EDED] space-y-4">
+            <h3 class="text-sm font-bold text-[#172B32] uppercase tracking-wider flex items-center gap-2">
+              <svg class="w-4 h-4 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
               </svg>
               Required Skills
             </h3>
             <div class="flex flex-wrap gap-2">
               @for (skill of jobData.criteria?.required_skills; track skill) {
-                <span class="bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-xl text-xs font-semibold border border-indigo-100/80">
+                <span class="bg-[#E3FDFD] text-[#244653] px-3 py-1.5 rounded-xl text-xs font-semibold border border-[#A6E3E9]">
                   {{ skill }}
                 </span>
               }
@@ -124,18 +124,18 @@
 
           <!-- Responsibilities Card -->
           @if (jobData.criteria?.core_responsibilities?.length) {
-            <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200/80 space-y-4">
-              <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
-                <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="bg-white p-6 rounded-3xl shadow-xs border border-[#D5EDED] space-y-4">
+              <h3 class="text-sm font-bold text-[#172B32] uppercase tracking-wider flex items-center gap-2">
+                <svg class="w-4 h-4 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                 </svg>
                 Core Responsibilities
               </h3>
-              <ul class="space-y-2.5 text-xs text-slate-700">
+              <ul class="space-y-2.5 text-xs text-[#172B32]">
                 @for (resp of jobData.criteria?.core_responsibilities; track resp) {
                   <li class="flex items-start gap-2">
-                    <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 mt-1.5 shrink-0"></span>
-                    <span>{{ resp }}</span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#71C9CE] mt-1.5 shrink-0"></span>
+                    <span class="leading-relaxed">{{ resp }}</span>
                   </li>
                 }
               </ul>
@@ -146,22 +146,22 @@
 
         <!-- Right Column: SJT Questionnaire Section (2 cols on lg) -->
         <div class="lg:col-span-2 space-y-6">
-          <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200/80 space-y-6">
+          <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-xs border border-[#D5EDED] space-y-6">
             
-            <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+            <div class="flex items-center justify-between border-b border-[#D5EDED] pb-4">
               <div>
-                <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-                  <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <h2 class="text-lg font-bold text-[#172B32] flex items-center gap-2">
+                  <svg class="w-5 h-5 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                   </svg>
                   Situational Judgement Test (SJT)
                 </h2>
-                <p class="text-xs text-slate-500 mt-0.5">Custom behavior-based assessment questions for candidates applying to this role.</p>
+                <p class="text-xs text-[#4E6770] mt-0.5">Custom behavior-based assessment questions for candidates applying to this role.</p>
               </div>
 
               @if (jobData.assessment?.questions?.length) {
                 <button (click)="openSjtCompose()" 
-                        class="px-4 py-2 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 text-xs font-bold rounded-xl transition-colors inline-flex items-center gap-1.5">
+                        class="px-4 py-2 bg-[#CBF1F5] text-[#244653] hover:bg-[#A6E3E9] border border-[#71C9CE] text-xs font-bold rounded-xl transition-colors inline-flex items-center gap-1.5">
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                   </svg>
@@ -173,20 +173,20 @@
             @if (jobData.assessment; as sjt) {
               <div class="space-y-4">
                 @for (q of sjt.questions; track q.id; let idx = $index) {
-                  <div class="bg-slate-50/80 border border-slate-200/80 rounded-2xl p-5 space-y-3 text-xs hover:border-indigo-300 transition-colors">
+                  <div class="bg-[#F8FBFA] border border-[#D5EDED] rounded-2xl p-5 space-y-3 text-xs hover:border-[#71C9CE] transition-colors">
                     <div class="flex items-start gap-2.5">
-                      <span class="bg-indigo-600 text-white font-bold px-2.5 py-1 rounded-lg text-xs shrink-0 shadow-sm">
+                      <span class="bg-[#244653] text-[#CBF1F5] font-bold px-2.5 py-1 rounded-lg text-xs shrink-0 shadow-2xs">
                         Q{{ idx + 1 }}
                       </span>
-                      <p class="font-bold text-slate-900 text-sm leading-relaxed">
+                      <p class="font-bold text-[#172B32] text-sm leading-relaxed">
                         {{ q.scenario }}
                       </p>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pl-9">
                       @for (opt of q.options; track opt.key) {
-                        <div class="bg-white p-3 rounded-xl border border-slate-200/70 text-slate-700 shadow-2xs">
-                          <strong class="text-indigo-700 font-bold mr-1.5">{{ opt.key }}.</strong> {{ opt.text }}
+                        <div class="bg-white p-3 rounded-xl border border-[#D5EDED] text-[#172B32] shadow-2xs">
+                          <strong class="text-[#244653] font-bold mr-1.5">{{ opt.key }}.</strong> {{ opt.text }}
                         </div>
                       }
                     </div>
@@ -195,20 +195,20 @@
               </div>
             } @else {
               <!-- Empty State for SJT -->
-              <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-8 text-center space-y-4">
-                <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mx-auto">
+              <div class="bg-[#F8FBFA] border border-[#D5EDED] rounded-2xl p-8 text-center space-y-4">
+                <div class="w-12 h-12 bg-[#E3FDFD] text-[#244653] border border-[#A6E3E9] rounded-2xl flex items-center justify-center mx-auto">
                   <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                   </svg>
                 </div>
                 <div>
-                  <h3 class="text-base font-bold text-slate-900">No SJT Questionnaire Created</h3>
-                  <p class="text-xs text-slate-500 mt-1 max-w-md mx-auto">
+                  <h3 class="text-base font-bold text-[#172B32]">No SJT Questionnaire Created</h3>
+                  <p class="text-xs text-[#4E6770] mt-1 max-w-md mx-auto">
                     Generate customized Situational Judgement Questions for candidates applying for this position using AI or custom criteria.
                   </p>
                 </div>
                 <button (click)="openSjtCompose()" 
-                        class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl text-xs shadow-md shadow-indigo-500/20 transition-all">
+                        class="px-5 py-2.5 bg-[#244653] hover:bg-[#1A343E] text-white font-semibold rounded-xl text-xs shadow-xs transition-all">
                   Create SJT Questionnaire
                 </button>
               </div>
@@ -224,7 +224,7 @@
 
   <!-- SJT Compose Modal -->
   @if (isSjtComposeOpen() && job()) {
-    <div class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+    <div class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-[#244653]/60 backdrop-blur-sm">
       <app-sjt-compose 
         [jobId]="job()!.id" 
         [jobAssessment]="job()?.assessment"

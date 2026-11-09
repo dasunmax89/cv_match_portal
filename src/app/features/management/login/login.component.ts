@@ -21,7 +21,6 @@ export class Login {
 
   adminId = '';
   password = '';
-  mfaCode = '';
   errorMessage = '';
   isLoading = false;
 
@@ -77,7 +76,7 @@ export class Login {
       },
       error: (err) => {
         this.isLoading = false;
-        this.errorMessage = err?.error?.detail || err?.message || 'Admin authentication failed. Please check your credentials and 2FA code.';
+        this.errorMessage = err?.error?.detail || err?.message || 'Admin authentication failed. Please check your credentials.';
       }
     });
   }

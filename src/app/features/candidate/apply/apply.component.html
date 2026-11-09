@@ -1,33 +1,33 @@
-<div class="min-h-screen bg-slate-50 py-10 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
+<div class="min-h-screen bg-[#F8FBFA] py-10 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
   <div class="w-full transition-all duration-500" [ngClass]="step() === 2 ? 'max-w-3xl' : 'max-w-xl'">
-    <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-200/80">
+    <div class="bg-white rounded-3xl shadow-sm overflow-hidden border border-[#D5EDED]">
 
       <!-- Idle State (Form Steps) -->
       @if (submitState() === 'idle' || submitState() === 'error') {
 
       <!-- Wizard Step Header -->
       <div
-        class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white px-8 py-6 flex items-center justify-between border-b border-indigo-900/40">
+        class="bg-[#244653] text-white px-8 py-6 flex items-center justify-between border-b border-[#71C9CE]/30">
         <div>
           <span
-            class="text-[11px] font-bold uppercase tracking-widest text-indigo-400 bg-indigo-950/80 px-2.5 py-0.5 rounded-full border border-indigo-800/60">
+            class="text-[11px] font-bold uppercase tracking-wider text-[#244653] bg-[#CBF1F5] px-2.5 py-0.5 rounded-full border border-[#71C9CE]/50">
             Step {{ step() }} of 2
           </span>
-          <h2 class="text-xl font-extrabold mt-1.5 tracking-tight">
+          <h2 class="text-xl font-bold mt-2 tracking-tight">
             {{ step() === 1 ? 'Upload Your Resume' : 'Behavioral Readiness Check' }}
           </h2>
         </div>
-        <div class="flex items-center gap-2 bg-indigo-900/30 px-3 py-1.5 rounded-full border border-indigo-700/40">
+        <div class="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-full border border-white/20">
           <span class="w-2.5 h-2.5 rounded-full"
-            [ngClass]="step() === 1 ? 'bg-indigo-400 animate-pulse' : 'bg-emerald-400'"></span>
-          <span class="text-xs font-medium text-indigo-200">{{ step() === 1 ? 'Resume Upload' : '10 SJT Questions'
+            [ngClass]="step() === 1 ? 'bg-[#71C9CE] animate-pulse' : 'bg-[#A6E3E9]'"></span>
+          <span class="text-xs font-semibold text-[#CBF1F5]">{{ step() === 1 ? 'Resume Upload' : '10 SJT Questions'
             }}</span>
         </div>
       </div>
 
       @if (submitState() === 'error') {
       <div
-        class="mx-8 mt-6 bg-rose-50 text-rose-700 p-4 rounded-2xl text-xs sm:text-sm border border-rose-200 text-center font-medium shadow-sm">
+        class="mx-8 mt-6 bg-rose-50 text-rose-800 p-4 rounded-2xl text-xs sm:text-sm border border-rose-200 text-center font-medium shadow-sm">
         Something went wrong submitting your application. Please try again.
       </div>
       }
@@ -37,20 +37,20 @@
       <div class="p-8 space-y-6">
 
         <!-- Applicant Recorded Profile Info Box -->
-        <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-4 flex items-center justify-between gap-4">
+        <div class="bg-[#F8FBFA] border border-[#D5EDED] rounded-2xl p-4 flex items-center justify-between gap-4">
           <div class="flex items-center gap-3 min-w-0">
             <div
-              class="w-10 h-10 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-sm shrink-0 shadow-sm">
+              class="w-10 h-10 rounded-full bg-[#244653] text-white font-bold flex items-center justify-center text-sm shrink-0 shadow-sm">
               {{ getCandidateFullName().charAt(0).toUpperCase() }}
             </div>
             <div class="min-w-0">
-              <p class="text-xs font-bold uppercase tracking-wider text-indigo-600">Applying As</p>
-              <h4 class="text-sm font-extrabold text-slate-900 truncate">{{ getCandidateFullName() }}</h4>
-              <p class="text-xs text-slate-500 truncate">{{ getCandidateEmail() }}</p>
+              <p class="text-xs font-bold uppercase tracking-wider text-[#244653]">Applying As</p>
+              <h4 class="text-sm font-bold text-[#172B32] truncate">{{ getCandidateFullName() }}</h4>
+              <p class="text-xs text-[#4E6770] truncate">{{ getCandidateEmail() }}</p>
             </div>
           </div>
           <span
-            class="px-2.5 py-1 bg-emerald-50 text-emerald-700 text-[11px] font-bold rounded-full border border-emerald-200 shrink-0">
+            class="px-2.5 py-1 bg-[#CBF1F5] text-[#244653] text-[11px] font-bold rounded-full border border-[#71C9CE]/50 shrink-0">
             Verified Candidate
           </span>
         </div>
@@ -58,15 +58,15 @@
         <!-- Resume / CV PDF Drag & Drop Zone -->
         <div class="space-y-2">
           <div class="flex justify-between items-center">
-            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+            <label class="block text-xs font-bold text-[#172B32] uppercase tracking-wider">
               Attach Resume / CV (PDF Only)
             </label>
-            <span class="text-[11px] text-slate-400 font-medium">Max 5MB</span>
+            <span class="text-[11px] text-[#4E6770] font-medium">Max 5MB</span>
           </div>
 
           <div class="border-2 border-dashed rounded-2xl p-8 text-center transition-all cursor-pointer group" [ngClass]="{
-                     'border-indigo-500 bg-indigo-50/70 ring-2 ring-indigo-500/20 shadow-md': isDragging(), 
-                     'border-slate-300 hover:border-indigo-400 bg-slate-50/70 hover:bg-slate-50': !isDragging()
+                     'border-[#71C9CE] bg-[#E3FDFD] ring-2 ring-[#71C9CE]/30 shadow-xs': isDragging(), 
+                     'border-[#D5EDED] hover:border-[#71C9CE] bg-[#F8FBFA] hover:bg-[#E3FDFD]/40': !isDragging()
                    }" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)"
             (click)="fileInput.click()">
             <input type="file" #fileInput class="hidden" accept="application/pdf" (change)="onFileSelected($event)">
@@ -74,38 +74,38 @@
             @if (selectedFile()) {
             <div class="flex flex-col items-center space-y-2">
               <div
-                class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center shadow-sm">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                class="w-12 h-12 bg-[#CBF1F5] text-[#244653] border border-[#71C9CE]/60 rounded-2xl flex items-center justify-center shadow-xs">
+                <svg class="w-6 h-6 text-[#244653]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
               </div>
               <div>
-                <p class="text-sm font-extrabold text-slate-900 max-w-xs truncate mx-auto">
+                <p class="text-sm font-bold text-[#172B32] max-w-xs truncate mx-auto">
                   {{ selectedFile()?.name }}
                 </p>
-                <p class="text-xs text-emerald-600 font-semibold mt-0.5">
+                <p class="text-xs text-[#244653] font-bold mt-0.5">
                   PDF attached ({{ (selectedFile()!.size / 1024 / 1024) | number:'1.1-2' }} MB)
                 </p>
               </div>
-              <span class="text-xs text-indigo-600 hover:text-indigo-700 font-bold underline mt-1">
+              <span class="text-xs text-[#244653] hover:text-[#71C9CE] font-bold underline mt-1">
                 Change Resume
               </span>
             </div>
             } @else {
             <div class="flex flex-col items-center space-y-2">
               <div
-                class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                class="w-12 h-12 bg-[#E3FDFD] text-[#244653] border border-[#A6E3E9] rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform">
+                <svg class="w-6 h-6 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
                 </svg>
               </div>
               <div>
-                <p class="text-sm font-bold text-slate-800">
-                  Drop your PDF resume here, or <span class="text-indigo-600 underline">browse</span>
+                <p class="text-sm font-bold text-[#172B32]">
+                  Drop your PDF resume here, or <span class="text-[#244653] underline font-bold">browse</span>
                 </p>
-                <p class="text-xs text-slate-400 mt-0.5">Supports PDF documents up to 5MB</p>
+                <p class="text-xs text-[#4E6770] mt-0.5">Supports PDF documents up to 5MB</p>
               </div>
             </div>
             }
@@ -114,9 +114,9 @@
 
         <!-- Initial AI Assessment Summary Card -->
         @if (loadingInitialAssessment()) {
-        <div class="bg-indigo-50/60 border border-indigo-100 p-5 rounded-2xl text-center space-y-2 animate-pulse">
-          <div class="text-xs font-bold text-indigo-800 flex items-center justify-center gap-2">
-            <svg class="animate-spin h-4 w-4 text-indigo-600" fill="none" viewBox="0 0 24 24">
+        <div class="bg-[#E3FDFD] border border-[#A6E3E9] p-5 rounded-2xl text-center space-y-2 animate-pulse">
+          <div class="text-xs font-bold text-[#244653] flex items-center justify-center gap-2">
+            <svg class="animate-spin h-4 w-4 text-[#71C9CE]" fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
               <path class="opacity-75" fill="currentColor"
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
@@ -124,40 +124,40 @@
             </svg>
             Parsing Resume & Executing Initial AI Evaluation...
           </div>
-          <p class="text-[11px] text-slate-500">Extracting skills, tenure, and fit rating via Gemini engine...</p>
+          <p class="text-[11px] text-[#4E6770]">Extracting skills, tenure, and fit rating via Gemini engine...</p>
         </div>
         } @else if (initialAssessment(); as ia) {
         <div
-          class="bg-gradient-to-br from-indigo-50/50 via-slate-50 to-indigo-50/30 border border-indigo-200/80 p-5 rounded-2xl space-y-3 shadow-sm">
+          class="bg-[#E3FDFD] border border-[#A6E3E9] p-5 rounded-2xl space-y-3 shadow-sm">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-extrabold text-indigo-900 uppercase tracking-wider flex items-center gap-1.5">
-              <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <span class="text-xs font-bold text-[#244653] uppercase tracking-wider flex items-center gap-1.5">
+              <svg class="w-4 h-4 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
               Initial Resume Parsing
             </span>
             <span
-              class="px-2.5 py-0.5 bg-emerald-100 text-emerald-800 text-[11px] font-bold rounded-full border border-emerald-200">
+              class="px-2.5 py-0.5 bg-[#CBF1F5] text-[#244653] text-[11px] font-bold rounded-full border border-[#71C9CE]">
               Fit Rating: {{ ia.initial_fit_rating }}/100
             </span>
           </div>
 
           <div>
-            <p class="text-xs font-bold text-slate-900">{{ ia.suggested_title }} • {{ ia.experience_years }} Yrs Exp</p>
-            <p class="text-xs text-slate-600 mt-1 italic leading-relaxed">"{{ ia.executive_summary }}"</p>
+            <p class="text-xs font-bold text-[#172B32]">{{ ia.suggested_title }} • {{ ia.experience_years }} Yrs Exp</p>
+            <p class="text-xs text-[#172B32] mt-1 italic leading-relaxed">"{{ ia.executive_summary }}"</p>
           </div>
 
           @if (ia.skills && ia.skills.length > 0) {
           <div class="space-y-1.5 pt-1">
-            <span class="text-[11px] font-bold text-indigo-900 block">Parsed Skills (Click ✕ to remove):</span>
+            <span class="text-[11px] font-bold text-[#244653] block">Parsed Skills (Click ✕ to remove):</span>
             <div class="flex flex-wrap gap-1.5">
               @for (sk of ia.skills; track sk) {
               <span
-                class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white text-indigo-700 border border-indigo-200 text-[11px] font-semibold rounded-lg shadow-2xs group hover:border-indigo-400 transition-colors">
+                class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white text-[#244653] border border-[#A6E3E9] text-[11px] font-semibold rounded-lg shadow-2xs group hover:border-[#71C9CE] transition-colors">
                 <span>{{ sk }}</span>
                 <button type="button" (click)="removeParsedSkill(sk)"
-                  class="text-indigo-400 hover:text-rose-600 focus:outline-none transition-colors font-bold text-xs cursor-pointer"
+                  class="text-[#4E6770] hover:text-rose-600 focus:outline-none transition-colors font-bold text-xs cursor-pointer"
                   title="Remove {{ sk }}">
                   ✕
                 </button>
@@ -171,7 +171,7 @@
         }
 
         <button type="button" (click)="proceedToAssessment()" [disabled]="!selectedFile() || loadingAssessment()"
-          class="w-full bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white py-3.5 px-4 rounded-2xl font-semibold text-sm shadow-md shadow-indigo-500/20 hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer">
+          class="w-full bg-[#244653] hover:bg-[#1A343E] text-white py-3.5 px-4 rounded-xl font-bold text-sm shadow-sm hover:shadow transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer">
           @if (loadingAssessment()) {
           <svg class="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -194,28 +194,28 @@
       @if (step() === 2 && assessment(); as sjt) {
       <div class="p-8 space-y-6">
         <div
-          class="bg-indigo-50/80 border border-indigo-100 rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          class="bg-[#E3FDFD] border border-[#A6E3E9] rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div class="flex items-start gap-3">
-            <div class="p-2.5 bg-indigo-600 text-white rounded-xl shrink-0 shadow-sm">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="p-2.5 bg-[#244653] text-white rounded-xl shrink-0 shadow-sm">
+              <svg class="w-5 h-5 text-[#A6E3E9]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
             </div>
             <div>
-              <h4 class="text-sm font-bold text-indigo-950">O*NET Situational Judgement Assessment</h4>
-              <p class="text-xs text-indigo-800 mt-0.5 leading-relaxed">
+              <h4 class="text-sm font-bold text-[#244653]">O*NET Situational Judgement Assessment</h4>
+              <p class="text-xs text-[#172B32] mt-0.5 leading-relaxed">
                 Evaluate each high-stakes operational dilemma below and select the single best action you would take in
                 that situation.
               </p>
             </div>
           </div>
-          <div class="shrink-0 text-right bg-white p-3 rounded-xl border border-indigo-200/80 shadow-2xs">
-            <span class="text-xs font-bold text-indigo-900 block">
+          <div class="shrink-0 text-right bg-white p-3 rounded-xl border border-[#A6E3E9] shadow-2xs">
+            <span class="text-xs font-bold text-[#244653] block">
               {{ answeredCount() }} / {{ sjt.questions.length }} Answered
             </span>
-            <div class="w-28 bg-indigo-100 rounded-full h-2 mt-1.5 overflow-hidden">
-              <div class="bg-indigo-600 h-2 rounded-full transition-all duration-300"
+            <div class="w-28 bg-[#CBF1F5] rounded-full h-2 mt-1.5 overflow-hidden">
+              <div class="bg-[#244653] h-2 rounded-full transition-all duration-300"
                 [style.width]="(answeredCount() / sjt.questions.length * 100) + '%'"></div>
             </div>
           </div>
@@ -224,12 +224,12 @@
         <!-- Questions List -->
         <div class="space-y-6 max-h-[500px] overflow-y-auto pr-2">
           @for (q of sjt.questions; track q.id; let idx = $index) {
-          <div class="bg-slate-50/80 border border-slate-200 rounded-2xl p-5 space-y-4">
+          <div class="bg-[#F8FBFA] border border-[#D5EDED] rounded-2xl p-5 space-y-4">
             <div class="flex items-start gap-3">
-              <span class="bg-slate-900 text-white text-xs font-bold px-2.5 py-1 rounded-lg shrink-0 shadow-xs">
+              <span class="bg-[#244653] text-white text-xs font-bold px-2.5 py-1 rounded-lg shrink-0 shadow-xs">
                 Q{{ idx + 1 }}
               </span>
-              <p class="text-sm font-bold text-slate-900 leading-snug">
+              <p class="text-sm font-bold text-[#172B32] leading-snug">
                 {{ q.scenario }}
               </p>
             </div>
@@ -237,14 +237,14 @@
             <div class="space-y-2.5 pl-9">
               @for (opt of q.options; track opt.key) {
               <label class="flex items-start gap-3 p-3.5 rounded-xl border transition-all cursor-pointer" [ngClass]="{
-                               'bg-indigo-50 border-indigo-500 ring-1 ring-indigo-500 shadow-xs': candidateAnswers()[q.id] === opt.key,
-                               'bg-white border-slate-200/80 hover:border-indigo-300': candidateAnswers()[q.id] !== opt.key
+                               'bg-[#E3FDFD] border-[#71C9CE] ring-1 ring-[#71C9CE] shadow-xs': candidateAnswers()[q.id] === opt.key,
+                               'bg-white border-[#D5EDED] hover:border-[#71C9CE]': candidateAnswers()[q.id] !== opt.key
                              }">
                 <input type="radio" [name]="'q_' + q.id" [value]="opt.key"
                   [checked]="candidateAnswers()[q.id] === opt.key" (change)="selectOption(q.id, opt.key)"
-                  class="mt-0.5 text-indigo-600 focus:ring-indigo-500 cursor-pointer">
-                <span class="text-xs font-medium text-slate-800 leading-relaxed">
-                  <strong class="text-indigo-700 font-bold mr-1">{{ opt.key }}.</strong> {{ opt.text }}
+                  class="mt-0.5 text-[#244653] focus:ring-[#71C9CE] cursor-pointer">
+                <span class="text-xs font-medium text-[#172B32] leading-relaxed">
+                  <strong class="text-[#244653] font-bold mr-1">{{ opt.key }}.</strong> {{ opt.text }}
                 </span>
               </label>
               }
@@ -254,9 +254,9 @@
         </div>
 
         <!-- Footer Actions -->
-        <div class="flex items-center justify-between pt-4 border-t border-slate-200 gap-4">
+        <div class="flex items-center justify-between pt-4 border-t border-[#D5EDED] gap-4">
           <button type="button" (click)="step.set(1)"
-            class="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-700 text-xs font-semibold hover:bg-slate-100 transition-colors flex items-center gap-1.5 cursor-pointer">
+            class="px-4 py-2.5 rounded-xl border border-[#D5EDED] text-[#4E6770] text-xs font-bold hover:text-[#172B32] hover:bg-[#F8FBFA] transition-colors flex items-center gap-1.5 cursor-pointer">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
             </svg>
@@ -264,7 +264,7 @@
           </button>
 
           <button type="button" (click)="submitFinalApplication()" [disabled]="!isAllQuestionsAnswered()"
-            class="flex-grow sm:flex-grow-0 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white px-6 py-2.5 rounded-xl font-semibold text-xs sm:text-sm shadow-md shadow-indigo-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer">
+            class="flex-grow sm:flex-grow-0 bg-[#244653] hover:bg-[#1A343E] text-white px-6 py-2.5 rounded-xl font-bold text-xs sm:text-sm shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer">
             <span>Submit Application & Assessment</span>
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
@@ -280,16 +280,16 @@
       @if (submitState() === 'submitting') {
       <div class="p-12 flex flex-col items-center justify-center text-center animate-pulse">
         <div
-          class="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-3xl flex items-center justify-center mb-6 shadow-inner">
-          <svg class="animate-spin h-8 w-8 text-indigo-600" fill="none" viewBox="0 0 24 24">
+          class="w-16 h-16 bg-[#E3FDFD] text-[#244653] border border-[#A6E3E9] rounded-3xl flex items-center justify-center mb-6 shadow-inner">
+          <svg class="animate-spin h-8 w-8 text-[#71C9CE]" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor"
               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
             </path>
           </svg>
         </div>
-        <h3 class="text-xl font-extrabold text-slate-900 mb-2">Analyzing your resume & behavioral check...</h3>
-        <p class="text-slate-500 text-xs max-w-sm">Our AI evaluation engine is processing your responses against role
+        <h3 class="text-xl font-bold text-[#172B32] mb-2">Analyzing your resume & behavioral check...</h3>
+        <p class="text-[#4E6770] text-xs max-w-sm">Our AI evaluation engine is processing your responses against role
           criteria and O*NET benchmarks.</p>
       </div>
       }
@@ -298,13 +298,13 @@
       @if (submitState() === 'success') {
       <div class="p-12 flex flex-col items-center justify-center text-center">
         <div
-          class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-3xl flex items-center justify-center mb-6 shadow-md shadow-emerald-500/10">
-          <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          class="w-20 h-20 bg-[#CBF1F5] text-[#244653] border border-[#71C9CE] rounded-3xl flex items-center justify-center mb-6 shadow-sm">
+          <svg class="w-10 h-10 text-[#244653]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
           </svg>
         </div>
-        <h3 class="text-2xl font-extrabold text-slate-900 mb-2">Application Submitted!</h3>
-        <p class="text-slate-500 text-xs sm:text-sm max-w-sm">
+        <h3 class="text-2xl font-bold text-[#172B32] mb-2">Application Submitted!</h3>
+        <p class="text-[#4E6770] text-xs sm:text-sm max-w-sm">
           Thank you for applying. Your resume and behavioral assessment responses have been recorded and sent to the
           recruiter.
         </p>

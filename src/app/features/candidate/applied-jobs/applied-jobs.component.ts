@@ -279,26 +279,26 @@ export class CandidateAppliedJobsComponent implements OnInit {
 
   getStatusBadgeClass(status?: string, hasInterview?: boolean, offer?: ContractOffer): string {
     if (offer?.status === 'Accepted' || status === 'Placed') {
-      return 'bg-emerald-100 text-emerald-900 border-emerald-400 font-extrabold shadow-2xs';
+      return 'bg-[#CBF1F5] text-[#244653] border border-[#71C9CE] font-extrabold shadow-2xs';
     }
     if (offer?.status === 'Offered' || status === 'Offered') {
-      return 'bg-gradient-to-r from-emerald-50 to-teal-50 text-emerald-800 border-emerald-300 font-black animate-pulse';
+      return 'bg-[#244653] text-[#CBF1F5] border border-[#244653] font-black animate-pulse';
     }
     if (offer?.status === 'Draft' || status === 'Offer Drafting') {
-      return 'bg-sky-50 text-sky-800 border-sky-300 font-semibold';
+      return 'bg-[#E3FDFD] text-[#244653] border border-[#A6E3E9] font-semibold';
     }
     if (offer?.status === 'Declined') {
       return 'bg-slate-150 text-slate-700 border-slate-300 font-semibold';
     }
-    if (status === 'Interview Passed') return 'bg-emerald-50 text-emerald-800 border-emerald-300 font-bold';
-    if (hasInterview) return 'bg-sky-50 text-sky-800 border-sky-300';
-    if (!status) return 'bg-slate-100 text-slate-700 border-slate-200';
+    if (status === 'Interview Passed') return 'bg-[#CBF1F5] text-[#244653] border border-[#71C9CE] font-bold';
+    if (hasInterview) return 'bg-[#E3FDFD] text-[#244653] border border-[#A6E3E9] font-semibold';
+    if (!status) return 'bg-[#F8FBFA] text-[#4E6770] border border-[#D5EDED]';
     const s = status.toLowerCase();
-    if (s === 'shortlisted') return 'bg-teal-50 text-teal-800 border-teal-300';
-    if (s.includes('strong')) return 'bg-emerald-50 text-emerald-800 border-emerald-200';
-    if (s.includes('moderate')) return 'bg-indigo-50 text-indigo-700 border-indigo-200';
+    if (s === 'shortlisted') return 'bg-[#CBF1F5] text-[#244653] border border-[#71C9CE] font-semibold';
+    if (s.includes('strong')) return 'bg-[#CBF1F5] text-[#244653] border border-[#71C9CE] font-semibold';
+    if (s.includes('moderate')) return 'bg-[#E3FDFD] text-[#244653] border border-[#A6E3E9] font-medium';
     if (s === 'rejected') return 'bg-rose-50 text-rose-700 border-rose-200';
-    return 'bg-amber-50 text-amber-800 border-amber-200';
+    return 'bg-[#FEF9C3] text-[#854D0E] border-[#FEF08A]';
   }
 
   getStatusLabel(app: CandidateApplication): string {

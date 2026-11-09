@@ -1,21 +1,21 @@
 <div class="space-y-8 animate-in fade-in duration-200">
 
   <!-- Header Section -->
-  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-white p-6 rounded-2xl shadow-xs border border-[#D5EDED]">
     <div class="flex items-center space-x-3.5">
-      <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-700 text-white flex items-center justify-center font-black shadow-md shadow-emerald-500/20">
+      <div class="w-12 h-12 rounded-2xl bg-[#244653] text-[#71C9CE] flex items-center justify-center font-bold shadow-sm">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       </div>
       <div>
         <div class="flex items-center space-x-2.5">
-          <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Placements & Fee Commissions</h1>
-          <span class="text-xs font-bold uppercase tracking-wider bg-emerald-50 text-emerald-800 border border-emerald-200 px-2.5 py-0.5 rounded-full">
+          <h1 class="text-2xl font-bold text-[#172B32] tracking-tight">Placements & Fee Commissions</h1>
+          <span class="text-xs font-bold uppercase tracking-wider bg-[#CBF1F5] text-[#244653] border border-[#71C9CE]/50 px-2.5 py-0.5 rounded-full">
             10% Standard Model
           </span>
         </div>
-        <p class="text-xs text-slate-500 mt-0.5">
+        <p class="text-xs text-[#4E6770] mt-0.5">
           Monitor 3-party contracts: Recruiter dispatch, Candidate execution, and Magic Match placement revenue collection.
         </p>
       </div>
@@ -23,8 +23,8 @@
 
     <div class="flex items-center space-x-3">
       <button (click)="loadPlacements()" type="button" [disabled]="isLoading()"
-        class="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition-colors cursor-pointer disabled:opacity-50">
-        <svg class="w-4 h-4" [class.animate-spin]="isLoading()" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        class="inline-flex items-center gap-2 px-4 py-2 bg-[#F8FBFA] hover:bg-[#E3FDFD] text-[#244653] border border-[#D5EDED] rounded-xl text-xs font-bold transition-colors cursor-pointer disabled:opacity-50">
+        <svg class="w-4 h-4 text-[#71C9CE]" [class.animate-spin]="isLoading()" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
         </svg>
         <span>Refresh Feed</span>
@@ -35,50 +35,50 @@
   <!-- Metric KPI Cards -->
   <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
     <!-- Card 1: Total Placed / Signed -->
-    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs space-y-1">
+    <div class="bg-white p-5 rounded-2xl border border-[#D5EDED] shadow-2xs space-y-1">
       <div class="flex items-center justify-between">
-        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Executed Contracts</span>
-        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+        <span class="text-xs font-bold uppercase tracking-wider text-[#4E6770]">Executed Contracts</span>
+        <span class="w-2 h-2 rounded-full bg-[#71C9CE]"></span>
       </div>
-      <p class="text-3xl font-black text-slate-900">{{ signedCount() }}</p>
-      <p class="text-[11px] text-slate-500">
+      <p class="text-3xl font-extrabold text-[#172B32]">{{ signedCount() }}</p>
+      <p class="text-[11px] text-[#4E6770]">
         Out of {{ data()?.total_placements || 0 }} total offers dispatched
       </p>
     </div>
 
     <!-- Card 2: Pending Signatures -->
-    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs space-y-1">
+    <div class="bg-white p-5 rounded-2xl border border-[#D5EDED] shadow-2xs space-y-1">
       <div class="flex items-center justify-between">
-        <span class="text-xs font-bold uppercase tracking-wider text-amber-600">Pending Candidate Signature</span>
-        <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+        <span class="text-xs font-bold uppercase tracking-wider text-amber-700">Pending Candidate Signature</span>
+        <span class="w-2 h-2 rounded-full bg-amber-500"></span>
       </div>
-      <p class="text-3xl font-black text-amber-600">{{ pendingOffersCount() }}</p>
-      <p class="text-[11px] text-slate-500">
+      <p class="text-3xl font-extrabold text-amber-700">{{ pendingOffersCount() }}</p>
+      <p class="text-[11px] text-[#4E6770]">
         Awaiting candidate e-signature review
       </p>
     </div>
 
     <!-- Card 3: Total Estimated Commission Pipeline -->
-    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs space-y-1">
-      <span class="text-xs font-bold uppercase tracking-wider text-indigo-600">Total Placement Pipeline (10%)</span>
-      <p class="text-2xl font-black text-indigo-700">
+    <div class="bg-white p-5 rounded-2xl border border-[#D5EDED] shadow-2xs space-y-1">
+      <span class="text-xs font-bold uppercase tracking-wider text-[#244653]">Total Placement Pipeline (10%)</span>
+      <p class="text-2xl font-extrabold text-[#244653]">
         {{ formatCurrency(totalCommissionEstimated(), 'CHF') }}
       </p>
-      <p class="text-[11px] text-slate-500">
+      <p class="text-[11px] text-[#4E6770]">
         Estimated from all offered positions
       </p>
     </div>
 
     <!-- Card 4: Collected Commissions -->
-    <div class="bg-gradient-to-br from-emerald-50 via-teal-50 to-white p-5 rounded-2xl border border-emerald-300 shadow-2xs space-y-1">
+    <div class="bg-[#E3FDFD] p-5 rounded-2xl border border-[#A6E3E9] shadow-2xs space-y-1">
       <div class="flex items-center justify-between">
-        <span class="text-xs font-bold uppercase tracking-wider text-emerald-900">Paid Commissions</span>
-        <span class="text-[10px] font-black uppercase tracking-wider bg-emerald-600 text-white px-2 py-0.5 rounded-full">Collected</span>
+        <span class="text-xs font-bold uppercase tracking-wider text-[#244653]">Paid Commissions</span>
+        <span class="text-[10px] font-bold uppercase tracking-wider bg-[#244653] text-white px-2 py-0.5 rounded-full">Collected</span>
       </div>
-      <p class="text-2xl font-black text-emerald-800">
+      <p class="text-2xl font-extrabold text-[#244653]">
         {{ formatCurrency(totalCommissionPaid(), 'CHF') }}
       </p>
-      <p class="text-[11px] text-emerald-700">
+      <p class="text-[11px] text-[#4E6770]">
         Settled client invoices
       </p>
     </div>
@@ -89,20 +89,20 @@
     <!-- Search Bar -->
     <div class="relative flex-1 max-w-md">
       <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-        <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-4 h-4 text-[#4E6770]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
       </div>
       <input type="text" [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)"
         placeholder="Filter by candidate, role, recruiter, or company CC..."
-        class="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-xs shadow-2xs" />
+        class="w-full pl-10 pr-4 py-2.5 bg-white border border-[#D5EDED] rounded-xl text-[#172B32] placeholder-[#4E6770]/60 focus:outline-none focus:ring-2 focus:ring-[#71C9CE]/30 focus:border-[#71C9CE] transition-all text-xs shadow-2xs" />
     </div>
 
     <!-- Dropdown Filters -->
     <div class="flex items-center space-x-3">
       <!-- Offer Status -->
       <select [ngModel]="filterOfferStatus()" (ngModelChange)="filterOfferStatus.set($event)"
-        class="px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 cursor-pointer">
+        class="px-3 py-2 bg-white border border-[#D5EDED] rounded-xl text-xs font-bold text-[#172B32] focus:ring-2 focus:ring-[#71C9CE]/30 focus:border-[#71C9CE] cursor-pointer">
         <option value="all">All Offer Statuses</option>
         <option value="Accepted">Accepted / Signed</option>
         <option value="Offered">Pending Signature</option>
@@ -111,7 +111,7 @@
 
       <!-- Commission Status -->
       <select [ngModel]="filterCommissionStatus()" (ngModelChange)="filterCommissionStatus.set($event)"
-        class="px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 cursor-pointer">
+        class="px-3 py-2 bg-white border border-[#D5EDED] rounded-xl text-xs font-bold text-[#172B32] focus:ring-2 focus:ring-[#71C9CE]/30 focus:border-[#71C9CE] cursor-pointer">
         <option value="all">All Invoice Statuses</option>
         <option value="Pending">Pending Invoice</option>
         <option value="Invoiced">Invoiced (Net 30)</option>
@@ -122,20 +122,20 @@
 
   <!-- Loading State -->
   @if (isLoading()) {
-  <div class="bg-white rounded-2xl border border-slate-200 p-12 text-center">
-    <div class="w-10 h-10 border-3 border-emerald-600 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
-    <p class="text-sm text-slate-600 font-semibold">Loading placement and commission registry...</p>
+  <div class="bg-white rounded-2xl border border-[#D5EDED] p-12 text-center">
+    <div class="w-10 h-10 border-3 border-[#244653] border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
+    <p class="text-sm text-[#4E6770] font-semibold">Loading placement and commission registry...</p>
   </div>
   }
 
   <!-- Empty State -->
   @else if (filteredPlacements().length === 0) {
-  <div class="bg-white rounded-2xl border border-slate-200 p-12 text-center max-w-lg mx-auto">
-    <div class="w-16 h-16 bg-slate-100 text-slate-400 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl font-black">
+  <div class="bg-white rounded-2xl border border-[#D5EDED] p-12 text-center max-w-lg mx-auto">
+    <div class="w-16 h-16 bg-[#E3FDFD] text-[#244653] border border-[#A6E3E9] rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
       💼
     </div>
-    <h3 class="text-base font-extrabold text-slate-900 mb-1">No Placements Found</h3>
-    <p class="text-xs text-slate-500 leading-relaxed">
+    <h3 class="text-base font-bold text-[#172B32] mb-1">No Placements Found</h3>
+    <p class="text-xs text-[#4E6770] leading-relaxed">
       {{ searchQuery() || filterOfferStatus() !== 'all' || filterCommissionStatus() !== 'all' ? 'No records match your active search or filters.' : 'When recruiters dispatch contract offers and candidates accept them, they will be registered here.' }}
     </p>
   </div>
@@ -143,11 +143,11 @@
 
   <!-- Data Table -->
   @else {
-  <div class="bg-white rounded-2xl border border-slate-200 shadow-2xs overflow-hidden">
+  <div class="bg-white rounded-2xl border border-[#D5EDED] shadow-2xs overflow-hidden">
     <div class="overflow-x-auto">
       <table class="w-full text-left border-collapse">
         <thead>
-          <tr class="bg-slate-50/80 text-[11px] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200">
+          <tr class="bg-[#F8FBFA] text-[11px] font-bold uppercase tracking-wider text-[#4E6770] border-b border-[#D5EDED]">
             <th class="py-3 px-5">Candidate</th>
             <th class="py-3 px-4">Role & Requisition</th>
             <th class="py-3 px-4">Recruiter & Company CC</th>
@@ -158,17 +158,17 @@
             <th class="py-3 px-5 text-right">Actions</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-slate-100 text-xs">
+        <tbody class="divide-y divide-[#D5EDED] text-xs">
           @for (item of filteredPlacements(); track (item.matchId || item.match_id || $index)) {
-          <tr class="hover:bg-slate-50/70 transition-colors">
+          <tr class="hover:bg-[#F8FBFA] transition-colors">
 
             <!-- Candidate Info -->
             <td class="py-4 px-5">
               <div>
-                <p class="font-extrabold text-slate-900">{{ item.candidateName || item.candidate_name }}</p>
-                <p class="text-[11px] text-slate-500">{{ item.candidateEmail || item.candidate_email }}</p>
+                <p class="font-bold text-[#172B32]">{{ item.candidateName || item.candidate_name }}</p>
+                <p class="text-[11px] text-[#4E6770]">{{ item.candidateEmail || item.candidate_email }}</p>
                 @if (item.signed_name || item.signatureLegalName) {
-                <span class="inline-block mt-1 font-mono text-[10px] text-emerald-800 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
+                <span class="inline-block mt-1 font-mono text-[10px] text-[#244653] bg-[#CBF1F5] px-1.5 py-0.5 rounded border border-[#71C9CE]/50">
                   Signed: {{ item.signed_name || item.signatureLegalName }}
                 </span>
                 }
@@ -178,24 +178,24 @@
             <!-- Role & Job ID -->
             <td class="py-4 px-4">
               <div>
-                <p class="font-bold text-slate-800">{{ item.jobTitle || item.job_title }}</p>
-                <p class="text-[11px] font-mono text-slate-400">ID: {{ item.jobId || item.job_id }}</p>
+                <p class="font-bold text-[#172B32]">{{ item.jobTitle || item.job_title }}</p>
+                <p class="text-[11px] font-mono text-[#4E6770]">ID: {{ item.jobId || item.job_id }}</p>
               </div>
             </td>
 
             <!-- Recruiter & Company CC -->
             <td class="py-4 px-4">
               <div class="space-y-0.5">
-                <p class="font-medium text-slate-700">
-                  Recruiter: <span class="text-slate-900">{{ item.recruiterEmail || item.recruiter_email || 'Assigned Recruiter' }}</span>
+                <p class="font-medium text-[#172B32]">
+                  Recruiter: <span class="font-semibold">{{ item.recruiterEmail || item.recruiter_email || 'Assigned Recruiter' }}</span>
                 </p>
                 @if (item.companyCcEmail || item.company_cc_email) {
-                <p class="text-[11px] text-sky-700 flex items-center gap-1 font-semibold">
+                <p class="text-[11px] text-[#244653] flex items-center gap-1 font-semibold">
                   <span>🏢 CC:</span>
                   <span class="truncate max-w-[180px]" [title]="item.companyCcEmail || item.company_cc_email">{{ item.companyCcEmail || item.company_cc_email }}</span>
                 </p>
                 } @else {
-                <span class="text-[11px] text-slate-400 italic">No Company CC specified</span>
+                <span class="text-[11px] text-[#4E6770] italic">No Company CC specified</span>
                 }
               </div>
             </td>
@@ -203,10 +203,10 @@
             <!-- Compensation & Start Date -->
             <td class="py-4 px-4">
               <div>
-                <p class="font-black text-slate-900 text-sm">
+                <p class="font-bold text-[#172B32] text-sm">
                   {{ formatCurrency(item.annualBaseSalary || item.annual_base_salary, item.currency) }}
                 </p>
-                <p class="text-[11px] text-slate-500">
+                <p class="text-[11px] text-[#4E6770]">
                   {{ item.currency }} &bull; Start: {{ (item.startDate || item.start_date) ? ((item.startDate || item.start_date) | date:'mediumDate') : 'TBD' }}
                 </p>
               </div>
@@ -215,10 +215,10 @@
             <!-- Magic Match Commission -->
             <td class="py-4 px-4">
               <div>
-                <p class="font-black text-emerald-700 text-sm">
+                <p class="font-bold text-[#244653] text-sm">
                   {{ formatCurrency(item.commissionAmount ?? item.commission_amount, item.currency) }}
                 </p>
-                <p class="text-[10px] font-bold text-slate-400 uppercase">
+                <p class="text-[10px] font-bold text-[#4E6770] uppercase">
                   {{ item.commissionRatePercent ?? item.commission_rate_percent ?? 10 }}% Placement Fee
                 </p>
               </div>
@@ -241,15 +241,15 @@
                 {{ commBadge.label }}
               </span>
               @if (item.invoiceReferenceId || item.invoice_reference) {
-              <p class="text-[10px] font-mono text-slate-500 mt-0.5">Ref: {{ item.invoiceReferenceId || item.invoice_reference }}</p>
+              <p class="text-[10px] font-mono text-[#4E6770] mt-0.5">Ref: {{ item.invoiceReferenceId || item.invoice_reference }}</p>
               }
             </td>
 
             <!-- Actions -->
             <td class="py-4 px-5 text-right whitespace-nowrap">
               <button (click)="openInvoiceModal(item)" type="button"
-                class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl text-xs font-semibold shadow-2xs hover:shadow-xs transition-all cursor-pointer">
-                <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#F8FBFA] hover:bg-[#E3FDFD] text-[#244653] border border-[#D5EDED] rounded-xl text-xs font-bold transition-all cursor-pointer">
+                <svg class="w-3.5 h-3.5 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                 </svg>
                 <span>Manage Invoice</span>
@@ -270,27 +270,27 @@
 <!-- MANAGE COMMISSION / INVOICE MODAL                                         -->
 <!-- ========================================================================= -->
 @if (selectedPlacementForInvoice(); as activePlacement) {
-<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in"
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#244653]/40 backdrop-blur-xs animate-in fade-in"
      (click)="closeInvoiceModal()">
-  <div class="bg-white rounded-3xl shadow-2xl border border-slate-200 w-full max-w-lg flex flex-col overflow-hidden animate-in zoom-in-95 duration-200"
+  <div class="bg-white rounded-3xl shadow-xl border border-[#D5EDED] w-full max-w-lg flex flex-col overflow-hidden animate-in zoom-in-95 duration-200"
        (click)="$event.stopPropagation()">
 
     <!-- Header -->
-    <div class="p-6 border-b border-slate-100 bg-gradient-to-r from-emerald-500/10 via-white to-teal-500/10 flex items-center justify-between shrink-0">
+    <div class="p-6 border-b border-[#D5EDED] bg-[#E3FDFD] flex items-center justify-between shrink-0">
       <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white font-black text-sm flex items-center justify-center shadow-xs">
+        <div class="w-10 h-10 rounded-xl bg-[#244653] text-[#71C9CE] font-bold text-sm flex items-center justify-center shadow-xs">
           💰
         </div>
         <div>
-          <h3 class="text-base font-extrabold text-slate-900">Manage Commission Invoice</h3>
-          <p class="text-xs text-slate-500 mt-0.5">
+          <h3 class="text-base font-bold text-[#172B32]">Manage Commission Invoice</h3>
+          <p class="text-xs text-[#4E6770] mt-0.5">
             {{ activePlacement.candidateName || activePlacement.candidate_name }} &bull; {{ activePlacement.jobTitle || activePlacement.job_title }}
           </p>
         </div>
       </div>
 
       <button (click)="closeInvoiceModal()" type="button"
-        class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 flex items-center justify-center transition-colors cursor-pointer text-base font-bold">
+        class="w-8 h-8 rounded-lg text-[#4E6770] hover:text-[#172B32] hover:bg-white/50 flex items-center justify-center transition-colors cursor-pointer text-base font-bold">
         ✕
       </button>
     </div>
@@ -300,7 +300,7 @@
 
       <!-- Alerts -->
       @if (actionSuccess()) {
-      <div class="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center gap-2 animate-in fade-in">
+      <div class="p-3.5 rounded-xl bg-[#CBF1F5] border border-[#71C9CE] text-[#244653] text-xs font-bold flex items-center gap-2 animate-in fade-in">
         <span>✓</span>
         <span>{{ actionSuccess() }}</span>
       </div>
@@ -314,26 +314,26 @@
       }
 
       <!-- Financial Snapshot -->
-      <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+      <div class="p-4 rounded-2xl bg-[#F8FBFA] border border-[#D5EDED] space-y-2">
         <div class="flex justify-between items-center text-xs">
-          <span class="text-slate-500 font-medium">1st Year Base Salary:</span>
-          <span class="font-extrabold text-slate-900">{{ formatCurrency(activePlacement.annualBaseSalary || activePlacement.annual_base_salary, activePlacement.currency) }}</span>
+          <span class="text-[#4E6770] font-medium">1st Year Base Salary:</span>
+          <span class="font-bold text-[#172B32]">{{ formatCurrency(activePlacement.annualBaseSalary || activePlacement.annual_base_salary, activePlacement.currency) }}</span>
         </div>
         <div class="flex justify-between items-center text-xs">
-          <span class="text-slate-500 font-medium">Magic Match Rate:</span>
-          <span class="font-extrabold text-slate-900">{{ activePlacement.commissionRatePercent ?? activePlacement.commission_rate_percent ?? 10 }}%</span>
+          <span class="text-[#4E6770] font-medium">Magic Match Rate:</span>
+          <span class="font-bold text-[#172B32]">{{ activePlacement.commissionRatePercent ?? activePlacement.commission_rate_percent ?? 10 }}%</span>
         </div>
-        <div class="flex justify-between items-center text-xs border-t border-slate-200 pt-2">
-          <span class="text-emerald-800 font-bold uppercase tracking-wider">Placement Fee Payable:</span>
-          <span class="font-black text-emerald-700 text-sm">{{ formatCurrency(activePlacement.commissionAmount ?? activePlacement.commission_amount, activePlacement.currency) }}</span>
+        <div class="flex justify-between items-center text-xs border-t border-[#D5EDED] pt-2">
+          <span class="text-[#244653] font-bold uppercase tracking-wider">Placement Fee Payable:</span>
+          <span class="font-bold text-[#244653] text-sm">{{ formatCurrency(activePlacement.commissionAmount ?? activePlacement.commission_amount, activePlacement.currency) }}</span>
         </div>
       </div>
 
       <!-- Form: Invoice Status -->
       <div class="space-y-1.5">
-        <label class="block text-xs font-bold text-slate-700">Commission Settlement Status</label>
+        <label class="block text-xs font-bold text-[#172B32]">Commission Settlement Status</label>
         <select [ngModel]="invoiceStatusInput()" (ngModelChange)="invoiceStatusInput.set($event)"
-          class="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all cursor-pointer">
+          class="w-full px-3 py-2.5 bg-white border border-[#D5EDED] rounded-xl text-xs font-bold text-[#172B32] focus:ring-2 focus:ring-[#71C9CE]/30 focus:border-[#71C9CE] transition-all cursor-pointer">
           <option value="Pending">Pending (Not yet invoiced)</option>
           <option value="Invoiced">Invoiced (Sent to employer, Net 30)</option>
           <option value="Paid">Paid (Full fee collected)</option>
@@ -342,31 +342,31 @@
 
       <!-- Form: Invoice Reference -->
       <div class="space-y-1.5">
-        <label class="block text-xs font-bold text-slate-700">Invoice Number / Reference</label>
+        <label class="block text-xs font-bold text-[#172B32]">Invoice Number / Reference</label>
         <input type="text" [ngModel]="invoiceRefInput()" (ngModelChange)="invoiceRefInput.set($event)"
           placeholder="e.g. MM-INV-2026-0042"
-          class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-mono text-slate-900 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all" />
+          class="w-full px-3.5 py-2.5 bg-white border border-[#D5EDED] rounded-xl text-xs font-mono text-[#172B32] focus:ring-2 focus:ring-[#71C9CE]/30 focus:border-[#71C9CE] transition-all" />
       </div>
 
       <!-- Form: Accounting Notes -->
       <div class="space-y-1.5">
-        <label class="block text-xs font-bold text-slate-700">Accounting & Audit Notes (Optional)</label>
+        <label class="block text-xs font-bold text-[#172B32]">Accounting & Audit Notes (Optional)</label>
         <textarea [ngModel]="invoiceNotesInput()" (ngModelChange)="invoiceNotesInput.set($event)" rows="2"
           placeholder="e.g. Received wire transfer, transaction ref 847291..."
-          class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs text-slate-900 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"></textarea>
+          class="w-full px-3.5 py-2.5 bg-white border border-[#D5EDED] rounded-xl text-xs text-[#172B32] focus:ring-2 focus:ring-[#71C9CE]/30 focus:border-[#71C9CE] transition-all"></textarea>
       </div>
 
     </div>
 
     <!-- Footer -->
-    <div class="p-5 border-t border-slate-100 bg-slate-50 flex items-center justify-between gap-3 shrink-0">
+    <div class="p-5 border-t border-[#D5EDED] bg-[#F8FBFA] flex items-center justify-between gap-3 shrink-0">
       <button (click)="closeInvoiceModal()" type="button" [disabled]="isUpdating()"
-        class="px-4 py-2 bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-xl text-xs font-semibold transition-all cursor-pointer">
+        class="px-4 py-2 bg-white hover:bg-[#F8FBFA] text-[#4E6770] hover:text-[#172B32] border border-[#D5EDED] rounded-xl text-xs font-bold transition-all cursor-pointer">
         Cancel
       </button>
 
       <button (click)="saveCommissionStatus()" type="button" [disabled]="isUpdating()"
-        class="inline-flex items-center gap-2 px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-md shadow-emerald-500/20 transition-all cursor-pointer disabled:opacity-50">
+        class="inline-flex items-center gap-2 px-5 py-2 bg-[#244653] hover:bg-[#1A343E] text-white rounded-xl text-xs font-bold shadow-sm transition-all cursor-pointer disabled:opacity-50">
         @if (isUpdating()) {
         <span class="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
         }

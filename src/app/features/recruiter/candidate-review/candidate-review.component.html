@@ -1,15 +1,15 @@
-<div class="h-full min-h-screen bg-slate-50 flex flex-col items-center py-8 px-4 sm:px-6 lg:px-8 overflow-hidden relative">
+<div class="h-full min-h-screen bg-[#F8FBFA] flex flex-col items-center py-8 px-4 sm:px-6 lg:px-8 overflow-hidden relative text-[#172B32]">
 
   <!-- Floating Feedback Toast -->
   @if (toastMessage()) {
     <div class="fixed top-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 rounded-xl shadow-xl border text-xs sm:text-sm font-semibold transition-all"
-         [ngClass]="toastType() === 'error' ? 'bg-rose-50 text-rose-800 border-rose-200 shadow-rose-100' : (toastType() === 'success' ? 'bg-emerald-50 text-emerald-800 border-emerald-200 shadow-emerald-100' : 'bg-slate-900 text-white border-slate-800 shadow-slate-300')">
+         [ngClass]="toastType() === 'error' ? 'bg-rose-50 text-rose-800 border-rose-200 shadow-rose-100' : (toastType() === 'success' ? 'bg-[#CBF1F5] text-[#244653] border-[#71C9CE] shadow-2xs' : 'bg-[#172B32] text-white border-[#244653] shadow-md')">
       @if (toastType() === 'error') {
         <svg class="w-4 h-4 text-rose-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
       } @else if (toastType() === 'success') {
-        <svg class="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+        <svg class="w-4 h-4 text-[#244653] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
       } @else {
-        <svg class="w-4 h-4 text-indigo-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <svg class="w-4 h-4 text-[#71C9CE] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
       }
       <span>{{ toastMessage() }}</span>
     </div>
@@ -17,19 +17,19 @@
 
   <div class="mb-6 z-10 w-full max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
     <div class="text-left space-y-1">
-      <button (click)="goBackToJobList()" class="inline-flex items-center text-xs font-semibold text-indigo-600 hover:text-indigo-800 transition-colors mb-1">
-        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <button (click)="goBackToJobList()" class="inline-flex items-center text-xs font-bold text-[#244653] hover:text-[#71C9CE] transition-colors mb-1 cursor-pointer">
+        <svg class="w-4 h-4 mr-1 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
         </svg>
         Back to Recruiter Job List
       </button>
-      <h1 class="text-2xl font-bold text-slate-900">
+      <h1 class="text-2xl font-bold text-[#172B32]">
         {{ jobDetails()?.title || jobDetails()?.criteria?.title || 'Candidate Evaluation Deck' }}
       </h1>
-      <p class="text-slate-500 text-xs font-medium">
+      <p class="text-[#4E6770] text-xs font-medium">
         Job Requisition ID: {{ jobId() }}
         @if (jobDetails()?.criteria?.seniority_level) {
-          • <span class="text-indigo-600 font-semibold">{{ jobDetails()?.criteria?.seniority_level }}</span>
+          • <span class="text-[#244653] font-bold">{{ jobDetails()?.criteria?.seniority_level }}</span>
           • {{ jobDetails()?.criteria?.minimum_years_experience }}+ Yrs Exp
         }
       </p>
@@ -39,34 +39,34 @@
     <div class="flex items-center gap-3">
       <!-- Company Persona Sensitivity Indicator -->
       <a routerLink="/recruiter/company-profile" 
-         class="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-xs text-slate-700 shadow-2xs hover:border-indigo-300 hover:text-indigo-600 transition-all cursor-pointer"
+         class="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white border border-[#D5EDED] text-xs text-[#172B32] shadow-2xs hover:border-[#71C9CE] hover:text-[#244653] transition-all cursor-pointer"
          title="Configure AI Screening Sensitivity Threshold in Company Persona Setting">
-        <span class="w-2 h-2 rounded-full" [ngClass]="sensitivityThreshold() >= 80 ? 'bg-purple-500' : (sensitivityThreshold() >= 65 ? 'bg-indigo-500' : 'bg-blue-500')"></span>
-        <span class="font-medium text-slate-500">Screening Threshold:</span>
-        <span class="font-bold text-slate-900">&ge;{{ sensitivityThreshold() }}%</span>
-        <span class="text-[10px] text-slate-400 font-medium">({{ sensitivityLabel() }})</span>
+        <span class="w-2 h-2 rounded-full" [ngClass]="sensitivityThreshold() >= 80 ? 'bg-[#244653]' : (sensitivityThreshold() >= 65 ? 'bg-[#71C9CE]' : 'bg-[#A6E3E9]')"></span>
+        <span class="font-medium text-[#4E6770]">Screening Threshold:</span>
+        <span class="font-bold text-[#172B32]">&ge;{{ sensitivityThreshold() }}%</span>
+        <span class="text-[10px] text-[#4E6770] font-medium">({{ sensitivityLabel() }})</span>
       </a>
 
       <!-- Refresh Candidates Button -->
       <button (click)="refreshCandidates()"
-              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-xs font-semibold text-slate-700 shadow-2xs hover:bg-slate-50 hover:text-indigo-600 hover:border-indigo-200 transition-all cursor-pointer"
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-[#D5EDED] text-xs font-semibold text-[#172B32] shadow-2xs hover:bg-[#F8FBFA] hover:text-[#244653] hover:border-[#71C9CE] transition-all cursor-pointer"
               title="Refresh candidate applications">
-        <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+        <svg class="w-3.5 h-3.5 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
         <span>Refresh</span>
       </button>
 
       <!-- View Toggle -->
-      <div class="bg-slate-200/60 p-1 rounded-lg inline-flex border border-slate-200">
+      <div class="bg-[#F8FBFA] p-1 rounded-lg inline-flex border border-[#D5EDED]">
         <button (click)="viewMode.set('stack')" 
-                [ngClass]="{'bg-white shadow-sm text-indigo-700': viewMode() === 'stack', 'text-slate-500 hover:text-slate-700': viewMode() !== 'stack'}" 
-                class="px-4 py-1.5 rounded-md text-sm font-medium transition-colors focus:outline-none flex items-center gap-2">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                [ngClass]="{'bg-white shadow-2xs text-[#244653] font-bold border border-[#D5EDED]': viewMode() === 'stack', 'text-[#4E6770] hover:text-[#172B32]': viewMode() !== 'stack'}" 
+                class="px-4 py-1.5 rounded-md text-sm font-medium transition-colors focus:outline-none flex items-center gap-2 cursor-pointer">
+          <svg class="w-4 h-4 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
           Stack
         </button>
         <button (click)="viewMode.set('table')" 
-                [ngClass]="{'bg-white shadow-sm text-indigo-700': viewMode() === 'table', 'text-slate-500 hover:text-slate-700': viewMode() !== 'table'}" 
-                class="px-4 py-1.5 rounded-md text-sm font-medium transition-colors focus:outline-none flex items-center gap-2">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
+                [ngClass]="{'bg-white shadow-2xs text-[#244653] font-bold border border-[#D5EDED]': viewMode() === 'table', 'text-[#4E6770] hover:text-[#172B32]': viewMode() !== 'table'}" 
+                class="px-4 py-1.5 rounded-md text-sm font-medium transition-colors focus:outline-none flex items-center gap-2 cursor-pointer">
+          <svg class="w-4 h-4 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
           Table
         </button>
       </div>
@@ -74,66 +74,66 @@
   </div>
 
   @if (isLoading()) {
-    <div class="w-full max-w-4xl h-[550px] flex flex-col items-center justify-center bg-white rounded-2xl shadow-sm border border-slate-200 p-8 my-4 text-center space-y-4">
-      <div class="w-12 h-12 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
+    <div class="w-full max-w-4xl h-[550px] flex flex-col items-center justify-center bg-white rounded-2xl shadow-xs border border-[#D5EDED] p-8 my-4 text-center space-y-4">
+      <div class="w-12 h-12 border-4 border-[#CBF1F5] border-t-[#244653] rounded-full animate-spin"></div>
       <div>
-        <h3 class="text-base font-bold text-slate-900">Loading Candidate Evaluation Deck...</h3>
-        <p class="text-xs text-slate-500 mt-1">Retrieving candidate applications and AI fit scores...</p>
+        <h3 class="text-base font-bold text-[#172B32]">Loading Candidate Evaluation Deck...</h3>
+        <p class="text-xs text-[#4E6770] mt-1">Retrieving candidate applications and AI fit scores...</p>
       </div>
     </div>
   } @else if (viewMode() === 'stack') {
   <div class="relative w-full max-w-7xl mx-auto flex flex-col items-center gap-4">
     @if (candidates().length === 0) {
-      <div class="w-full max-w-4xl h-[550px] flex flex-col items-center justify-center bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-        <svg class="w-16 h-16 text-slate-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
-        <h3 class="text-lg font-medium text-slate-700">No candidates available</h3>
-        <p class="text-slate-500 text-sm mt-1">Waiting for new candidate applications...</p>
+      <div class="w-full max-w-4xl h-[550px] flex flex-col items-center justify-center bg-white rounded-2xl shadow-xs border border-[#D5EDED] p-6">
+        <svg class="w-16 h-16 text-[#A6E3E9] mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
+        <h3 class="text-lg font-bold text-[#172B32]">No candidates available</h3>
+        <p class="text-[#4E6770] text-sm mt-1">Waiting for new candidate applications...</p>
       </div>
     } @else {
       <!-- Stack Header Bar with Prev/Next Navigation Controls -->
-      <div class="w-full max-w-4xl flex justify-between items-center bg-white px-4 py-2 rounded-xl border border-slate-200 shadow-sm text-sm">
+      <div class="w-full max-w-4xl flex justify-between items-center bg-white px-4 py-2 rounded-xl border border-[#D5EDED] shadow-2xs text-sm">
         <button (click)="prevCard()" 
                 [disabled]="currentIndex() === 0"
-                class="px-3 py-1.5 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1 text-xs font-semibold transition-all">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                class="px-3 py-1.5 rounded-lg border border-[#D5EDED] text-[#172B32] hover:bg-[#F8FBFA] disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1 text-xs font-semibold transition-all cursor-pointer">
+          <svg class="w-4 h-4 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
           Previous
         </button>
 
-        <span class="text-xs font-semibold text-slate-600 bg-slate-100 px-3 py-1 rounded-full">
+        <span class="text-xs font-bold text-[#244653] bg-[#E3FDFD] border border-[#A6E3E9] px-3 py-1 rounded-full">
           Candidate {{ currentIndex() + 1 }} of {{ candidates().length }}
         </span>
 
         <button (click)="nextCard()" 
                 [disabled]="currentIndex() >= candidates().length - 1"
-                class="px-3 py-1.5 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1 text-xs font-semibold transition-all">
+                class="px-3 py-1.5 rounded-lg border border-[#D5EDED] text-[#172B32] hover:bg-[#F8FBFA] disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1 text-xs font-semibold transition-all cursor-pointer">
           Next
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+          <svg class="w-4 h-4 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
         </button>
       </div>
 
       <!-- Main Stack Card Container -->
       <div class="relative w-full max-w-4xl min-h-[600px] h-[650px]">
         @if (currentCandidate; as candidate) {
-          <div class="absolute inset-0 bg-white rounded-2xl shadow-xl border border-slate-200 flex flex-col overflow-hidden transition-all duration-300 ease-out z-30"
+          <div class="absolute inset-0 bg-white rounded-2xl shadow-md border border-[#D5EDED] flex flex-col overflow-hidden transition-all duration-300 ease-out z-30"
                [ngClass]="{
                  'swipe-left': swipeDirection() === 'left',
                  'swipe-right': swipeDirection() === 'right'
                }">
                
             <!-- Card Header -->
-            <div class="p-5 border-b border-slate-100 bg-slate-50/80 flex justify-between items-start gap-3">
+            <div class="p-5 border-b border-[#D5EDED] bg-[#F8FBFA] flex justify-between items-start gap-3">
               <div class="flex items-start gap-3.5">
                 @if (candidate.profile_image || candidate.profileImage) {
                   <img [src]="candidate.profile_image || candidate.profileImage" [alt]="candidate.candidateName"
-                       class="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm ring-2 ring-indigo-100 flex-shrink-0" />
+                       class="w-12 h-12 rounded-full object-cover border-2 border-white shadow-2xs ring-2 ring-[#71C9CE] shrink-0" />
                 } @else {
-                  <div class="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 text-white font-bold flex items-center justify-center text-sm shadow-sm ring-2 ring-indigo-100 flex-shrink-0">
+                  <div class="w-12 h-12 rounded-full bg-[#244653] text-white font-bold flex items-center justify-center text-sm shadow-2xs ring-2 ring-[#CBF1F5] shrink-0">
                     {{ getInitials(candidate.candidateName) }}
                   </div>
                 }
                 <div>
-                  <h2 class="text-xl font-bold text-slate-900">{{ candidate.candidateName }}</h2>
-                  <p class="text-xs text-slate-500 mt-0.5">{{ candidate.candidateEmail }}</p>
+                  <h2 class="text-xl font-bold text-[#172B32]">{{ candidate.candidateName }}</h2>
+                  <p class="text-xs text-[#4E6770] mt-0.5">{{ candidate.candidateEmail }}</p>
                 @if (candidate.linkedin_url || candidate.facebook_url || candidate.tiktok_url) {
                   <div class="flex items-center gap-1.5 mt-2 flex-wrap">
                     @if (candidate.linkedin_url) {
@@ -168,11 +168,11 @@
               </div>
             </div>
             <div class="text-right flex flex-col items-end">
-                <div class="text-3xl font-black" [ngClass]="getScoreColor(candidate.evaluation?.overall_match_score)">
+                <div class="text-3xl font-black text-[#244653]">
                   {{ candidate.evaluation?.overall_match_score ?? '--' }}<span class="text-lg" *ngIf="candidate.evaluation">%</span>
                 </div>
                 <div class="mt-1 flex items-center gap-1.5 flex-wrap justify-end">
-                  <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold border flex items-center gap-1"
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-bold border flex items-center gap-1"
                         [ngClass]="getVerdictBadgeClass(getDisplayVerdict(candidate))">
                     @if (candidate.status === 'Rejected') {
                       <svg class="w-3 h-3 text-rose-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -181,12 +181,12 @@
                   </span>
                   @if (candidate.evaluation) {
                     @if (canShortlist(candidate)) {
-                      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 inline-flex items-center gap-1" [title]="'Meets or exceeds Company Persona Sensitivity Threshold (&ge;' + sensitivityThreshold() + '%)'">
-                        <svg class="w-2.5 h-2.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#CBF1F5] text-[#244653] border border-[#71C9CE] inline-flex items-center gap-1" [title]="'Meets or exceeds Company Persona Sensitivity Threshold (&ge;' + sensitivityThreshold() + '%)'">
+                        <svg class="w-2.5 h-2.5 text-[#244653]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                         &ge;{{ sensitivityThreshold() }}%
                       </span>
                     } @else {
-                      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200 inline-flex items-center gap-1" [title]="'Score is below Company Persona Sensitivity Threshold (' + sensitivityThreshold() + '%)'">
+                      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200 inline-flex items-center gap-1" [title]="'Score is below Company Persona Sensitivity Threshold (' + sensitivityThreshold() + '%)'">
                         <svg class="w-2.5 h-2.5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                         &lt;{{ sensitivityThreshold() }}%
                       </span>
@@ -201,50 +201,50 @@
               
               <!-- Interview Scheduled Alert Banner -->
               @if (candidate.status !== 'Rejected' && candidate.interview; as iv) {
-                <div class="p-3.5 bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl flex items-center justify-between gap-3 text-xs shadow-2xs">
-                  <div class="flex items-center gap-2.5 text-emerald-950">
-                    <span class="p-1.5 bg-emerald-600 text-white rounded-lg text-xs font-bold leading-none">📅</span>
+                <div class="p-3.5 bg-[#CBF1F5]/60 border border-[#71C9CE] rounded-xl flex items-center justify-between gap-3 text-xs shadow-2xs">
+                  <div class="flex items-center gap-2.5 text-[#244653]">
+                    <span class="p-1.5 bg-[#244653] text-white rounded-lg text-xs font-bold leading-none">📅</span>
                     <div>
-                      <span class="font-bold text-emerald-900">Interview Scheduled:</span>
-                      <span class="font-semibold text-emerald-800 ml-1">{{ formatDisplayDate(iv.scheduled_at) }}</span>
+                      <span class="font-bold text-[#172B32]">Interview Scheduled:</span>
+                      <span class="font-bold text-[#244653] ml-1">{{ formatDisplayDate(iv.scheduled_at) }}</span>
                       @if (iv.location) {
-                        <span class="text-slate-500 ml-1.5">• {{ iv.location }}</span>
+                        <span class="text-[#4E6770] ml-1.5">• {{ iv.location }}</span>
                       }
                     </div>
                   </div>
-                  <button (click)="openScheduleModal(candidate)" class="px-2.5 py-1 bg-white hover:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-lg font-semibold text-[11px] transition-colors shrink-0">
+                  <button (click)="openScheduleModal(candidate)" class="px-2.5 py-1 bg-white hover:bg-[#E3FDFD] text-[#244653] border border-[#71C9CE] rounded-lg font-bold text-[11px] transition-colors shrink-0 cursor-pointer">
                     Reschedule
                   </button>
                 </div>
               }
               
               @if (!candidate.evaluation) {
-                <div class="p-6 bg-indigo-50 border border-indigo-100 rounded-xl text-center">
-                  <svg class="animate-spin h-6 w-6 text-indigo-600 mx-auto mb-2" fill="none" viewBox="0 0 24 24">
+                <div class="p-6 bg-[#E3FDFD] border border-[#A6E3E9] rounded-xl text-center">
+                  <svg class="animate-spin h-6 w-6 text-[#244653] mx-auto mb-2" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  <p class="text-sm font-semibold text-indigo-900">AI Screening in Progress</p>
-                  <p class="text-xs text-indigo-600 mt-1">Evaluating candidate CV against target requirements...</p>
+                  <p class="text-sm font-bold text-[#244653]">AI Screening in Progress</p>
+                  <p class="text-xs text-[#4E6770] mt-1">Evaluating candidate CV against target requirements...</p>
                 </div>
               } @else {
                 <!-- Sub Scores -->
                 <div class="space-y-3">
                   <div>
                     <div class="flex justify-between text-xs mb-1">
-                      <span class="font-medium text-slate-700">Skills Match</span>
-                      <span class="font-bold text-slate-900">{{ candidate.evaluation?.skills_score }}%</span>
+                      <span class="font-medium text-[#172B32]">Skills Match</span>
+                      <span class="font-bold text-[#244653]">{{ candidate.evaluation?.skills_score }}%</span>
                     </div>
-                    <div class="w-full bg-slate-100 rounded-full h-2">
+                    <div class="w-full bg-[#D5EDED] rounded-full h-2">
                       <div class="h-2 rounded-full transition-all duration-500" [ngClass]="getScoreBg(candidate.evaluation?.skills_score)" [style.width]="(candidate.evaluation?.skills_score || 0) + '%'"></div>
                     </div>
                   </div>
                   <div>
                     <div class="flex justify-between text-xs mb-1">
-                      <span class="font-medium text-slate-700">Experience Match</span>
-                      <span class="font-bold text-slate-900">{{ candidate.evaluation?.experience_score }}%</span>
+                      <span class="font-medium text-[#172B32]">Experience Match</span>
+                      <span class="font-bold text-[#244653]">{{ candidate.evaluation?.experience_score }}%</span>
                     </div>
-                    <div class="w-full bg-slate-100 rounded-full h-2">
+                    <div class="w-full bg-[#D5EDED] rounded-full h-2">
                       <div class="h-2 rounded-full transition-all duration-500" [ngClass]="getScoreBg(candidate.evaluation?.experience_score)" [style.width]="(candidate.evaluation?.experience_score || 0) + '%'"></div>
                     </div>
                   </div>
@@ -252,14 +252,14 @@
 
                 <!-- Strengths & Weaknesses -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div class="bg-emerald-50/70 rounded-xl p-3.5 border border-emerald-100">
-                    <h4 class="text-xs font-bold text-emerald-800 uppercase tracking-wider mb-1.5 flex items-center">
-                      <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                  <div class="bg-[#CBF1F5]/30 rounded-xl p-3.5 border border-[#A6E3E9]">
+                    <h4 class="text-xs font-bold text-[#244653] uppercase tracking-wider mb-1.5 flex items-center">
+                      <svg class="w-3.5 h-3.5 mr-1 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                       Key Strengths
                     </h4>
                     <div class="flex flex-wrap gap-1.5">
                       @for (strength of candidate.evaluation?.key_strengths; track strength) {
-                        <span class="bg-white text-emerald-700 text-xs px-2.5 py-1 rounded-md border border-emerald-200 shadow-2xs">{{ strength }}</span>
+                        <span class="bg-white text-[#244653] text-xs px-2.5 py-1 rounded-md border border-[#71C9CE] shadow-2xs font-medium">{{ strength }}</span>
                       }
                     </div>
                   </div>
@@ -274,7 +274,7 @@
                         <span class="bg-white text-rose-700 text-xs px-2.5 py-1 rounded-md border border-rose-200 shadow-2xs">{{ gap }}</span>
                       }
                       @if (getCandidateGaps(candidate).length === 0) {
-                        <span class="text-slate-400 text-xs italic">No critical gaps or red flags identified.</span>
+                        <span class="text-[#4E6770] text-xs italic">No critical gaps or red flags identified.</span>
                       }
                     </div>
                   </div>
@@ -282,18 +282,18 @@
 
                 <!-- Rationale -->
                 <div>
-                  <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">AI Rationale</h4>
-                  <blockquote class="border-l-3 border-indigo-500 pl-3 py-1 text-slate-700 italic text-xs leading-relaxed">
+                  <h4 class="text-xs font-bold text-[#4E6770] uppercase tracking-wider mb-1.5">AI Rationale</h4>
+                  <blockquote class="border-l-3 border-[#71C9CE] pl-3 py-1 text-[#172B32] italic text-xs leading-relaxed bg-[#F8FBFA] rounded-r-lg">
                     "{{ candidate.evaluation?.concise_rationale }}"
                   </blockquote>
                 </div>
 
                 <!-- O*NET Behavioral Assessment Section -->
                 @if (candidate.behavioral_evaluation; as beh) {
-                  <div class="bg-indigo-50/60 border border-indigo-100 rounded-xl p-3.5 space-y-2.5">
+                  <div class="bg-[#E3FDFD]/50 border border-[#A6E3E9] rounded-xl p-3.5 space-y-2.5">
                     <div class="flex items-center justify-between">
-                      <h4 class="text-xs font-bold text-indigo-900 uppercase tracking-wider flex items-center">
-                        <svg class="w-3.5 h-3.5 mr-1 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                      <h4 class="text-xs font-bold text-[#244653] uppercase tracking-wider flex items-center">
+                        <svg class="w-3.5 h-3.5 mr-1 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         O*NET Behavioral Analysis
                       </h4>
                       <span class="px-2 py-0.5 rounded-full text-xs font-bold border" [ngClass]="getBehavioralVerdictBadgeClass(beh.verdict)">
@@ -302,8 +302,8 @@
                     </div>
 
                     <div class="flex items-center gap-2">
-                      <span class="text-xs text-slate-500 font-medium">Archetype:</span>
-                      <span class="bg-white text-indigo-800 text-xs px-2.5 py-0.5 rounded-md font-bold border border-indigo-200 shadow-2xs">
+                      <span class="text-xs text-[#4E6770] font-medium">Archetype:</span>
+                      <span class="bg-white text-[#244653] text-xs px-2.5 py-0.5 rounded-md font-bold border border-[#71C9CE] shadow-2xs">
                         {{ beh.behavioral_archetype }}
                       </span>
                     </div>
@@ -321,8 +321,8 @@
 
                     @if (beh.client_interview_probes && beh.client_interview_probes.length > 0) {
                       <div>
-                        <p class="text-xs font-semibold text-slate-700 mb-1">Client Interview Probes:</p>
-                        <ul class="list-disc list-inside text-xs text-slate-600 space-y-0.5">
+                        <p class="text-xs font-semibold text-[#172B32] mb-1">Client Interview Probes:</p>
+                        <ul class="list-disc list-inside text-xs text-[#4E6770] space-y-0.5">
                           @for (probe of beh.client_interview_probes; track probe) {
                             <li>{{ probe }}</li>
                           }
@@ -332,16 +332,16 @@
 
                     <!-- Candidate Answers & SJT Questions Breakdown -->
                     @if (jobDetails()?.assessment; as sjt) {
-                      <div class="pt-2 border-t border-indigo-100 space-y-2">
-                        <p class="text-xs font-bold text-slate-800 flex items-center gap-1">
-                          <svg class="w-3.5 h-3.5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                      <div class="pt-2 border-t border-[#A6E3E9] space-y-2">
+                        <p class="text-xs font-bold text-[#172B32] flex items-center gap-1">
+                          <svg class="w-3.5 h-3.5 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                           Candidate SJT Responses ({{ sjt.questions.length }} Questions):
                         </p>
                         <div class="space-y-2 max-h-48 overflow-y-auto pr-1">
                           @for (q of sjt.questions; track q.id; let idx = $index) {
-                            <div class="bg-white p-2.5 rounded-lg border border-slate-200 text-xs space-y-1">
-                              <p class="font-semibold text-slate-900 leading-snug">
-                                <span class="bg-slate-900 text-white font-bold px-1.5 py-0.5 rounded text-[10px] mr-1">Q{{ idx + 1 }}</span>
+                            <div class="bg-white p-2.5 rounded-lg border border-[#D5EDED] text-xs space-y-1">
+                              <p class="font-semibold text-[#172B32] leading-snug">
+                                <span class="bg-[#244653] text-white font-bold px-1.5 py-0.5 rounded text-[10px] mr-1">Q{{ idx + 1 }}</span>
                                 {{ q.scenario }}
                               </p>
                               <div class="pl-5 text-[11px]">
@@ -349,12 +349,12 @@
                                 @for (opt of q.options; track opt.key) {
                                   <div class="p-1 rounded font-medium my-0.5"
                                        [ngClass]="{
-                                         'bg-indigo-100 text-indigo-900 border border-indigo-300 font-bold': selKey === opt.key,
-                                         'text-slate-600': selKey !== opt.key
+                                         'bg-[#CBF1F5] text-[#244653] border border-[#71C9CE] font-bold': selKey === opt.key,
+                                         'text-[#4E6770]': selKey !== opt.key
                                        }">
-                                    <span [ngClass]="selKey === opt.key ? 'text-indigo-700 font-extrabold' : 'text-slate-500'">{{ opt.key }}.</span> {{ opt.text }}
+                                    <span [ngClass]="selKey === opt.key ? 'text-[#244653] font-black' : 'text-[#4E6770]'">{{ opt.key }}.</span> {{ opt.text }}
                                     @if (selKey === opt.key) {
-                                      <span class="ml-1 text-indigo-700 font-bold">(Selected)</span>
+                                      <span class="ml-1 text-[#244653] font-bold">(Selected)</span>
                                     }
                                   </div>
                                 }
@@ -370,7 +370,7 @@
             </div>
 
             <!-- Card Bottom Action Bar -->
-            <div class="p-4 border-t border-slate-100 bg-white flex flex-col gap-2.5">
+            <div class="p-4 border-t border-[#D5EDED] bg-white flex flex-col gap-2.5">
               @if (candidate.status === 'Rejected') {
                 <div class="flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold text-center">
                   <svg class="w-4 h-4 text-rose-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -380,30 +380,30 @@
               <div class="flex justify-between items-center gap-3">
                 <button (click)="reject(candidate)" 
                         [disabled]="candidate.status === 'Rejected'"
-                        class="flex-1 py-2.5 px-3 rounded-xl font-semibold text-xs border transition-colors flex items-center justify-center gap-2"
-                        [ngClass]="candidate.status === 'Rejected' ? 'bg-rose-100/60 text-rose-400 border-rose-200 cursor-not-allowed' : 'bg-rose-50 hover:bg-rose-100 text-rose-700 border-rose-200 cursor-pointer'">
+                        class="flex-1 py-2.5 px-3 rounded-xl font-semibold text-xs border transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                        [ngClass]="candidate.status === 'Rejected' ? 'bg-rose-100/60 text-rose-400 border-rose-200 cursor-not-allowed' : 'bg-rose-50 hover:bg-rose-100 text-rose-700 border-rose-200'">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                   {{ candidate.status === 'Rejected' ? 'Rejected' : 'Reject' }}
                 </button>
                 <button (click)="shortlist(candidate)" 
                         [disabled]="!canShortlist(candidate)"
                         [title]="!canShortlist(candidate) ? 'Candidate score (' + (candidate.evaluation?.overall_match_score ?? 0) + '%) is below Company Persona Sensitivity Threshold (' + sensitivityThreshold() + '%)' : 'Shortlist & Schedule Interview'"
-                        class="flex-1 py-2.5 px-3 rounded-xl font-semibold text-xs border transition-all flex items-center justify-center gap-2"
-                        [ngClass]="canShortlist(candidate) ? 'bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border-emerald-200 cursor-pointer' : 'bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed opacity-60'">
-                  <svg class="w-4 h-4" [ngClass]="canShortlist(candidate) ? 'text-emerald-600' : 'text-slate-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        class="flex-1 py-2.5 px-3 rounded-xl font-bold text-xs border transition-all flex items-center justify-center gap-2 cursor-pointer focus-visible:ring-2 focus-visible:ring-[#71C9CE]"
+                        [ngClass]="canShortlist(candidate) ? 'bg-[#244653] hover:bg-[#1B353F] text-white border-[#244653] shadow-xs' : 'bg-[#F8FBFA] text-[#4E6770] border-[#D5EDED] cursor-not-allowed opacity-60'">
+                  <svg class="w-4 h-4 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                   {{ candidate.interview ? 'Reschedule' : 'Shortlist & Meet' }}
                 </button>
                 @if (candidate.status !== 'Rejected') {
                 <button (click)="openOfferModal(candidate)" type="button"
                         class="flex-1 py-2.5 px-3 rounded-xl font-bold text-xs border transition-all flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer"
-                        [ngClass]="candidate.offer?.status === 'Draft' ? 'bg-sky-50 hover:bg-sky-100 text-sky-800 border-sky-300' : (candidate.offer?.status === 'Offered' ? 'bg-indigo-50 hover:bg-indigo-100 text-indigo-800 border-indigo-300' : (candidate.offer?.status === 'Accepted' ? 'bg-emerald-100 text-emerald-900 border-emerald-300 font-extrabold' : 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white border-transparent hover:from-emerald-700 hover:to-teal-800'))">
+                        [ngClass]="candidate.offer?.status === 'Draft' ? 'bg-[#E3FDFD] text-[#244653] border-[#A6E3E9]' : (candidate.offer?.status === 'Offered' ? 'bg-[#CBF1F5] text-[#244653] border-[#71C9CE]' : (candidate.offer?.status === 'Accepted' ? 'bg-[#CBF1F5] text-[#244653] font-black border-[#71C9CE]' : 'bg-[#71C9CE] hover:bg-[#54B5BC] text-[#172B32] font-bold border-transparent'))">
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                   <span>{{ candidate.offer?.status === 'Draft' ? 'Edit Draft Offer' : (candidate.offer?.status === 'Offered' ? 'Offer Extended' : (candidate.offer?.status === 'Accepted' ? '✓ Signed' : 'Draft Offer')) }}</span>
                 </button>
                 }
               </div>
               @if (!canShortlist(candidate)) {
-                <div class="flex items-center justify-center gap-1.5 text-[11px] font-medium text-amber-800 bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-200 text-center">
+                <div class="flex items-center justify-center gap-1.5 text-[11px] font-medium text-amber-900 bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-200 text-center">
                   <svg class="w-3.5 h-3.5 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                   <span>Score ({{ candidate.evaluation?.overall_match_score ?? 0 }}%) is below your Company Persona Screening Threshold (&ge;{{ sensitivityThreshold() }}% - {{ sensitivityLabel() }}). Shortlisting is locked.</span>
                 </div>
@@ -417,11 +417,11 @@
   </div>
   } @else {
   <!-- Table View -->
-  <div class="w-full max-w-7xl mx-auto bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+  <div class="w-full max-w-7xl mx-auto bg-white rounded-2xl shadow-xs border border-[#D5EDED] overflow-hidden">
     <div class="overflow-x-auto">
       <table class="w-full text-left border-collapse">
         <thead>
-          <tr class="bg-slate-50 border-b border-slate-200 text-xs font-bold text-slate-500 uppercase tracking-wider">
+          <tr class="bg-[#F8FBFA] border-b border-[#D5EDED] text-xs font-bold text-[#4E6770] uppercase tracking-wider">
             <th class="p-4">Candidate</th>
             <th class="p-4 text-center">Match Score</th>
             <th class="p-4 text-center">Verdict</th>
@@ -429,22 +429,22 @@
             <th class="p-4 text-center">Actions</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-slate-100 text-sm">
+        <tbody class="divide-y divide-[#D5EDED] text-sm">
           @for (candidate of candidates(); track candidate.id) {
-            <tr class="hover:bg-slate-50/80 transition-colors cursor-pointer" (click)="openCandidateDetails(candidate)">
+            <tr class="hover:bg-[#F8FBFA] transition-colors cursor-pointer" (click)="openCandidateDetails(candidate)">
               <td class="p-4">
                 <div class="flex items-center gap-3">
                   @if (candidate.profile_image || candidate.profileImage) {
                     <img [src]="candidate.profile_image || candidate.profileImage" [alt]="candidate.candidateName"
-                         class="w-10 h-10 rounded-full object-cover border border-slate-200 shadow-2xs shrink-0" />
+                         class="w-10 h-10 rounded-full object-cover border border-[#D5EDED] shadow-2xs shrink-0" />
                   } @else {
-                    <div class="w-10 h-10 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 font-bold flex items-center justify-center text-xs shrink-0">
+                    <div class="w-10 h-10 rounded-full bg-[#CBF1F5] border border-[#A6E3E9] text-[#244653] font-bold flex items-center justify-center text-xs shrink-0">
                       {{ getInitials(candidate.candidateName) }}
                     </div>
                   }
                   <div class="min-w-0">
-                    <div class="font-bold text-slate-900 hover:text-indigo-600 transition-colors truncate">{{ candidate.candidateName }}</div>
-                    <div class="text-slate-500 text-xs mt-0.5 truncate">{{ candidate.candidateEmail }}</div>
+                    <div class="font-bold text-[#172B32] hover:text-[#244653] transition-colors truncate">{{ candidate.candidateName }}</div>
+                    <div class="text-[#4E6770] text-xs mt-0.5 truncate">{{ candidate.candidateEmail }}</div>
                     @if (candidate.linkedin_url || candidate.facebook_url || candidate.tiktok_url) {
                       <div class="flex items-center gap-1.5 mt-1.5">
                         @if (candidate.linkedin_url) {
@@ -478,16 +478,16 @@
               </td>
               <td class="p-4 text-center">
                 <div class="flex flex-col items-center gap-1">
-                  <span class="inline-flex items-center justify-center w-10 h-10 rounded-full font-black text-sm bg-slate-50 border border-slate-200" [ngClass]="getScoreColor(candidate.evaluation?.overall_match_score)">
+                  <span class="inline-flex items-center justify-center w-10 h-10 rounded-full font-black text-sm bg-[#F8FBFA] border border-[#D5EDED]" [ngClass]="getScoreColor(candidate.evaluation?.overall_match_score)">
                     {{ candidate.evaluation?.overall_match_score ?? '--' }}<span *ngIf="candidate.evaluation" class="text-xs font-normal">%</span>
                   </span>
                   @if (candidate.evaluation) {
                     @if (canShortlist(candidate)) {
-                      <span class="text-[9px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded-full inline-flex items-center gap-0.5" [title]="'Meets Persona Sensitivity Threshold (&ge;' + sensitivityThreshold() + '%)'">
+                      <span class="text-[9px] font-bold text-[#244653] bg-[#CBF1F5] border border-[#71C9CE] px-1.5 py-0.5 rounded-full inline-flex items-center gap-0.5" [title]="'Meets Persona Sensitivity Threshold (&ge;' + sensitivityThreshold() + '%)'">
                         &ge;{{ sensitivityThreshold() }}%
                       </span>
                     } @else {
-                      <span class="text-[9px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded-full inline-flex items-center gap-0.5" [title]="'Below Persona Sensitivity Threshold (' + sensitivityThreshold() + '%)'">
+                      <span class="text-[9px] font-bold text-amber-800 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded-full inline-flex items-center gap-0.5" [title]="'Below Persona Sensitivity Threshold (' + sensitivityThreshold() + '%)'">
                         &lt;{{ sensitivityThreshold() }}%
                       </span>
                     }
@@ -496,7 +496,7 @@
               </td>
               <td class="p-4 text-center">
                 <div class="flex flex-col items-center gap-1">
-                  <span class="px-2.5 py-1 rounded-full text-xs font-semibold border flex items-center gap-1"
+                  <span class="px-2.5 py-1 rounded-full text-xs font-bold border flex items-center gap-1"
                         [ngClass]="getVerdictBadgeClass(getDisplayVerdict(candidate))">
                     @if (candidate.status === 'Rejected') {
                       <svg class="w-3 h-3 text-rose-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -504,40 +504,40 @@
                     {{ getDisplayVerdict(candidate) }}
                   </span>
                   @if (candidate.status !== 'Rejected' && candidate.interview?.scheduled_at) {
-                    <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md flex items-center gap-1" [title]="'Interview: ' + formatDisplayDate(candidate.interview?.scheduled_at)">
+                    <span class="text-[10px] font-bold text-[#244653] bg-[#CBF1F5] border border-[#71C9CE] px-2 py-0.5 rounded-md flex items-center gap-1" [title]="'Interview: ' + formatDisplayDate(candidate.interview?.scheduled_at)">
                       📅 {{ formatDisplayDate(candidate.interview?.scheduled_at) }}
                     </span>
                   }
                 </div>
               </td>
-              <td class="p-4 max-w-xs truncate text-slate-600 text-xs" title="{{ candidate.evaluation?.concise_rationale || 'Processing AI Analysis...' }}">
+              <td class="p-4 max-w-xs truncate text-[#4E6770] text-xs" title="{{ candidate.evaluation?.concise_rationale || 'Processing AI Analysis...' }}">
                 {{ candidate.evaluation?.concise_rationale || 'Processing AI Analysis...' }}
               </td>
               <td class="p-4 text-center" (click)="$event.stopPropagation()">
                 <div class="flex items-center justify-center gap-2">
-                  <button (click)="openCandidateDetails(candidate)" class="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors border border-indigo-100" title="View Candidate Details">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                  <button (click)="openCandidateDetails(candidate)" class="p-2 text-[#244653] hover:bg-[#E3FDFD] rounded-lg transition-colors border border-[#D5EDED] hover:border-[#71C9CE]" title="View Candidate Details">
+                    <svg class="w-4 h-4 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                   </button>
                   <button (click)="reject(candidate)" 
                           [disabled]="candidate.status === 'Rejected'"
-                          class="p-2 rounded-lg transition-colors border"
-                          [ngClass]="candidate.status === 'Rejected' ? 'text-rose-300 bg-rose-50/50 border-rose-100 cursor-not-allowed' : 'text-rose-500 hover:bg-rose-50 border-rose-100 cursor-pointer'"
+                          class="p-2 rounded-lg transition-colors border cursor-pointer"
+                          [ngClass]="candidate.status === 'Rejected' ? 'text-rose-300 bg-rose-50/50 border-rose-100 cursor-not-allowed' : 'text-rose-600 hover:bg-rose-50 border-rose-200'"
                           [title]="candidate.status === 'Rejected' ? 'Candidate already rejected' : 'Reject Candidate'">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                   </button>
                   <button (click)="shortlist(candidate)" 
                           [disabled]="!canShortlist(candidate)"
-                          class="p-2 rounded-lg transition-colors border"
-                          [ngClass]="canShortlist(candidate) ? 'text-emerald-500 hover:bg-emerald-50 border-emerald-100 cursor-pointer' : 'text-slate-300 border-slate-100 cursor-not-allowed opacity-40'"
+                          class="p-2 rounded-lg transition-colors border cursor-pointer"
+                          [ngClass]="canShortlist(candidate) ? 'text-[#244653] hover:bg-[#CBF1F5] border-[#71C9CE]' : 'text-[#4E6770] border-[#D5EDED] cursor-not-allowed opacity-40'"
                           [title]="!canShortlist(candidate) ? 'Score (' + (candidate.evaluation?.overall_match_score ?? 0) + '%) is below Company Persona Sensitivity Threshold (' + sensitivityThreshold() + '%)' : (candidate.interview ? 'Reschedule Interview' : 'Shortlist & Schedule Interview')">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    <svg class="w-4 h-4 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                   </button>
                   @if (candidate.status !== 'Rejected') {
                   <button (click)="openOfferModal(candidate)" 
-                          class="p-2 rounded-lg transition-colors border"
-                          [ngClass]="candidate.offer?.status === 'Draft' ? 'bg-sky-50 text-sky-700 border-sky-300' : (candidate.offer?.status === 'Offered' ? 'bg-indigo-50 text-indigo-700 border-indigo-300' : (candidate.offer?.status === 'Accepted' ? 'bg-emerald-50 text-emerald-800 border-emerald-300' : 'text-slate-600 hover:bg-slate-100 border-slate-200'))"
+                          class="p-2 rounded-lg transition-colors border cursor-pointer"
+                          [ngClass]="candidate.offer?.status === 'Draft' ? 'bg-[#E3FDFD] text-[#244653] border-[#A6E3E9]' : (candidate.offer?.status === 'Offered' ? 'bg-[#CBF1F5] text-[#244653] border-[#71C9CE]' : (candidate.offer?.status === 'Accepted' ? 'bg-[#CBF1F5] text-[#244653] font-bold border-[#71C9CE]' : 'text-[#172B32] hover:bg-[#E3FDFD] border-[#D5EDED]'))"
                           [title]="candidate.offer?.status === 'Draft' ? 'Offer Drafting (Edit terms)' : (candidate.offer?.status === 'Offered' ? 'Offer Extended (Review/Update)' : (candidate.offer?.status === 'Accepted' ? 'Contract Signed' : 'Draft Contract Offer'))">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    <svg class="w-4 h-4 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                   </button>
                   }
                 </div>
@@ -546,7 +546,7 @@
           }
           @if (candidates().length === 0) {
             <tr>
-              <td colspan="5" class="p-8 text-center text-slate-500">No candidates available for review.</td>
+              <td colspan="5" class="p-8 text-center text-[#4E6770]">No candidates available for review.</td>
             </tr>
           }
         </tbody>
@@ -557,20 +557,20 @@
 
   <!-- Candidate Details Inspection Modal / Slide-over Drawer -->
   @if (selectedTableCandidate(); as candidate) {
-    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs animate-fadeIn">
-      <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden animate-scaleUp">
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#172B32]/60 backdrop-blur-xs animate-fadeIn">
+      <div class="bg-white rounded-2xl shadow-2xl border border-[#D5EDED] w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden animate-scaleUp">
         
         <!-- Modal Header -->
-        <div class="p-6 border-b border-slate-100 bg-slate-50/80 flex justify-between items-start">
+        <div class="p-6 border-b border-[#D5EDED] bg-[#F8FBFA] flex justify-between items-start">
           <div>
-            <span class="text-xs font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md border border-indigo-100">
+            <span class="text-xs font-bold uppercase tracking-wider text-[#244653] bg-[#CBF1F5] px-2.5 py-1 rounded-md border border-[#71C9CE]">
               Candidate Inspection
             </span>
-            <h2 class="text-2xl font-bold text-slate-900 mt-2">{{ candidate.candidateName }}</h2>
+            <h2 class="text-2xl font-bold text-[#172B32] mt-2">{{ candidate.candidateName }}</h2>
             <div class="flex items-center gap-3 mt-1.5 flex-wrap">
-              <p class="text-sm text-slate-500">{{ candidate.candidateEmail }}</p>
+              <p class="text-sm text-[#4E6770]">{{ candidate.candidateEmail }}</p>
               @if (candidate.linkedin_url || candidate.facebook_url || candidate.tiktok_url) {
-                <div class="flex items-center gap-2 pl-3 border-l border-slate-200">
+                <div class="flex items-center gap-2 pl-3 border-l border-[#D5EDED]">
                   @if (candidate.linkedin_url) {
                     <a [href]="candidate.linkedin_url" target="_blank" rel="noopener noreferrer"
                        class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-lg bg-[#0A66C2]/10 text-[#0A66C2] hover:bg-[#0A66C2]/20 border border-[#0A66C2]/20 transition-all shadow-2xs"
@@ -599,7 +599,7 @@
               }
             </div>
           </div>
-          <button (click)="closeCandidateDetails()" class="p-2 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 transition-colors">
+          <button (click)="closeCandidateDetails()" class="p-2 rounded-full text-[#4E6770] hover:text-[#172B32] hover:bg-[#E3FDFD] transition-colors cursor-pointer">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
           </button>
         </div>
@@ -609,44 +609,44 @@
           
           <!-- Interview Schedule Card (If Scheduled) -->
           @if (candidate.status !== 'Rejected' && candidate.interview; as iv) {
-            <div class="p-4 rounded-xl bg-gradient-to-r from-emerald-50 via-teal-50 to-indigo-50 border border-emerald-200 shadow-2xs">
+            <div class="p-4 rounded-xl bg-[#CBF1F5]/40 border border-[#71C9CE] shadow-2xs">
               <div class="flex items-center justify-between mb-3">
                 <div class="flex items-center gap-2">
-                  <span class="p-1.5 bg-emerald-600 text-white rounded-lg text-xs leading-none">📅</span>
-                  <span class="text-xs font-bold uppercase tracking-wider text-emerald-900">Interview Scheduled & Confirmed</span>
+                  <span class="p-1.5 bg-[#244653] text-white rounded-lg text-xs leading-none">📅</span>
+                  <span class="text-xs font-bold uppercase tracking-wider text-[#244653]">Interview Scheduled & Confirmed</span>
                 </div>
-                <button (click)="openScheduleModal(candidate)" class="px-3 py-1 bg-white hover:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-lg text-xs font-semibold transition-colors">
+                <button (click)="openScheduleModal(candidate)" class="px-3 py-1 bg-white hover:bg-[#E3FDFD] text-[#244653] border border-[#71C9CE] rounded-lg text-xs font-bold transition-colors cursor-pointer">
                   Edit / Reschedule
                 </button>
               </div>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <div class="bg-white/90 p-2.5 rounded-lg border border-emerald-100">
-                  <span class="text-slate-500 font-semibold uppercase text-[10px] block">Date & Time</span>
-                  <span class="font-bold text-slate-800">{{ formatDisplayDate(iv.scheduled_at) }}</span>
+                <div class="bg-white/90 p-2.5 rounded-lg border border-[#D5EDED]">
+                  <span class="text-[#4E6770] font-semibold uppercase text-[10px] block">Date & Time</span>
+                  <span class="font-bold text-[#172B32]">{{ formatDisplayDate(iv.scheduled_at) }}</span>
                 </div>
-                <div class="bg-white/90 p-2.5 rounded-lg border border-emerald-100">
-                  <span class="text-slate-500 font-semibold uppercase text-[10px] block">Location</span>
-                  <span class="font-bold text-slate-800 truncate block" [title]="iv.location">{{ iv.location || 'Remote / Online' }}</span>
+                <div class="bg-white/90 p-2.5 rounded-lg border border-[#D5EDED]">
+                  <span class="text-[#4E6770] font-semibold uppercase text-[10px] block">Location</span>
+                  <span class="font-bold text-[#172B32] truncate block" [title]="iv.location">{{ iv.location || 'Remote / Online' }}</span>
                 </div>
               </div>
               @if (iv.custom_message) {
-                <div class="mt-2.5 bg-white/90 p-2.5 rounded-lg border border-emerald-100 text-xs">
-                  <span class="text-slate-500 font-semibold uppercase text-[10px] block">Custom Notes for Candidate</span>
-                  <span class="text-slate-700 italic block mt-0.5">{{ iv.custom_message }}</span>
+                <div class="mt-2.5 bg-white/90 p-2.5 rounded-lg border border-[#D5EDED] text-xs">
+                  <span class="text-[#4E6770] font-semibold uppercase text-[10px] block">Custom Notes for Candidate</span>
+                  <span class="text-[#172B32] italic block mt-0.5">{{ iv.custom_message }}</span>
                 </div>
               }
             </div>
           }
           
           <!-- Overall Match Card -->
-          <div class="flex items-center justify-between p-4 rounded-xl bg-slate-50 border border-slate-200">
+          <div class="flex items-center justify-between p-4 rounded-xl bg-[#F8FBFA] border border-[#D5EDED]">
             <div>
-              <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Overall AI Match Score</p>
+              <p class="text-xs font-bold text-[#4E6770] uppercase tracking-wider">Overall AI Match Score</p>
               <div class="mt-1 flex items-center gap-3">
-                <span class="text-4xl font-black" [ngClass]="getScoreColor(candidate.evaluation?.overall_match_score)">
+                <span class="text-4xl font-black text-[#244653]">
                   {{ candidate.evaluation?.overall_match_score ?? '--' }}<span *ngIf="candidate.evaluation" class="text-xl">%</span>
                 </span>
-                <span class="px-3 py-1 rounded-full text-xs font-semibold border flex items-center gap-1"
+                <span class="px-3 py-1 rounded-full text-xs font-bold border flex items-center gap-1"
                       [ngClass]="getVerdictBadgeClass(getDisplayVerdict(candidate))">
                   @if (candidate.status === 'Rejected') {
                     <svg class="w-3 h-3 text-rose-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -656,8 +656,8 @@
               </div>
             </div>
             @if (candidate.resumeUrl) {
-              <a [href]="candidate.resumeUrl" target="_blank" class="px-4 py-2 rounded-lg bg-white border border-slate-200 text-xs font-semibold text-indigo-600 hover:bg-indigo-50 transition-colors flex items-center gap-1.5 shadow-2xs">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+              <a [href]="candidate.resumeUrl" target="_blank" class="px-4 py-2 rounded-lg bg-white border border-[#D5EDED] text-xs font-bold text-[#244653] hover:bg-[#E3FDFD] hover:border-[#71C9CE] transition-colors flex items-center gap-1.5 shadow-2xs">
+                <svg class="w-4 h-4 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                 View PDF Resume
               </a>
             }
@@ -665,36 +665,36 @@
 
           <!-- Breakdown Progress Bars -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div class="p-4 rounded-xl bg-white border border-slate-200 shadow-2xs space-y-1.5">
+            <div class="p-4 rounded-xl bg-white border border-[#D5EDED] shadow-2xs space-y-1.5">
               <div class="flex justify-between text-xs font-semibold">
-                <span class="text-slate-700">Skills Match</span>
-                <span class="text-slate-900">{{ candidate.evaluation?.skills_score }}%</span>
+                <span class="text-[#172B32]">Skills Match</span>
+                <span class="text-[#244653] font-bold">{{ candidate.evaluation?.skills_score }}%</span>
               </div>
-              <div class="w-full bg-slate-100 rounded-full h-2.5">
+              <div class="w-full bg-[#D5EDED] rounded-full h-2.5">
                 <div class="h-2.5 rounded-full transition-all duration-500" [ngClass]="getScoreBg(candidate.evaluation?.skills_score)" [style.width]="(candidate.evaluation?.skills_score || 0) + '%'"></div>
               </div>
             </div>
 
-            <div class="p-4 rounded-xl bg-white border border-slate-200 shadow-2xs space-y-1.5">
+            <div class="p-4 rounded-xl bg-white border border-[#D5EDED] shadow-2xs space-y-1.5">
               <div class="flex justify-between text-xs font-semibold">
-                <span class="text-slate-700">Experience Match</span>
-                <span class="text-slate-900">{{ candidate.evaluation?.experience_score }}%</span>
+                <span class="text-[#172B32]">Experience Match</span>
+                <span class="text-[#244653] font-bold">{{ candidate.evaluation?.experience_score }}%</span>
               </div>
-              <div class="w-full bg-slate-100 rounded-full h-2.5">
+              <div class="w-full bg-[#D5EDED] rounded-full h-2.5">
                 <div class="h-2.5 rounded-full transition-all duration-500" [ngClass]="getScoreBg(candidate.evaluation?.experience_score)" [style.width]="(candidate.evaluation?.experience_score || 0) + '%'"></div>
               </div>
             </div>
           </div>
 
           <!-- Strengths -->
-          <div class="bg-emerald-50/70 rounded-xl p-4 border border-emerald-100">
-            <h4 class="text-xs font-bold text-emerald-800 uppercase tracking-wider mb-2 flex items-center">
-              <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+          <div class="bg-[#CBF1F5]/30 rounded-xl p-4 border border-[#A6E3E9]">
+            <h4 class="text-xs font-bold text-[#244653] uppercase tracking-wider mb-2 flex items-center">
+              <svg class="w-4 h-4 mr-1.5 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
               Key Strengths & Competencies
             </h4>
             <div class="flex flex-wrap gap-2">
               @for (strength of candidate.evaluation?.key_strengths; track strength) {
-                <span class="bg-white text-emerald-700 text-xs px-3 py-1.5 rounded-md border border-emerald-200 font-medium shadow-2xs">{{ strength }}</span>
+                <span class="bg-white text-[#244653] text-xs px-3 py-1.5 rounded-md border border-[#71C9CE] font-medium shadow-2xs">{{ strength }}</span>
               }
             </div>
           </div>
@@ -710,34 +710,34 @@
                 <span class="bg-white text-rose-700 text-xs px-3 py-1.5 rounded-md border border-rose-200 font-medium shadow-2xs">{{ gap }}</span>
               }
               @if (getCandidateGaps(candidate).length === 0) {
-                <span class="text-slate-400 text-xs italic">No critical gaps or red flags identified.</span>
+                <span class="text-[#4E6770] text-xs italic">No critical gaps or red flags identified.</span>
               }
             </div>
           </div>
 
           <!-- Rationale -->
           <div>
-            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Executive AI Rationale</h4>
-            <blockquote class="border-l-4 border-indigo-500 pl-4 py-2 text-slate-700 italic text-sm leading-relaxed bg-slate-50/50 rounded-r-xl">
+            <h4 class="text-xs font-bold text-[#4E6770] uppercase tracking-wider mb-2">Executive AI Rationale</h4>
+            <blockquote class="border-l-4 border-[#71C9CE] pl-4 py-2 text-[#172B32] italic text-sm leading-relaxed bg-[#F8FBFA] rounded-r-xl">
               "{{ candidate.evaluation?.concise_rationale }}"
             </blockquote>
           </div>
 
           <!-- O*NET Behavioral Assessment Block -->
           @if (candidate.behavioral_evaluation; as beh) {
-            <div class="bg-indigo-50/70 border border-indigo-200 rounded-xl p-5 space-y-4">
-              <div class="flex items-center justify-between border-b border-indigo-100 pb-3">
+            <div class="bg-[#E3FDFD]/50 border border-[#A6E3E9] rounded-xl p-5 space-y-4">
+              <div class="flex items-center justify-between border-b border-[#A6E3E9] pb-3">
                 <div>
-                  <span class="text-xs font-bold uppercase tracking-wider text-indigo-700 bg-white px-2.5 py-1 rounded-md border border-indigo-200 shadow-2xs">
+                  <span class="text-xs font-bold uppercase tracking-wider text-[#244653] bg-white px-2.5 py-1 rounded-md border border-[#71C9CE] shadow-2xs">
                     O*NET Behavioral Assessment
                   </span>
-                  <h3 class="text-base font-bold text-slate-900 mt-2">
+                  <h3 class="text-base font-bold text-[#172B32] mt-2">
                     Archetype: {{ beh.behavioral_archetype }}
                   </h3>
                 </div>
                 <div class="text-right">
-                  <div class="text-3xl font-black text-indigo-700">{{ beh.score_percentage }}%</div>
-                  <span class="px-3 py-0.5 rounded-full text-xs font-semibold border inline-block mt-1" [ngClass]="getBehavioralVerdictBadgeClass(beh.verdict)">
+                  <div class="text-3xl font-black text-[#244653]">{{ beh.score_percentage }}%</div>
+                  <span class="px-3 py-0.5 rounded-full text-xs font-bold border inline-block mt-1" [ngClass]="getBehavioralVerdictBadgeClass(beh.verdict)">
                     {{ beh.verdict }}
                   </span>
                 </div>
@@ -760,12 +760,12 @@
 
               <!-- Recommended Client Interview Probes -->
               @if (beh.client_interview_probes && beh.client_interview_probes.length > 0) {
-                <div class="bg-white border border-indigo-100 rounded-lg p-3.5">
-                  <h4 class="text-xs font-bold text-indigo-900 uppercase tracking-wider mb-1.5 flex items-center">
-                    <svg class="w-4 h-4 mr-1 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <div class="bg-white border border-[#D5EDED] rounded-lg p-3.5">
+                  <h4 class="text-xs font-bold text-[#244653] uppercase tracking-wider mb-1.5 flex items-center">
+                    <svg class="w-4 h-4 mr-1 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     Recommended Client Interview Probes
                   </h4>
-                  <ul class="list-disc list-inside text-xs text-slate-700 space-y-1">
+                  <ul class="list-disc list-inside text-xs text-[#172B32] space-y-1">
                     @for (probe of beh.client_interview_probes; track probe) {
                       <li class="leading-relaxed font-medium">{{ probe }}</li>
                     }
@@ -775,18 +775,18 @@
 
               <!-- Candidate Answers & SJT Questions Breakdown -->
               @if (jobDetails()?.assessment; as sjt) {
-                <div class="pt-3 border-t border-indigo-200 space-y-3">
-                  <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-                    <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <div class="pt-3 border-t border-[#A6E3E9] space-y-3">
+                  <h4 class="text-xs font-bold text-[#172B32] uppercase tracking-wider flex items-center gap-1.5">
+                    <svg class="w-4 h-4 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     Full SJT Assessment Questions & Candidate Selections ({{ sjt.questions.length }} Questions)
                   </h4>
 
                   <div class="space-y-3 max-h-72 overflow-y-auto pr-1">
                     @for (q of sjt.questions; track q.id; let idx = $index) {
-                      <div class="bg-white p-3 rounded-xl border border-slate-200 text-xs space-y-2">
+                      <div class="bg-white p-3 rounded-xl border border-[#D5EDED] text-xs space-y-2">
                         <div class="flex items-start gap-2">
-                          <span class="bg-indigo-600 text-white font-bold px-2 py-0.5 rounded text-[11px] shrink-0">Q{{ idx + 1 }}</span>
-                          <p class="font-semibold text-slate-900 leading-snug">
+                          <span class="bg-[#244653] text-white font-bold px-2 py-0.5 rounded text-[11px] shrink-0">Q{{ idx + 1 }}</span>
+                          <p class="font-semibold text-[#172B32] leading-snug">
                             {{ q.scenario }}
                           </p>
                         </div>
@@ -795,12 +795,12 @@
                           @for (opt of q.options; track opt.key) {
                             <div class="p-2 rounded-lg border font-medium transition-all"
                                  [ngClass]="{
-                                   'bg-indigo-50 border-indigo-400 text-indigo-900 font-bold shadow-2xs': selKey === opt.key,
-                                   'bg-slate-50 border-slate-200 text-slate-700': selKey !== opt.key
+                                   'bg-[#CBF1F5] border-[#71C9CE] text-[#244653] font-bold shadow-2xs': selKey === opt.key,
+                                   'bg-[#F8FBFA] border-[#D5EDED] text-[#4E6770]': selKey !== opt.key
                                  }">
-                              <span [ngClass]="selKey === opt.key ? 'text-indigo-700 font-extrabold' : 'text-slate-600'">{{ opt.key }}.</span> {{ opt.text }}
+                              <span [ngClass]="selKey === opt.key ? 'text-[#244653] font-extrabold' : 'text-[#4E6770]'">{{ opt.key }}.</span> {{ opt.text }}
                               @if (selKey === opt.key) {
-                                <span class="ml-1.5 text-xs text-indigo-700 font-extrabold">✓ Candidate Answer</span>
+                                <span class="ml-1.5 text-xs text-[#244653] font-extrabold">✓ Candidate Answer</span>
                               }
                             </div>
                           }
@@ -815,7 +815,7 @@
         </div>
 
         <!-- Modal Footer Actions -->
-        <div class="p-4 border-t border-slate-100 bg-slate-50 flex flex-col gap-2.5">
+        <div class="p-4 border-t border-[#D5EDED] bg-[#F8FBFA] flex flex-col gap-2.5">
           @if (candidate.status === 'Rejected') {
             <div class="flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold text-center">
               <svg class="w-4 h-4 text-rose-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -825,8 +825,8 @@
           <div class="flex justify-between items-center gap-3">
             <button (click)="reject(candidate)" 
                     [disabled]="candidate.status === 'Rejected'"
-                    class="px-4 py-2.5 rounded-xl font-semibold text-xs border transition-colors flex items-center gap-2"
-                    [ngClass]="candidate.status === 'Rejected' ? 'bg-rose-100/60 text-rose-400 border-rose-200 cursor-not-allowed' : 'bg-rose-50 hover:bg-rose-100 text-rose-700 border-rose-200 cursor-pointer'">
+                    class="px-4 py-2.5 rounded-xl font-semibold text-xs border transition-colors flex items-center gap-2 cursor-pointer"
+                    [ngClass]="candidate.status === 'Rejected' ? 'bg-rose-100/60 text-rose-400 border-rose-200 cursor-not-allowed' : 'bg-rose-50 hover:bg-rose-100 text-rose-700 border-rose-200'">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
               {{ candidate.status === 'Rejected' ? 'Candidate Rejected' : 'Reject Candidate' }}
             </button>
@@ -834,15 +834,15 @@
               <button (click)="shortlist(candidate)" 
                       [disabled]="!canShortlist(candidate)"
                       [title]="!canShortlist(candidate) ? 'Candidate score (' + (candidate.evaluation?.overall_match_score ?? 0) + '%) is below the Company Persona Screening Sensitivity Threshold (' + sensitivityThreshold() + '%)' : 'Shortlist & Schedule Interview'"
-                      class="px-4 py-2.5 rounded-xl font-semibold text-xs border transition-colors flex items-center gap-2"
-                      [ngClass]="canShortlist(candidate) ? 'bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border-emerald-200 cursor-pointer' : 'bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed opacity-60'">
-                <svg class="w-4 h-4" [ngClass]="canShortlist(candidate) ? 'text-emerald-600' : 'text-slate-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                      class="px-4 py-2.5 rounded-xl font-bold text-xs border transition-colors flex items-center gap-2 cursor-pointer focus-visible:ring-2 focus-visible:ring-[#71C9CE]"
+                      [ngClass]="canShortlist(candidate) ? 'bg-[#244653] hover:bg-[#1B353F] text-white border-[#244653]' : 'bg-[#F8FBFA] text-[#4E6770] border-[#D5EDED] cursor-not-allowed opacity-60'">
+                <svg class="w-4 h-4 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                 {{ candidate.interview ? 'Reschedule Interview' : 'Shortlist & Schedule' }}
               </button>
               @if (candidate.status !== 'Rejected') {
               <button (click)="openOfferModal(candidate)" type="button"
                       class="px-4 py-2.5 rounded-xl font-bold text-xs border transition-all flex items-center gap-1.5 shadow-2xs cursor-pointer"
-                      [ngClass]="candidate.offer?.status === 'Draft' ? 'bg-sky-50 hover:bg-sky-100 text-sky-800 border-sky-300' : (candidate.offer?.status === 'Offered' ? 'bg-indigo-50 hover:bg-indigo-100 text-indigo-800 border-indigo-300' : (candidate.offer?.status === 'Accepted' ? 'bg-emerald-100 text-emerald-900 border-emerald-300 font-extrabold' : 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white border-transparent hover:from-emerald-700 hover:to-teal-800'))">
+                      [ngClass]="candidate.offer?.status === 'Draft' ? 'bg-[#E3FDFD] text-[#244653] border-[#A6E3E9]' : (candidate.offer?.status === 'Offered' ? 'bg-[#CBF1F5] text-[#244653] border-[#71C9CE]' : (candidate.offer?.status === 'Accepted' ? 'bg-[#CBF1F5] text-[#244653] font-bold border-[#71C9CE]' : 'bg-[#71C9CE] hover:bg-[#54B5BC] text-[#172B32] font-bold border-transparent'))">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                 <span>{{ candidate.offer?.status === 'Draft' ? 'Edit Draft Offer' : (candidate.offer?.status === 'Offered' ? 'Offer Extended' : (candidate.offer?.status === 'Accepted' ? '✓ Contract Signed' : 'Draft Contract Offer')) }}</span>
               </button>
@@ -850,7 +850,7 @@
             </div>
           </div>
           @if (!canShortlist(candidate)) {
-            <div class="flex items-center justify-center gap-1.5 text-[11px] font-medium text-amber-800 bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-200 text-center">
+            <div class="flex items-center justify-center gap-1.5 text-[11px] font-medium text-amber-900 bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-200 text-center">
               <svg class="w-3.5 h-3.5 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
               <span>Shortlisting locked: Candidate score ({{ candidate.evaluation?.overall_match_score ?? 0 }}%) is below your Company Persona Screening Threshold (&ge;{{ sensitivityThreshold() }}% - {{ sensitivityLabel() }}).</span>
             </div>
@@ -864,28 +864,28 @@
   <!-- Interview Scheduling Modal Popup -->
   @if (isScheduleModalOpen()) {
     @if (schedulingCandidate(); as candidate) {
-      <div class="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn"
+      <div class="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-[#172B32]/60 backdrop-blur-sm animate-fadeIn"
            (click)="closeScheduleModal()">
-        <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-xl overflow-hidden animate-scaleUp flex flex-col max-h-[92vh]"
+        <div class="bg-white rounded-2xl shadow-2xl border border-[#D5EDED] w-full max-w-xl overflow-hidden animate-scaleUp flex flex-col max-h-[92vh]"
              (click)="$event.stopPropagation()">
              
           <!-- Modal Header with Brand Gradient Accent -->
-          <div class="p-5 border-b border-slate-100 bg-gradient-to-r from-indigo-50/80 via-white to-purple-50/80 flex justify-between items-start">
+          <div class="p-5 border-b border-[#D5EDED] bg-[#F8FBFA] flex justify-between items-start">
             <div class="flex items-start gap-3">
-              <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow-md shadow-indigo-200 shrink-0">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div class="w-10 h-10 rounded-xl bg-[#244653] text-white flex items-center justify-center shadow-xs shrink-0">
+                <svg class="w-5 h-5 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                 </svg>
               </div>
               <div>
-                <h2 class="text-xl font-bold text-slate-900">Schedule Interview & Shortlist</h2>
-                <p class="text-xs text-slate-500 mt-0.5">
-                  Candidate: <strong class="text-slate-800">{{ candidate.candidateName }}</strong> &bull; 
-                  <span class="text-indigo-600 font-semibold">{{ jobDetails()?.title || 'Job Position' }}</span>
+                <h2 class="text-xl font-bold text-[#172B32]">Schedule Interview & Shortlist</h2>
+                <p class="text-xs text-[#4E6770] mt-0.5">
+                  Candidate: <strong class="text-[#172B32]">{{ candidate.candidateName }}</strong> &bull; 
+                  <span class="text-[#244653] font-bold">{{ jobDetails()?.title || 'Job Position' }}</span>
                 </p>
               </div>
             </div>
-            <button (click)="closeScheduleModal()" class="p-2 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors">
+            <button (click)="closeScheduleModal()" class="p-2 rounded-full text-[#4E6770] hover:text-[#172B32] hover:bg-[#E3FDFD] transition-colors cursor-pointer">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
               </svg>
@@ -893,29 +893,29 @@
           </div>
 
           <!-- Notification Notice Banner -->
-          <div class="px-5 py-2.5 bg-indigo-50/70 border-b border-indigo-100 flex items-center gap-2.5 text-xs text-indigo-900">
-            <svg class="w-4 h-4 text-indigo-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="px-5 py-2.5 bg-[#E3FDFD] border-b border-[#A6E3E9] flex items-center gap-2.5 text-xs text-[#244653]">
+            <svg class="w-4 h-4 text-[#71C9CE] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
             </svg>
             <span>
-              An invitation email will be delivered to <strong class="underline decoration-indigo-300">{{ candidate.candidateEmail }}</strong>
+              An invitation email will be delivered to <strong class="underline decoration-[#71C9CE]">{{ candidate.candidateEmail }}</strong>
             </span>
           </div>
 
           <!-- Threshold Alignment Banner in Modal -->
           <div class="px-5 py-2 border-b text-xs flex items-center justify-between"
-               [ngClass]="canShortlist(candidate) ? 'bg-emerald-50/60 border-emerald-100 text-emerald-900' : 'bg-rose-50 border-rose-200 text-rose-800'">
+               [ngClass]="canShortlist(candidate) ? 'bg-[#CBF1F5]/40 border-[#A6E3E9] text-[#244653]' : 'bg-rose-50 border-rose-200 text-rose-800'">
             <div class="flex items-center gap-2">
-              <span class="font-medium text-slate-600">Candidate Score:</span>
-              <strong class="font-black">{{ candidate.evaluation?.overall_match_score ?? 0 }}%</strong>
-              <span class="text-slate-300">&bull;</span>
-              <span class="font-medium text-slate-600">Screening Threshold:</span>
-              <strong class="font-bold">&ge;{{ sensitivityThreshold() }}%</strong>
-              <span class="text-[10px] text-slate-500">({{ sensitivityLabel() }})</span>
+              <span class="font-medium text-[#4E6770]">Candidate Score:</span>
+              <strong class="font-black text-[#172B32]">{{ candidate.evaluation?.overall_match_score ?? 0 }}%</strong>
+              <span class="text-[#D5EDED]">&bull;</span>
+              <span class="font-medium text-[#4E6770]">Screening Threshold:</span>
+              <strong class="font-bold text-[#172B32]">&ge;{{ sensitivityThreshold() }}%</strong>
+              <span class="text-[10px] text-[#4E6770]">({{ sensitivityLabel() }})</span>
             </div>
             @if (canShortlist(candidate)) {
-              <span class="text-emerald-700 font-bold flex items-center gap-1 text-[11px]">
-                <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+              <span class="text-[#244653] font-bold flex items-center gap-1 text-[11px]">
+                <svg class="w-3.5 h-3.5 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                 Meets Threshold
               </span>
             } @else {
@@ -931,8 +931,8 @@
             
             <!-- Success Message Banner -->
             @if (scheduleSuccessMessage()) {
-              <div class="p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-2.5 text-xs font-semibold text-emerald-800">
-                <svg class="w-5 h-5 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div class="p-3.5 bg-[#CBF1F5]/60 border border-[#71C9CE] rounded-xl flex items-center gap-2.5 text-xs font-semibold text-[#244653]">
+                <svg class="w-5 h-5 text-[#244653] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
                 <span>{{ scheduleSuccessMessage() }}</span>
@@ -953,8 +953,8 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <!-- Date Field -->
               <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-                  <svg class="w-3.5 h-3.5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <label class="block text-xs font-bold text-[#172B32] uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                  <svg class="w-3.5 h-3.5 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                   </svg>
                   Interview Date <span class="text-rose-500">*</span>
@@ -964,18 +964,18 @@
                   [min]="minDate()"
                   [ngModel]="interviewDate()"
                   (ngModelChange)="interviewDate.set($event)"
-                  class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all shadow-2xs"
+                  class="w-full px-3.5 py-2.5 bg-[#F8FBFA] border border-[#D5EDED] rounded-xl text-sm font-medium text-[#172B32] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#71C9CE] focus:border-transparent transition-all shadow-2xs"
                   required
                 />
                 <!-- Quick Date Chips -->
                 <div class="flex flex-wrap gap-1.5 mt-2">
-                  <button type="button" (click)="setQuickDate(1)" class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-600 transition-colors">
+                  <button type="button" (click)="setQuickDate(1)" class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#F8FBFA] hover:bg-[#CBF1F5] hover:text-[#244653] text-[#4E6770] border border-[#D5EDED] transition-colors cursor-pointer">
                     Tomorrow
                   </button>
-                  <button type="button" (click)="setQuickDate(2)" class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-600 transition-colors">
+                  <button type="button" (click)="setQuickDate(2)" class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#F8FBFA] hover:bg-[#CBF1F5] hover:text-[#244653] text-[#4E6770] border border-[#D5EDED] transition-colors cursor-pointer">
                     In 2 Days
                   </button>
-                  <button type="button" (click)="setQuickDate(7)" class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-600 transition-colors">
+                  <button type="button" (click)="setQuickDate(7)" class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#F8FBFA] hover:bg-[#CBF1F5] hover:text-[#244653] text-[#4E6770] border border-[#D5EDED] transition-colors cursor-pointer">
                     Next Week
                   </button>
                 </div>
@@ -983,8 +983,8 @@
 
               <!-- Time Field -->
               <div>
-                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-                  <svg class="w-3.5 h-3.5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <label class="block text-xs font-bold text-[#172B32] uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                  <svg class="w-3.5 h-3.5 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                   </svg>
                   Interview Time <span class="text-rose-500">*</span>
@@ -993,21 +993,21 @@
                   type="time"
                   [ngModel]="interviewTime()"
                   (ngModelChange)="interviewTime.set($event)"
-                  class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all shadow-2xs"
+                  class="w-full px-3.5 py-2.5 bg-[#F8FBFA] border border-[#D5EDED] rounded-xl text-sm font-medium text-[#172B32] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#71C9CE] focus:border-transparent transition-all shadow-2xs"
                   required
                 />
                 <!-- Quick Time Chips -->
                 <div class="flex flex-wrap gap-1.5 mt-2">
-                  <button type="button" (click)="setQuickTime('09:30')" class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-600 transition-colors">
+                  <button type="button" (click)="setQuickTime('09:30')" class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#F8FBFA] hover:bg-[#CBF1F5] hover:text-[#244653] text-[#4E6770] border border-[#D5EDED] transition-colors cursor-pointer">
                     09:30 AM
                   </button>
-                  <button type="button" (click)="setQuickTime('11:00')" class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-600 transition-colors">
+                  <button type="button" (click)="setQuickTime('11:00')" class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#F8FBFA] hover:bg-[#CBF1F5] hover:text-[#244653] text-[#4E6770] border border-[#D5EDED] transition-colors cursor-pointer">
                     11:00 AM
                   </button>
-                  <button type="button" (click)="setQuickTime('14:00')" class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-600 transition-colors">
+                  <button type="button" (click)="setQuickTime('14:00')" class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#F8FBFA] hover:bg-[#CBF1F5] hover:text-[#244653] text-[#4E6770] border border-[#D5EDED] transition-colors cursor-pointer">
                     02:00 PM
                   </button>
-                  <button type="button" (click)="setQuickTime('16:00')" class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-600 transition-colors">
+                  <button type="button" (click)="setQuickTime('16:00')" class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#F8FBFA] hover:bg-[#CBF1F5] hover:text-[#244653] text-[#4E6770] border border-[#D5EDED] transition-colors cursor-pointer">
                     04:00 PM
                   </button>
                 </div>
@@ -1016,9 +1016,9 @@
 
             <!-- Location Input Box -->
             <div>
-              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center justify-between">
+              <label class="block text-xs font-bold text-[#172B32] uppercase tracking-wider mb-1.5 flex items-center justify-between">
                 <span class="flex items-center gap-1.5">
-                  <svg class="w-3.5 h-3.5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-3.5 h-3.5 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                   </svg>
@@ -1031,29 +1031,29 @@
                   [ngModel]="interviewLocation()"
                   (ngModelChange)="interviewLocation.set($event)"
                   placeholder="e.g. Google Maps link, office address, or meeting link (Google Meet / Zoom)"
-                  class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all shadow-2xs"
+                  class="w-full px-3.5 py-2.5 bg-[#F8FBFA] border border-[#D5EDED] rounded-xl text-sm font-medium text-[#172B32] placeholder-[#4E6770]/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#71C9CE] focus:border-transparent transition-all shadow-2xs"
                   required
                 />
               </div>
               <!-- Quick Location Presets -->
               <div class="flex flex-wrap gap-1.5 mt-2">
-                <button type="button" (click)="setQuickLocation('Google Meet: https://meet.google.com/new')" class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-600 transition-colors">
+                <button type="button" (click)="setQuickLocation('Google Meet: https://meet.google.com/new')" class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#F8FBFA] hover:bg-[#CBF1F5] hover:text-[#244653] text-[#4E6770] border border-[#D5EDED] transition-colors cursor-pointer">
                   + Google Meet
                 </button>
-                <button type="button" (click)="setQuickLocation('Microsoft Teams Meeting')" class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-600 transition-colors">
+                <button type="button" (click)="setQuickLocation('Microsoft Teams Meeting')" class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#F8FBFA] hover:bg-[#CBF1F5] hover:text-[#244653] text-[#4E6770] border border-[#D5EDED] transition-colors cursor-pointer">
                   + MS Teams
                 </button>
-                <button type="button" (click)="setQuickLocation('Main HQ Office, Floor 3, Conference Room A')" class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-600 transition-colors">
+                <button type="button" (click)="setQuickLocation('Main HQ Office, Floor 3, Conference Room A')" class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#F8FBFA] hover:bg-[#CBF1F5] hover:text-[#244653] text-[#4E6770] border border-[#D5EDED] transition-colors cursor-pointer">
                   + In-Person Office
                 </button>
               </div>
-              <p class="text-[11px] text-slate-400 mt-1">If a URL or map link is provided, candidates can open it with a single tap in their invitation email.</p>
+              <p class="text-[11px] text-[#4E6770] mt-1">If a URL or map link is provided, candidates can open it with a single tap in their invitation email.</p>
             </div>
 
             <!-- Custom Information / Recruiter Message Text Area -->
             <div>
-              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-                <svg class="w-3.5 h-3.5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <label class="block text-xs font-bold text-[#172B32] uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path>
                 </svg>
                 Custom Information / Recruiter Instructions
@@ -1063,32 +1063,32 @@
                 [ngModel]="interviewCustomMessage()"
                 (ngModelChange)="interviewCustomMessage.set($event)"
                 placeholder="e.g., Please bring your laptop for a 15-minute live pairing session. We will cover technical design and team fit..."
-                class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all shadow-2xs resize-none"
+                class="w-full px-3.5 py-2.5 bg-[#F8FBFA] border border-[#D5EDED] rounded-xl text-sm font-medium text-[#172B32] placeholder-[#4E6770]/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#71C9CE] focus:border-transparent transition-all shadow-2xs resize-none"
               ></textarea>
-              <p class="text-[11px] text-slate-400 mt-1">This note is prominently highlighted inside the candidate's invitation email.</p>
+              <p class="text-[11px] text-[#4E6770] mt-1">This note is prominently highlighted inside the candidate's invitation email.</p>
             </div>
 
           </div>
 
           <!-- Modal Footer Actions -->
-          <div class="p-4 border-t border-slate-100 bg-slate-50 flex justify-end items-center gap-3">
+          <div class="p-4 border-t border-[#D5EDED] bg-[#F8FBFA] flex justify-end items-center gap-3">
             <button 
               type="button" 
               (click)="closeScheduleModal()"
               [disabled]="isScheduling()"
-              class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100 font-semibold text-xs transition-colors disabled:opacity-50">
+              class="px-4 py-2.5 rounded-xl border border-[#D5EDED] text-[#4E6770] hover:text-[#172B32] hover:bg-white font-semibold text-xs transition-colors disabled:opacity-50 cursor-pointer">
               Cancel
             </button>
             <button 
               type="button" 
               (click)="confirmScheduleAndShortlist()"
               [disabled]="isScheduling() || !canShortlist(candidate)"
-              class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs transition-colors flex items-center gap-2 shadow-sm shadow-indigo-200 disabled:opacity-50 disabled:cursor-not-allowed">
+              class="px-5 py-2.5 rounded-xl bg-[#244653] hover:bg-[#1B353F] text-white font-semibold text-xs transition-colors flex items-center gap-2 shadow-xs disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer focus-visible:ring-2 focus-visible:ring-[#71C9CE]">
               @if (isScheduling()) {
                 <div class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                 <span>Scheduling & Emailing...</span>
               } @else {
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-4 h-4 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                 </svg>
                 <span>Schedule Interview & Shortlist</span>
@@ -1118,4 +1118,3 @@
   }
 
 </div>
-

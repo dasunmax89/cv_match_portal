@@ -1,51 +1,51 @@
-<div class="max-w-4xl mx-auto p-6">
-  <div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-900">Create New Job</h1>
-    <p class="text-gray-500 mt-2">Upload a job description PDF and let our AI extract the core requirements.</p>
+<div class="max-w-4xl mx-auto p-6 space-y-6">
+  <div class="mb-4">
+    <h1 class="text-3xl font-extrabold text-[#172B32] tracking-tight">Create New Job</h1>
+    <p class="text-[#4E6770] mt-1.5 text-sm">Upload a job description PDF and let our AI extract the core requirements and generate candidate evaluation criteria.</p>
   </div>
 
   @if (!parsedCriteria()) {
     @if (errorMessage()) {
-      <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 flex items-start space-x-3">
-        <svg class="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div class="p-4 bg-rose-50 border border-rose-200 rounded-xl text-rose-700 flex items-start space-x-3 text-sm font-medium">
+        <svg class="w-5 h-5 text-rose-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        <div class="flex-1 text-sm font-medium">{{ errorMessage() }}</div>
+        <div class="flex-1">{{ errorMessage() }}</div>
       </div>
     }
 
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+    <div class="bg-white rounded-2xl shadow-xs border border-[#D5EDED] p-8">
       <form [formGroup]="jdForm" class="space-y-6">
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">
-            Job Title <span class="text-xs text-gray-400 font-normal">(Optional — AI auto-extracts from PDF if left blank)</span>
+          <label class="block text-xs font-bold text-[#172B32] uppercase tracking-wider mb-1.5">
+            Job Title <span class="text-xs text-[#4E6770] font-normal lowercase">(optional — AI auto-extracts from PDF if left blank)</span>
           </label>
           <input type="text" formControlName="title" placeholder="e.g. Senior Frontend Engineer (or leave blank to auto-detect)" 
-                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-shadow">
+                 class="w-full px-4 py-2.5 border border-[#D5EDED] rounded-xl focus:ring-2 focus:ring-[#71C9CE]/20 focus:border-[#71C9CE] outline-none transition-all text-sm text-[#172B32] placeholder-[#4E6770]/60">
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Job Description (PDF)</label>
-          <div class="border-2 border-dashed rounded-xl p-10 text-center transition-colors cursor-pointer"
-               [ngClass]="{'border-indigo-500 bg-indigo-50': isDragging(), 'border-gray-300 hover:border-gray-400 bg-gray-50': !isDragging()}"
+          <label class="block text-xs font-bold text-[#172B32] uppercase tracking-wider mb-1.5">Job Description (PDF)</label>
+          <div class="border-2 border-dashed rounded-2xl p-10 text-center transition-colors cursor-pointer"
+               [ngClass]="{'border-[#71C9CE] bg-[#E3FDFD]/60': isDragging(), 'border-[#D5EDED] hover:border-[#71C9CE] bg-[#F8FBFA]': !isDragging()}"
                (dragover)="onDragOver($event)" 
                (dragleave)="onDragLeave($event)" 
                (drop)="onDrop($event)"
                (click)="fileInput.click()">
             <input type="file" #fileInput class="hidden" accept="application/pdf" (change)="onFileSelected($event)">
-            <svg class="mx-auto h-12 w-12 text-gray-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg class="mx-auto h-12 w-12 text-[#71C9CE] mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
             </svg>
-            <p class="text-gray-600 font-medium">
-              {{ selectedFile() ? selectedFile()?.name : 'Click to upload or drag and drop' }}
+            <p class="text-[#172B32] font-semibold text-sm">
+              {{ selectedFile() ? selectedFile()?.name : 'Click to upload or drag and drop job requisition PDF' }}
             </p>
-            <p class="text-sm text-gray-400 mt-1">PDF up to 10MB</p>
+            <p class="text-xs text-[#4E6770] mt-1">PDF format up to 10MB</p>
           </div>
         </div>
 
         <div class="flex justify-end pt-4">
           <button type="button" (click)="upload()" [disabled]="isUploading()"
-                  class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center shadow-md shadow-indigo-500/20 cursor-pointer">
+                  class="bg-[#244653] hover:bg-[#1A343E] text-white px-6 py-2.5 rounded-xl font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center shadow-xs cursor-pointer text-sm">
             @if (isUploading()) {
               <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -62,35 +62,36 @@
     </div>
   } @else {
     <!-- Review Card -->
-    <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
-      <div class="bg-gradient-to-r from-indigo-500 to-indigo-600 px-6 py-4">
-        <h2 class="text-xl font-bold text-white flex items-center">
-          <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-          Extracted Requirements
+    <div class="bg-white rounded-2xl shadow-xs border border-[#D5EDED] overflow-hidden">
+      <div class="bg-[#244653] px-6 py-4 flex items-center justify-between">
+        <h2 class="text-lg font-bold text-white flex items-center gap-2">
+          <svg class="w-5 h-5 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          Extracted Requirements & Profile
         </h2>
+        <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#CBF1F5] text-[#244653]">AI Parsed</span>
       </div>
       
       <div class="p-6 space-y-6">
         <div class="grid grid-cols-2 gap-6">
           <div>
-            <p class="text-sm text-gray-500 uppercase font-semibold tracking-wider">Job Title</p>
-            <p class="text-lg font-medium text-gray-900 mt-1">{{ parsedCriteria()?.title }}</p>
+            <p class="text-xs text-[#4E6770] uppercase font-bold tracking-wider">Job Title</p>
+            <p class="text-lg font-bold text-[#172B32] mt-1">{{ parsedCriteria()?.title }}</p>
           </div>
           <div>
-            <p class="text-sm text-gray-500 uppercase font-semibold tracking-wider">Experience</p>
-            <p class="text-lg font-medium text-gray-900 mt-1">
+            <p class="text-xs text-[#4E6770] uppercase font-bold tracking-wider">Experience</p>
+            <p class="text-lg font-bold text-[#172B32] mt-1">
               {{ parsedCriteria()?.seniority_level }} • {{ parsedCriteria()?.minimum_years_experience }}+ Years
             </p>
           </div>
         </div>
 
-        <hr class="border-gray-100">
+        <hr class="border-[#D5EDED]">
 
         <div>
-          <p class="text-sm text-gray-500 uppercase font-semibold tracking-wider mb-3">Required Skills</p>
+          <p class="text-xs text-[#4E6770] uppercase font-bold tracking-wider mb-3">Required Skills</p>
           <div class="flex flex-wrap gap-2">
             @for (skill of parsedCriteria()?.required_skills; track skill) {
-              <span class="bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full text-sm font-medium border border-indigo-100">
+              <span class="bg-[#E3FDFD] text-[#244653] px-3 py-1 rounded-xl text-xs font-semibold border border-[#A6E3E9]">
                 {{ skill }}
               </span>
             }
@@ -99,10 +100,10 @@
 
         @if (parsedCriteria()?.nice_to_have_skills?.length) {
           <div>
-            <p class="text-sm text-gray-500 uppercase font-semibold tracking-wider mb-3">Nice to Have</p>
+            <p class="text-xs text-[#4E6770] uppercase font-bold tracking-wider mb-3">Nice to Have</p>
             <div class="flex flex-wrap gap-2">
               @for (skill of parsedCriteria()?.nice_to_have_skills; track skill) {
-                <span class="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-sm font-medium border border-gray-200">
+                <span class="bg-[#F8FBFA] text-[#4E6770] px-3 py-1 rounded-xl text-xs font-semibold border border-[#D5EDED]">
                   {{ skill }}
                 </span>
               }
@@ -110,11 +111,11 @@
           </div>
         }
 
-        <hr class="border-gray-100">
+        <hr class="border-[#D5EDED]">
         
         <div>
-           <p class="text-sm text-gray-500 uppercase font-semibold tracking-wider mb-3">Core Responsibilities</p>
-           <ul class="list-disc pl-5 space-y-2 text-gray-700">
+           <p class="text-xs text-[#4E6770] uppercase font-bold tracking-wider mb-3">Core Responsibilities</p>
+           <ul class="list-disc pl-5 space-y-2 text-xs text-[#172B32]">
              @for (resp of parsedCriteria()?.core_responsibilities; track resp) {
                <li>{{ resp }}</li>
              }
@@ -122,21 +123,21 @@
         </div>
 
         @if (createdJob()?.assessment) {
-          <hr class="border-gray-100">
+          <hr class="border-[#D5EDED]">
 
           <div>
             <div class="flex items-center justify-between mb-3">
               <div>
-                <p class="text-sm text-gray-500 uppercase font-semibold tracking-wider flex items-center gap-1.5">
-                  <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <p class="text-xs text-[#172B32] uppercase font-bold tracking-wider flex items-center gap-1.5">
+                  <svg class="w-4 h-4 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                   </svg>
                   Generated O*NET 28.0 Behavioral SJT Assessment
                 </p>
-                <p class="text-xs text-slate-400 mt-0.5">10 AI-generated Situational Judgment scenarios tailored for this role.</p>
+                <p class="text-xs text-[#4E6770] mt-0.5">10 AI-generated Situational Judgment scenarios tailored for this role.</p>
               </div>
 
-              <span class="px-2.5 py-1 bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-semibold rounded-full">
+              <span class="px-2.5 py-1 bg-[#E3FDFD] border border-[#A6E3E9] text-[#244653] text-xs font-semibold rounded-full">
                 {{ createdJob()?.assessment?.questions?.length || 10 }} Questions
               </span>
             </div>
@@ -144,9 +145,9 @@
             <!-- Primary Assessed Traits -->
             @if (createdJob()?.assessment?.assessment_metadata?.primary_traits?.length) {
               <div class="mb-4 flex flex-wrap gap-1.5 items-center">
-                <span class="text-xs text-slate-400 font-medium">Assessed Work Styles:</span>
+                <span class="text-xs text-[#4E6770] font-medium">Assessed Work Styles:</span>
                 @for (trait of createdJob()?.assessment?.assessment_metadata?.primary_traits; track trait) {
-                  <span class="px-2.5 py-0.5 bg-slate-100 text-slate-700 rounded-md text-xs font-medium border border-slate-200">
+                  <span class="px-2.5 py-0.5 bg-[#F8FBFA] text-[#244653] rounded-md text-xs font-medium border border-[#D5EDED]">
                     {{ trait }}
                   </span>
                 }
@@ -156,20 +157,20 @@
             <!-- SJT Questions Accordion/Cards -->
             <div class="space-y-4">
               @for (q of createdJob()?.assessment?.questions; track q.id; let i = $index) {
-                <div class="p-4 bg-slate-50 border border-slate-200/80 rounded-2xl text-left space-y-2">
+                <div class="p-4 bg-[#F8FBFA] border border-[#D5EDED] rounded-2xl text-left space-y-2">
                   <div class="flex items-start gap-2">
-                    <span class="w-6 h-6 rounded-full bg-indigo-600 text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">
+                    <span class="w-6 h-6 rounded-lg bg-[#244653] text-[#CBF1F5] font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">
                       {{ i + 1 }}
                     </span>
-                    <p class="text-sm font-semibold text-slate-900 leading-snug">
+                    <p class="text-sm font-semibold text-[#172B32] leading-snug">
                       {{ q.scenario }}
                     </p>
                   </div>
 
                   <div class="pl-8 grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
                     @for (opt of q.options; track opt.key) {
-                      <div class="p-2.5 bg-white border border-slate-200/70 rounded-xl text-xs text-slate-700 flex items-start gap-2">
-                        <span class="font-bold text-indigo-600 shrink-0">{{ opt.key }}.</span>
+                      <div class="p-2.5 bg-white border border-[#D5EDED] rounded-xl text-xs text-[#172B32] flex items-start gap-2">
+                        <span class="font-bold text-[#244653] shrink-0">{{ opt.key }}.</span>
                         <span class="leading-relaxed">{{ opt.text }}</span>
                       </div>
                     }
@@ -182,9 +183,9 @@
 
         
         <div class="pt-6 flex justify-end gap-3">
-          <button class="px-5 py-2.5 rounded-xl text-slate-600 font-medium hover:bg-slate-100 transition-colors text-sm" (click)="parsedCriteria.set(null)">Start Over</button>
-          <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-xl font-semibold shadow-sm transition-colors text-sm" (click)="publishJob()">View All Recruiter Jobs</button>
-          <button class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-xl font-semibold shadow-sm transition-colors text-sm" (click)="viewJobCandidates()">Evaluate Candidates</button>
+          <button class="px-5 py-2.5 rounded-xl text-[#4E6770] font-semibold hover:bg-[#F8FBFA] transition-colors text-xs" (click)="parsedCriteria.set(null)">Start Over</button>
+          <button class="bg-white border border-[#D5EDED] text-[#244653] hover:bg-[#F8FBFA] px-6 py-2.5 rounded-xl font-semibold shadow-2xs transition-colors text-xs" (click)="publishJob()">View All Recruiter Jobs</button>
+          <button class="bg-[#244653] hover:bg-[#1A343E] text-white px-6 py-2.5 rounded-xl font-semibold shadow-xs transition-colors text-xs" (click)="viewJobCandidates()">Evaluate Candidates</button>
         </div>
       </div>
     </div>
