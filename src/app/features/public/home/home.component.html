@@ -251,13 +251,20 @@
   <footer class="bg-[#172B32] text-[#A6E3E9] border-t border-[#244653] py-12">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
 
-      <div class="flex items-center gap-3">
-        <img src="logo.png" alt="Magic Match Logo" class="w-10 h-10 object-contain" />
+      <!-- Brand Logo: Magicmatch -->
+      <a routerLink="/" class="flex items-center gap-3 group cursor-pointer">
+        <img src="logo.png" alt="Magic Match Logo"
+          class="w-15 h-14 object-contain group-hover:scale-105 transition-transform" />
         <div>
-          <span class="text-base font-bold text-white tracking-tight">MAGICMATCH</span>
-          <p class="text-xs text-[#CBF1F5]">The Next Generation's Hiring Platform</p>
+          <div class="flex items-center gap-1">
+            <span class="text-xl font-extrabold text-[#244653] tracking-tight">MAGIC</span>
+            <span class="text-xl font-extrabold text-[#71C9CE] tracking-tight">MATCH</span>
+          </div>
+          <p class="text-[10px] text-[#4E6770] font-semibold tracking-wider uppercase">The Next Generation's Hiring
+            Platform</p>
         </div>
-      </div>
+      </a>
+
 
       <div class="flex flex-wrap items-center gap-6 text-xs font-semibold">
         <a routerLink="/public/jobs" class="hover:text-white transition-colors cursor-pointer">Latest Jobs</a>

@@ -1,6 +1,10 @@
-import { HttpInterceptorFn } from '@angular/common/http';
+import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { catchError, throwError } from 'rxjs';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  const router = inject(Router);
   let token = localStorage.getItem('portal_token');
 
   // Resilient fallback to inspect stored user objects if portal_token is not directly set
@@ -23,13 +27,33 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     } catch {}
   }
 
-  if (token) {
-    const authReq = req.clone({
-      setHeaders: {
-        Authorization: `Bearer ${token}`
+  const finalReq = token
+    ? req.clone({
+        setHeaders: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+    : req;
+
+  return next(finalReq).pipe(
+    catchError((error: HttpErrorResponse) => {
+      if (error.status === 401 && !req.url.includes('/auth/login') && !req.url.includes('/auth/google')) {
+        const path = window.location.pathname;
+        if (path.startsWith('/recruiter') && !path.includes('/login')) {
+          localStorage.removeItem('recruiter_user');
+          localStorage.removeItem('portal_token');
+          router.navigate(['/recruiter/login'], { queryParams: { expired: 'true' } });
+        } else if (path.startsWith('/candidate') && !path.includes('/login')) {
+          localStorage.removeItem('candidate_user');
+          localStorage.removeItem('portal_token');
+          router.navigate(['/candidate/login'], { queryParams: { expired: 'true' } });
+        } else if (path.startsWith('/management') && !path.includes('/login')) {
+          localStorage.removeItem('management_user');
+          localStorage.removeItem('portal_token');
+          router.navigate(['/management/login'], { queryParams: { expired: 'true' } });
+        }
       }
-    });
-    return next(authReq);
-  }
-  return next(req);
+      return throwError(() => error);
+    })
+  );
 };

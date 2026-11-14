@@ -66,11 +66,20 @@ export class CompanyProfileComponent implements OnInit {
 
   industryOptions = [
     'Technology & Software',
+    'Financial Services & Fintech',
     'Finance & Fintech',
+    'Healthcare & BioTech',
     'Healthcare & Biotech',
+    'E-Commerce & Retail',
     'E-commerce & Retail',
+    'Education & EdTech',
+    'Manufacturing & Engineering',
+    'Professional & Consulting Services',
     'Consulting & Professional Services',
     'Recruitment & Staffing',
+    'Media & Entertainment',
+    'Real Estate & Construction',
+    'Energy & Utilities',
     'Other'
   ];
 
@@ -181,17 +190,43 @@ export class CompanyProfileComponent implements OnInit {
     if (user) {
       this.fullName = user.fullName || user.full_name || '';
       this.workEmail = user.workEmail || user.work_email || user.email || '';
-      this.phone = user.phone || '';
-      this.recruiterRole = user.recruiterRole || user.recruiter_role || 'Technical Recruiter';
+      this.phone = user.phone || user.telephone || '';
       this.companyName = user.companyName || user.company_name || 'Recruiter Workspace';
-      this.companyWebsite = user.companyWebsite || user.company_website || '';
-      this.industry = user.industry || 'Technology & Software';
+      this.companyWebsite = user.companyWebsite || user.company_website || user.website || '';
+
+      const incomingIndustry = user.industry || '';
+      if (incomingIndustry) {
+        const indMatch = this.industryOptions.find(opt => opt.toLowerCase() === incomingIndustry.toLowerCase());
+        if (indMatch) {
+          this.industry = indMatch;
+        } else {
+          this.industry = incomingIndustry;
+          this.industryOptions.unshift(incomingIndustry);
+        }
+      } else {
+        this.industry = 'Technology & Software';
+      }
+
+      const incomingRole = user.recruiterRole || user.recruiter_role || user.designation || '';
+      if (incomingRole) {
+        const roleMatch = this.roleOptions.find(opt => opt.toLowerCase() === incomingRole.toLowerCase());
+        if (roleMatch) {
+          this.recruiterRole = roleMatch;
+        } else {
+          this.recruiterRole = incomingRole;
+          this.roleOptions.unshift(incomingRole);
+        }
+      } else {
+        this.recruiterRole = 'Technical Recruiter';
+      }
+
       this.companySize = user.companySize || user.company_size || '11-50 employees';
       this.location = user.location || '';
       this.hiringFocus = user.hiringFocus || user.hiring_focus || 'Engineering & Tech';
       this.aiSensitivity = user.aiSensitivity || user.ai_sensitivity || 'Balanced (65%+)';
       this.customAiInstructions = user.customAiInstructions || '';
-      this.profileImage = user.profileImage || user.profile_image || '';
+      this.profileImage = user.profileImage || user.profile_image || user.profilePhoto || user.profile_photo ||
+        user.companyLogo || user.company_logo || user.logo_data || user.logoData || '';
     }
   }
 

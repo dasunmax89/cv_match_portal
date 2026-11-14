@@ -215,24 +215,44 @@ export class SignupComponent {
     }
 
     this.isLoading = true;
-    const fullName = `${this.soloFirstName.trim()} ${this.soloLastName.trim()}`;
+    const firstNameClean = this.soloFirstName.trim();
+    const lastNameClean = this.soloLastName.trim();
+    const fullName = `${firstNameClean} ${lastNameClean}`;
     const emailClean = this.soloEmail.trim();
+    const phoneClean = this.soloPhone.trim();
+    const designationClean = this.soloDesignation.trim() || 'Independent Recruiter';
 
     this.apiService.signupRecruiter({
-      firstName: this.soloFirstName.trim(),
-      lastName: this.soloLastName.trim(),
+      firstName: firstNameClean,
+      lastName: lastNameClean,
       email: emailClean,
-      phone: this.soloPhone.trim(),
+      phone: phoneClean,
       password: this.soloPassword,
-      designation: this.soloDesignation.trim() || 'Independent Recruiter'
+      designation: designationClean
     }).subscribe({
       next: (res) => {
         this.isLoading = false;
         this.pendingUser = {
           workEmail: emailClean,
+          email: emailClean,
           fullName: fullName,
+          full_name: fullName,
+          firstName: firstNameClean,
+          first_name: firstNameClean,
+          lastName: lastNameClean,
+          last_name: lastNameClean,
+          phone: phoneClean,
+          telephone: phoneClean,
+          designation: designationClean,
+          recruiterRole: designationClean,
+          recruiter_role: designationClean,
+          companyName: fullName || 'Independent Recruiter Workspace',
+          company_name: fullName || 'Independent Recruiter Workspace',
           accountType: 'solo',
-          token: res?.access_token
+          account_type: 'solo',
+          role: 'recruiter',
+          token: res?.access_token,
+          access_token: res?.access_token
         };
         this.otpEmail = emailClean;
         this.isOtpStep = true;
@@ -299,26 +319,48 @@ export class SignupComponent {
     this.isLoading = true;
     const emailClean = this.companyEmail.trim();
     const phoneClean = this.companyPhone.trim();
+    const websiteClean = this.companyWebsite.trim();
+    const industryClean = this.companyIndustry.trim();
+    const taglineClean = this.companyTagline.trim();
+    const companyNameClean = this.companyName.trim();
+    const logoData = this.logoPreviewUrl || null;
 
     this.apiService.signupCompany({
-      companyName: this.companyName.trim(),
-      website: this.companyWebsite.trim(),
-      industry: this.companyIndustry,
-      tagline: this.companyTagline.trim(),
+      companyName: companyNameClean,
+      website: websiteClean,
+      industry: industryClean,
+      tagline: taglineClean,
       email: emailClean,
       phone: phoneClean,
       telephone: phoneClean,
       password: this.companyPassword,
-      logoData: this.logoPreviewUrl || null
+      logoData: logoData
     }).subscribe({
       next: (res) => {
         this.isLoading = false;
         this.pendingUser = {
           workEmail: emailClean,
-          companyName: this.companyName.trim(),
+          email: emailClean,
+          companyName: companyNameClean,
+          company_name: companyNameClean,
+          companyWebsite: websiteClean,
+          company_website: websiteClean,
+          website: websiteClean,
+          industry: industryClean,
+          tagline: taglineClean,
           phone: phoneClean,
           telephone: phoneClean,
+          companyLogo: logoData,
+          company_logo: logoData,
+          logo_data: logoData,
+          logoData: logoData,
+          profileImage: logoData,
+          profile_image: logoData,
           accountType: 'company',
+          account_type: 'company',
+          role: 'company_admin',
+          recruiterRole: 'Technical Recruiter',
+          recruiter_role: 'Technical Recruiter',
           token: res?.access_token,
           access_token: res?.access_token
         };
@@ -347,25 +389,77 @@ export class SignupComponent {
     this.apiService.verifyOtp(this.otpEmail, this.otpCode.trim()).subscribe({
       next: (res) => {
         this.isVerifyingOtp = false;
-        const userToLogin = res?.user || this.pendingUser || { workEmail: this.otpEmail };
-        const token = res?.access_token || this.pendingUser?.token || this.pendingUser?.access_token;
-        userToLogin.token = token;
-        userToLogin.access_token = token;
-        userToLogin.workEmail = userToLogin.workEmail || userToLogin.email || this.otpEmail;
-        userToLogin.email = userToLogin.email || userToLogin.workEmail || this.otpEmail;
-        // Save accountType & telephone state explicitly
-        userToLogin.accountType = this.pendingUser?.accountType || userToLogin.account_type || 'company';
-        if (this.pendingUser?.phone) {
-          userToLogin.phone = userToLogin.phone || this.pendingUser.phone;
-          userToLogin.telephone = userToLogin.telephone || this.pendingUser.telephone;
-        }
-        if (this.pendingUser?.companyName && !userToLogin.companyName) {
-          userToLogin.companyName = this.pendingUser.companyName;
-        }
-        if (this.pendingUser?.company_id && !userToLogin.company_id) {
-          userToLogin.company_id = this.pendingUser.company_id;
-          userToLogin.companyId = this.pendingUser.company_id;
-        }
+        const resUser = res?.user || {};
+        const pending = this.pendingUser || {};
+        const token = res?.access_token || pending.token || pending.access_token || this.authService.getToken();
+
+        // 1. Resolve Logo / Company Profile Picture
+        const resolvedLogo = pending.companyLogo || pending.logo_data || pending.logoData || 
+          this.logoPreviewUrl || resUser.companyLogo || resUser.company_logo || resUser.logo_data || resUser.logoData || '';
+        const resolvedProfileImage = pending.profileImage || pending.profile_image || 
+          resUser.profileImage || resUser.profile_image || (pending.accountType === 'company' || this.activeTab === 'company' ? resolvedLogo : '') || '';
+
+        // 2. Resolve Website
+        const resolvedWebsite = pending.companyWebsite || pending.website || this.companyWebsite.trim() || 
+          resUser.companyWebsite || resUser.company_website || resUser.website || '';
+
+        // 3. Resolve Industry
+        const resolvedIndustry = pending.industry || this.companyIndustry || resUser.industry || '';
+
+        // 4. Resolve Company Name
+        const resolvedCompanyName = pending.companyName || (this.activeTab === 'company' ? this.companyName.trim() : '') ||
+          resUser.companyName || resUser.company_name || '';
+
+        // 5. Resolve Names & Designation / Recruiter Role
+        const resolvedFirstName = pending.firstName || this.soloFirstName.trim() || resUser.firstName || resUser.first_name || '';
+        const resolvedLastName = pending.lastName || this.soloLastName.trim() || resUser.lastName || resUser.last_name || '';
+        const resolvedFullName = pending.fullName || (resolvedFirstName ? `${resolvedFirstName} ${resolvedLastName}`.trim() : '') ||
+          resUser.fullName || resUser.full_name || '';
+        const resolvedDesignation = pending.designation || this.soloDesignation.trim() || resUser.designation || '';
+        const resolvedRole = pending.recruiterRole || resolvedDesignation || resUser.recruiterRole || resUser.recruiter_role || 'Technical Recruiter';
+
+        // 6. Resolve Contact Info & Account Type
+        const resolvedPhone = pending.phone || pending.telephone || this.soloPhone.trim() || this.companyPhone.trim() ||
+          resUser.phone || resUser.telephone || '';
+        const resolvedAccountType = pending.accountType || this.activeTab || resUser.accountType || resUser.account_type || (resolvedCompanyName ? 'company' : 'solo');
+
+        const userToLogin: any = {
+          ...resUser,
+          ...pending,
+          token,
+          access_token: token,
+          workEmail: this.otpEmail || resUser.workEmail || resUser.email || pending.workEmail,
+          email: this.otpEmail || resUser.email || resUser.workEmail || pending.workEmail,
+          fullName: resolvedFullName,
+          full_name: resolvedFullName,
+          firstName: resolvedFirstName,
+          first_name: resolvedFirstName,
+          lastName: resolvedLastName,
+          last_name: resolvedLastName,
+          companyName: resolvedCompanyName || (resolvedAccountType === 'solo' ? resolvedFullName : 'Recruiter Workspace'),
+          company_name: resolvedCompanyName || (resolvedAccountType === 'solo' ? resolvedFullName : 'Recruiter Workspace'),
+          companyWebsite: resolvedWebsite,
+          company_website: resolvedWebsite,
+          website: resolvedWebsite,
+          industry: resolvedIndustry,
+          tagline: pending.tagline || this.companyTagline.trim() || resUser.tagline || '',
+          phone: resolvedPhone,
+          telephone: resolvedPhone,
+          designation: resolvedDesignation,
+          recruiterRole: resolvedRole,
+          recruiter_role: resolvedRole,
+          companyLogo: resolvedLogo,
+          company_logo: resolvedLogo,
+          logo_data: resolvedLogo,
+          logoData: resolvedLogo,
+          profileImage: resolvedProfileImage,
+          profile_image: resolvedProfileImage,
+          accountType: resolvedAccountType,
+          account_type: resolvedAccountType,
+          company_id: pending.company_id || resUser.company_id || resUser.companyId,
+          companyId: pending.companyId || resUser.companyId || resUser.company_id
+        };
+
         this.authService.loginRecruiter(userToLogin);
         this.router.navigate(['/recruiter/onboarding']);
       },

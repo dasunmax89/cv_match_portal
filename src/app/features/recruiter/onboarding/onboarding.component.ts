@@ -66,11 +66,20 @@ export class Onboarding implements OnInit {
 
   industryOptions = [
     'Technology & Software',
+    'Financial Services & Fintech',
     'Finance & Fintech',
+    'Healthcare & BioTech',
     'Healthcare & Biotech',
+    'E-Commerce & Retail',
     'E-commerce & Retail',
+    'Education & EdTech',
+    'Manufacturing & Engineering',
+    'Professional & Consulting Services',
     'Consulting & Professional Services',
     'Recruitment & Staffing',
+    'Media & Entertainment',
+    'Real Estate & Construction',
+    'Energy & Utilities',
     'Other'
   ];
 
@@ -109,20 +118,72 @@ export class Onboarding implements OnInit {
   ngOnInit() {
     const user = this.authService.recruiterUser();
     if (user) {
-      this.fullName = user.fullName || user.full_name || '';
+      this.accountType = user.accountType || user.account_type || (user.companyName || user.company_name ? 'company' : 'solo');
+      this.isSoloRecruiter = (this.accountType === 'solo');
+
+      // Contact & Identification
       this.recruiterEmail = user.workEmail || user.work_email || user.email || '';
-      this.phone = user.phone || '';
-      this.companyName = user.companyName || user.company_name || user.fullName || 'Recruiter Workspace';
-      this.companyWebsite = user.companyWebsite || user.company_website || '';
-      this.industry = user.industry || 'Technology & Software';
-      this.companySize = user.companySize || user.company_size || '11-50 employees';
-      this.recruiterRole = user.recruiterRole || user.recruiter_role || 'Technical Recruiter';
+      this.phone = user.phone || user.telephone || user.phone_number || '';
+
+      // Company info
+      this.companyName = user.companyName || user.company_name || (this.isSoloRecruiter ? (user.fullName || user.full_name) : '') || 'Recruiter Workspace';
+      this.companyWebsite = user.companyWebsite || user.company_website || user.website || '';
+
+      // Full Name resolution (avoiding company name overwrite for company accounts)
+      if (this.isSoloRecruiter) {
+        this.fullName = user.fullName || user.full_name || 
+          `${user.firstName || user.first_name || ''} ${user.lastName || user.last_name || ''}`.trim();
+      } else {
+        const uFullName = user.fullName || user.full_name || '';
+        if (uFullName && uFullName.toLowerCase() !== this.companyName.toLowerCase()) {
+          this.fullName = uFullName;
+        } else if (user.firstName || user.first_name) {
+          this.fullName = `${user.firstName || user.first_name} ${user.lastName || user.last_name || ''}`.trim();
+        } else {
+          this.fullName = '';
+        }
+      }
+
+      // Images (Company Logo & Recruiter Profile Photo)
+      const passedLogo = user.companyLogo || user.company_logo || user.logo_data || user.logoData || user.logo || '';
+      const passedProfile = user.profileImage || user.profile_image || user.profilePhoto || user.profile_photo || '';
+
+      this.companyLogo = passedLogo || passedProfile || '';
+      this.profileImage = passedProfile || passedLogo || '';
+
+      // Industry resolution with case-insensitive matching
+      const incomingIndustry = user.industry || '';
+      if (incomingIndustry) {
+        const indMatch = this.industryOptions.find(opt => opt.toLowerCase() === incomingIndustry.toLowerCase());
+        if (indMatch) {
+          this.industry = indMatch;
+        } else {
+          this.industry = incomingIndustry;
+          this.industryOptions.unshift(incomingIndustry);
+        }
+      } else {
+        this.industry = 'Technology & Software';
+      }
+
+      // Recruiter Role / Designation with options fallback
+      const incomingRole = user.recruiterRole || user.recruiter_role || user.designation || '';
+      if (incomingRole) {
+        const roleMatch = this.roleOptions.find(opt => opt.toLowerCase() === incomingRole.toLowerCase());
+        if (roleMatch) {
+          this.recruiterRole = roleMatch;
+        } else {
+          this.recruiterRole = incomingRole;
+          this.roleOptions.unshift(incomingRole);
+        }
+      } else {
+        this.recruiterRole = 'Technical Recruiter';
+      }
+
+      // Company Size & AI screening settings
+      this.companySize = user.companySize || user.company_size || (this.isSoloRecruiter ? 'Solo Recruiter (1)' : '11-50 employees');
       this.hiringFocus = user.hiringFocus || user.hiring_focus || 'Engineering & Tech';
       this.aiSensitivity = user.aiSensitivity || user.ai_sensitivity || 'Balanced (65%+)';
-      this.profileImage = user.profileImage || user.profile_image || '';
-      this.companyLogo = user.companyLogo || user.company_logo || '';
-      this.accountType = user.accountType || user.account_type || (user.companyName ? 'company' : 'solo');
-      this.isSoloRecruiter = (this.accountType === 'solo');
+
       if (!this.isSoloRecruiter) {
         this.loadSentInvites();
       }
@@ -346,6 +407,7 @@ export class Onboarding implements OnInit {
       ai_sensitivity: this.aiSensitivity,
       profile_image: this.profileImage,
       company_logo: this.companyLogo,
+      logo_data: this.companyLogo,
       team_invites: validInvites
     };
 
@@ -369,19 +431,33 @@ export class Onboarding implements OnInit {
             token: currentUser.token || currentUser.access_token || this.authService.getToken(),
             access_token: currentUser.token || currentUser.access_token || this.authService.getToken(),
             fullName: this.fullName || currentUser.fullName || currentUser.full_name,
+            full_name: this.fullName || currentUser.fullName || currentUser.full_name,
             workEmail: payload.recruiter_email,
+            email: payload.recruiter_email,
             phone: this.phone,
+            telephone: this.phone,
             companyName: payload.company_name,
+            company_name: payload.company_name,
             companyWebsite: payload.company_website,
+            company_website: payload.company_website,
+            website: payload.company_website,
             companySize: payload.company_size,
+            company_size: payload.company_size,
             industry: payload.industry,
             recruiterRole: payload.recruiter_role,
+            recruiter_role: payload.recruiter_role,
             hiringFocus: payload.hiring_focus,
+            hiring_focus: payload.hiring_focus,
             aiSensitivity: payload.ai_sensitivity,
+            ai_sensitivity: payload.ai_sensitivity,
             profileImage: this.profileImage,
             profile_image: this.profileImage,
             companyLogo: this.companyLogo,
             company_logo: this.companyLogo,
+            logo_data: this.companyLogo,
+            logoData: this.companyLogo,
+            accountType: this.accountType,
+            account_type: this.accountType,
             hasCompletedOnboarding: true
           });
 

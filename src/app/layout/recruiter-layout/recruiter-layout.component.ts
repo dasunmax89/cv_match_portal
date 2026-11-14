@@ -107,6 +107,13 @@ export class RecruiterLayout implements OnInit {
     }
   }
 
+  get userProfileImage(): string {
+    const user = this.authService.recruiterUser();
+    if (!user) return '';
+    return user.profileImage || user.profile_image || user.profilePhoto || user.profile_photo ||
+      user.companyLogo || user.company_logo || user.logo_data || user.logoData || '';
+  }
+
   get initials(): string {
     const user = this.authService.recruiterUser();
     if (!user) return 'RW';
