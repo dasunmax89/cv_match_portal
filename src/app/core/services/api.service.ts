@@ -38,6 +38,7 @@ export class ApiService {
         const apiHost = window.location.hostname.replace(/^angular-ui[a-z0-9-]*\./, 'accepting-api.');
         return `${window.location.protocol}//${apiHost}/api/v1`;
       }
+      return 'https://accepting-api.blackrock-850e2607.southeastasia.azurecontainerapps.io/api/v1';
     }
     return 'http://127.0.0.1:8080/api/v1';
   }
@@ -278,6 +279,10 @@ export class ApiService {
     status: string,
     interviewSchedule?: {
       scheduled_at?: string;
+      start_time?: string;
+      end_time?: string;
+      duration_minutes?: number;
+      interviewers?: string[];
       location?: string;
       custom_message?: string;
     },
@@ -287,6 +292,10 @@ export class ApiService {
     const payload: any = { status };
     if (interviewSchedule) {
       if (interviewSchedule.scheduled_at) payload.scheduled_at = interviewSchedule.scheduled_at;
+      if (interviewSchedule.start_time) payload.start_time = interviewSchedule.start_time;
+      if (interviewSchedule.end_time) payload.end_time = interviewSchedule.end_time;
+      if (interviewSchedule.duration_minutes !== undefined && interviewSchedule.duration_minutes !== null) payload.duration_minutes = interviewSchedule.duration_minutes;
+      if (interviewSchedule.interviewers && interviewSchedule.interviewers.length) payload.interviewers = interviewSchedule.interviewers;
       if (interviewSchedule.location) payload.location = interviewSchedule.location;
       if (interviewSchedule.custom_message) payload.custom_message = interviewSchedule.custom_message;
     }

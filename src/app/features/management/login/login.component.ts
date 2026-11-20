@@ -68,8 +68,15 @@ export class Login {
     this.apiService.login(this.adminId, this.password).subscribe({
       next: (res) => {
         this.isLoading = false;
+        const u = res?.user || {};
+        const role = u.role || '';
+        if (role && role !== 'management' && role !== 'admin') {
+          this.errorMessage = 'Access denied. Account does not have management privileges.';
+          return;
+        }
         this.authService.loginManagement({
-          adminId: this.adminId,
+          ...u,
+          adminId: u.email || this.adminId,
           token: res?.access_token
         });
         this.router.navigate(['/management/dashboard']);

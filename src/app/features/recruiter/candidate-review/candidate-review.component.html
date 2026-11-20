@@ -207,8 +207,17 @@
                     <div>
                       <span class="font-bold text-[#172B32]">Interview Scheduled:</span>
                       <span class="font-bold text-[#244653] ml-1">{{ formatDisplayDate(iv.scheduled_at) }}</span>
+                      @if (iv.start_time && iv.end_time) {
+                        <span class="font-medium text-[#244653] ml-1">({{ iv.start_time }} – {{ iv.end_time }})</span>
+                      }
+                      @if (iv.duration_minutes) {
+                        <span class="bg-[#E3FDFD] text-[#244653] px-1.5 py-0.5 rounded text-[10px] font-bold ml-1">{{ iv.duration_minutes }}m</span>
+                      }
                       @if (iv.location) {
                         <span class="text-[#4E6770] ml-1.5">• {{ iv.location }}</span>
+                      }
+                      @if (iv.interviewers?.length) {
+                        <span class="text-[#244653] ml-1.5 font-medium">• 👥 {{ iv.interviewers?.length }} Interviewer{{ (iv.interviewers?.length || 0) > 1 ? 's' : '' }}</span>
                       }
                     </div>
                   </div>
@@ -393,7 +402,7 @@
                   <svg class="w-4 h-4 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                   {{ candidate.interview ? 'Reschedule' : 'Shortlist & Meet' }}
                 </button>
-                @if (candidate.status !== 'Rejected') {
+                @if (canDraftOffer(candidate)) {
                 <button (click)="openOfferModal(candidate)" type="button"
                         class="flex-1 py-2.5 px-3 rounded-xl font-bold text-xs border transition-all flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer"
                         [ngClass]="candidate.offer?.status === 'Draft' ? 'bg-[#E3FDFD] text-[#244653] border-[#A6E3E9]' : (candidate.offer?.status === 'Offered' ? 'bg-[#CBF1F5] text-[#244653] border-[#71C9CE]' : (candidate.offer?.status === 'Accepted' ? 'bg-[#CBF1F5] text-[#244653] font-black border-[#71C9CE]' : 'bg-[#71C9CE] hover:bg-[#54B5BC] text-[#172B32] font-bold border-transparent'))">
@@ -532,7 +541,7 @@
                           [title]="!canShortlist(candidate) ? 'Score (' + (candidate.evaluation?.overall_match_score ?? 0) + '%) is below Company Persona Sensitivity Threshold (' + sensitivityThreshold() + '%)' : (candidate.interview ? 'Reschedule Interview' : 'Shortlist & Schedule Interview')">
                     <svg class="w-4 h-4 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                   </button>
-                  @if (candidate.status !== 'Rejected') {
+                  @if (canDraftOffer(candidate)) {
                   <button (click)="openOfferModal(candidate)" 
                           class="p-2 rounded-lg transition-colors border cursor-pointer"
                           [ngClass]="candidate.offer?.status === 'Draft' ? 'bg-[#E3FDFD] text-[#244653] border-[#A6E3E9]' : (candidate.offer?.status === 'Offered' ? 'bg-[#CBF1F5] text-[#244653] border-[#71C9CE]' : (candidate.offer?.status === 'Accepted' ? 'bg-[#CBF1F5] text-[#244653] font-bold border-[#71C9CE]' : 'text-[#172B32] hover:bg-[#E3FDFD] border-[#D5EDED]'))"
@@ -621,14 +630,29 @@
               </div>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                 <div class="bg-white/90 p-2.5 rounded-lg border border-[#D5EDED]">
-                  <span class="text-[#4E6770] font-semibold uppercase text-[10px] block">Date & Time</span>
+                  <span class="text-[#4E6770] font-semibold uppercase text-[10px] block">Date &amp; Time</span>
                   <span class="font-bold text-[#172B32]">{{ formatDisplayDate(iv.scheduled_at) }}</span>
+                  @if (iv.start_time && iv.end_time) {
+                    <span class="text-xs text-[#244653] block font-semibold mt-0.5">{{ iv.start_time }} – {{ iv.end_time }} @if (iv.duration_minutes) { ({{ iv.duration_minutes }} mins) }</span>
+                  }
                 </div>
                 <div class="bg-white/90 p-2.5 rounded-lg border border-[#D5EDED]">
                   <span class="text-[#4E6770] font-semibold uppercase text-[10px] block">Location</span>
                   <span class="font-bold text-[#172B32] truncate block" [title]="iv.location">{{ iv.location || 'Remote / Online' }}</span>
                 </div>
               </div>
+              @if (iv.interviewers?.length) {
+                <div class="mt-2.5 bg-white/90 p-2.5 rounded-lg border border-[#D5EDED] text-xs">
+                  <span class="text-[#4E6770] font-semibold uppercase text-[10px] block mb-1">Invited Interviewers ({{ iv.interviewers?.length }})</span>
+                  <div class="flex flex-wrap gap-1.5">
+                    @for (inv of iv.interviewers; track inv) {
+                      <span class="px-2 py-0.5 bg-[#E3FDFD] text-[#244653] border border-[#A6E3E9] rounded-md text-[11px] font-mono">
+                        {{ inv }}
+                      </span>
+                    }
+                  </div>
+                </div>
+              }
               @if (iv.custom_message) {
                 <div class="mt-2.5 bg-white/90 p-2.5 rounded-lg border border-[#D5EDED] text-xs">
                   <span class="text-[#4E6770] font-semibold uppercase text-[10px] block">Custom Notes for Candidate</span>
@@ -839,7 +863,7 @@
                 <svg class="w-4 h-4 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                 {{ candidate.interview ? 'Reschedule Interview' : 'Shortlist & Schedule' }}
               </button>
-              @if (candidate.status !== 'Rejected') {
+              @if (canDraftOffer(candidate)) {
               <button (click)="openOfferModal(candidate)" type="button"
                       class="px-4 py-2.5 rounded-xl font-bold text-xs border transition-all flex items-center gap-1.5 shadow-2xs cursor-pointer"
                       [ngClass]="candidate.offer?.status === 'Draft' ? 'bg-[#E3FDFD] text-[#244653] border-[#A6E3E9]' : (candidate.offer?.status === 'Offered' ? 'bg-[#CBF1F5] text-[#244653] border-[#71C9CE]' : (candidate.offer?.status === 'Accepted' ? 'bg-[#CBF1F5] text-[#244653] font-bold border-[#71C9CE]' : 'bg-[#71C9CE] hover:bg-[#54B5BC] text-[#172B32] font-bold border-transparent'))">
@@ -893,13 +917,20 @@
           </div>
 
           <!-- Notification Notice Banner -->
-          <div class="px-5 py-2.5 bg-[#E3FDFD] border-b border-[#A6E3E9] flex items-center gap-2.5 text-xs text-[#244653]">
-            <svg class="w-4 h-4 text-[#71C9CE] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-            </svg>
-            <span>
-              An invitation email will be delivered to <strong class="underline decoration-[#71C9CE]">{{ candidate.candidateEmail }}</strong>
-            </span>
+          <div class="px-5 py-2.5 bg-[#E3FDFD] border-b border-[#A6E3E9] flex items-center justify-between text-xs text-[#244653]">
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-[#71C9CE] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+              </svg>
+              <span>
+                Candidate: <strong class="underline decoration-[#71C9CE]">{{ candidate.candidateEmail }}</strong>
+              </span>
+            </div>
+            @if (interviewerEmails().length) {
+              <span class="text-[11px] font-bold text-[#244653] bg-white px-2 py-0.5 rounded-md border border-[#A6E3E9]">
+                +{{ interviewerEmails().length }} Interviewer{{ interviewerEmails().length > 1 ? 's' : '' }} will be invited
+              </span>
+            }
           </div>
 
           <!-- Threshold Alignment Banner in Modal -->
@@ -949,7 +980,7 @@
               </div>
             }
 
-            <!-- Date & Time Grid -->
+            <!-- Date & Duration Row -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <!-- Date Field -->
               <div>
@@ -981,37 +1012,195 @@
                 </div>
               </div>
 
-              <!-- Time Field -->
+              <!-- Duration Selector -->
+              <div>
+                <label class="block text-xs font-bold text-[#172B32] uppercase tracking-wider mb-1.5 flex items-center justify-between">
+                  <span class="flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    Interview Duration <span class="text-rose-500">*</span>
+                  </span>
+                  <span class="text-[11px] font-extrabold text-[#244653] bg-[#CBF1F5] px-2 py-0.5 rounded-md border border-[#71C9CE]">
+                    {{ getDurationDisplay() }}
+                  </span>
+                </label>
+                <div class="grid grid-cols-4 gap-2">
+                  <button 
+                    type="button" 
+                    (click)="setDuration(30)" 
+                    class="py-2.5 rounded-xl text-xs font-bold border transition-all cursor-pointer text-center"
+                    [ngClass]="interviewDurationMinutes() === 30 ? 'bg-[#244653] text-white border-[#244653] shadow-xs' : 'bg-[#F8FBFA] hover:bg-[#CBF1F5] text-[#4E6770] border-[#D5EDED]'">
+                    30 min
+                  </button>
+                  <button 
+                    type="button" 
+                    (click)="setDuration(45)" 
+                    class="py-2.5 rounded-xl text-xs font-bold border transition-all cursor-pointer text-center"
+                    [ngClass]="interviewDurationMinutes() === 45 ? 'bg-[#244653] text-white border-[#244653] shadow-xs' : 'bg-[#F8FBFA] hover:bg-[#CBF1F5] text-[#4E6770] border-[#D5EDED]'">
+                    45 min
+                  </button>
+                  <button 
+                    type="button" 
+                    (click)="setDuration(60)" 
+                    class="py-2.5 rounded-xl text-xs font-bold border transition-all cursor-pointer text-center"
+                    [ngClass]="interviewDurationMinutes() === 60 ? 'bg-[#244653] text-white border-[#244653] shadow-xs' : 'bg-[#F8FBFA] hover:bg-[#CBF1F5] text-[#4E6770] border-[#D5EDED]'">
+                    60 min
+                  </button>
+                  <button 
+                    type="button" 
+                    (click)="setDuration(90)" 
+                    class="py-2.5 rounded-xl text-xs font-bold border transition-all cursor-pointer text-center"
+                    [ngClass]="interviewDurationMinutes() === 90 ? 'bg-[#244653] text-white border-[#244653] shadow-xs' : 'bg-[#F8FBFA] hover:bg-[#CBF1F5] text-[#4E6770] border-[#D5EDED]'">
+                    90 min
+                  </button>
+                </div>
+                <p class="text-[11px] text-[#4E6770] mt-1.5">Preset duration updates end time automatically.</p>
+              </div>
+            </div>
+
+            <!-- Start Time & End Time Row -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <!-- Start Time -->
               <div>
                 <label class="block text-xs font-bold text-[#172B32] uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
                   <svg class="w-3.5 h-3.5 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                   </svg>
-                  Interview Time <span class="text-rose-500">*</span>
+                  Start Time <span class="text-rose-500">*</span>
                 </label>
                 <input 
                   type="time"
-                  [ngModel]="interviewTime()"
-                  (ngModelChange)="interviewTime.set($event)"
+                  [ngModel]="interviewStartTime()"
+                  (ngModelChange)="onStartTimeChange($event)"
                   class="w-full px-3.5 py-2.5 bg-[#F8FBFA] border border-[#D5EDED] rounded-xl text-sm font-medium text-[#172B32] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#71C9CE] focus:border-transparent transition-all shadow-2xs"
                   required
                 />
-                <!-- Quick Time Chips -->
+                <!-- Quick Start Time Chips -->
                 <div class="flex flex-wrap gap-1.5 mt-2">
-                  <button type="button" (click)="setQuickTime('09:30')" class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#F8FBFA] hover:bg-[#CBF1F5] hover:text-[#244653] text-[#4E6770] border border-[#D5EDED] transition-colors cursor-pointer">
+                  <button type="button" (click)="setQuickStartTime('09:30')" class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#F8FBFA] hover:bg-[#CBF1F5] hover:text-[#244653] text-[#4E6770] border border-[#D5EDED] transition-colors cursor-pointer">
                     09:30 AM
                   </button>
-                  <button type="button" (click)="setQuickTime('11:00')" class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#F8FBFA] hover:bg-[#CBF1F5] hover:text-[#244653] text-[#4E6770] border border-[#D5EDED] transition-colors cursor-pointer">
+                  <button type="button" (click)="setQuickStartTime('11:00')" class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#F8FBFA] hover:bg-[#CBF1F5] hover:text-[#244653] text-[#4E6770] border border-[#D5EDED] transition-colors cursor-pointer">
                     11:00 AM
                   </button>
-                  <button type="button" (click)="setQuickTime('14:00')" class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#F8FBFA] hover:bg-[#CBF1F5] hover:text-[#244653] text-[#4E6770] border border-[#D5EDED] transition-colors cursor-pointer">
+                  <button type="button" (click)="setQuickStartTime('14:00')" class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#F8FBFA] hover:bg-[#CBF1F5] hover:text-[#244653] text-[#4E6770] border border-[#D5EDED] transition-colors cursor-pointer">
                     02:00 PM
                   </button>
-                  <button type="button" (click)="setQuickTime('16:00')" class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#F8FBFA] hover:bg-[#CBF1F5] hover:text-[#244653] text-[#4E6770] border border-[#D5EDED] transition-colors cursor-pointer">
+                  <button type="button" (click)="setQuickStartTime('16:00')" class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#F8FBFA] hover:bg-[#CBF1F5] hover:text-[#244653] text-[#4E6770] border border-[#D5EDED] transition-colors cursor-pointer">
                     04:00 PM
                   </button>
                 </div>
               </div>
+
+              <!-- End Time -->
+              <div>
+                <label class="block text-xs font-bold text-[#172B32] uppercase tracking-wider mb-1.5 flex items-center justify-between">
+                  <span class="flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    End Time <span class="text-rose-500">*</span>
+                  </span>
+                  @if (interviewDurationMinutes() > 0) {
+                    <span class="text-[10px] text-[#4E6770]">Calculated from duration</span>
+                  }
+                </label>
+                <input 
+                  type="time"
+                  [ngModel]="interviewEndTime()"
+                  (ngModelChange)="onEndTimeChange($event)"
+                  class="w-full px-3.5 py-2.5 bg-[#F8FBFA] border border-[#D5EDED] rounded-xl text-sm font-medium text-[#172B32] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#71C9CE] focus:border-transparent transition-all shadow-2xs"
+                  required
+                />
+                @if (interviewDurationMinutes() <= 0) {
+                  <p class="text-[11px] text-rose-600 font-semibold mt-1.5">⚠️ End time must be later than start time</p>
+                } @else {
+                  <p class="text-[11px] text-[#4E6770] mt-1.5">Modifying end time will recalculate duration.</p>
+                }
+              </div>
+            </div>
+
+            <!-- Interviewer Invitees Section -->
+            <div class="p-4 bg-[#F8FBFA] border border-[#D5EDED] rounded-2xl space-y-3">
+              <div class="flex items-start justify-between gap-3">
+                <div>
+                  <label class="block text-xs font-bold text-[#172B32] uppercase tracking-wider flex items-center gap-1.5">
+                    <svg class="w-4 h-4 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    Interviewer Invitees (Hiring Panel)
+                  </label>
+                  <p class="text-[11px] text-[#4E6770] mt-0.5">
+                    Invite team members or panel interviewers by email. Each interviewer receives a dedicated briefing email.
+                  </p>
+                </div>
+                @if (interviewerEmails().length) {
+                  <span class="px-2 py-0.5 bg-[#CBF1F5] text-[#244653] font-bold text-[11px] rounded-md border border-[#71C9CE] shrink-0">
+                    {{ interviewerEmails().length }} Invited
+                  </span>
+                }
+              </div>
+
+              <!-- Input and Add Button -->
+              <div class="flex gap-2">
+                <div class="relative flex-grow">
+                  <input 
+                    type="email"
+                    [ngModel]="interviewerInput()"
+                    (ngModelChange)="interviewerInput.set($event)"
+                    (keydown.enter)="$event.preventDefault(); addInterviewerEmail()"
+                    placeholder="Enter interviewer email (e.g. interviewer@company.com)"
+                    class="w-full px-3.5 py-2.5 bg-white border border-[#D5EDED] rounded-xl text-sm font-medium text-[#172B32] placeholder-[#4E6770]/60 focus:outline-none focus:ring-2 focus:ring-[#71C9CE] focus:border-transparent transition-all shadow-2xs"
+                  />
+                </div>
+                <button 
+                  type="button" 
+                  (click)="addInterviewerEmail()"
+                  class="px-4 py-2.5 bg-[#244653] hover:bg-[#1B353F] text-white rounded-xl text-xs font-bold transition-colors shrink-0 shadow-2xs flex items-center gap-1.5 cursor-pointer">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                  </svg>
+                  <span>Add</span>
+                </button>
+              </div>
+
+              <!-- Interviewer Email Error -->
+              @if (interviewerEmailError()) {
+                <p class="text-[11px] text-rose-600 font-semibold flex items-center gap-1">
+                  <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  <span>{{ interviewerEmailError() }}</span>
+                </p>
+              }
+
+              <!-- Interviewer Chips List -->
+              @if (interviewerEmails().length) {
+                <div class="flex flex-wrap gap-2 pt-1">
+                  @for (inv of interviewerEmails(); track inv) {
+                    <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-[#A6E3E9] text-[#244653] rounded-lg text-xs font-semibold shadow-2xs">
+                      <span class="w-4 h-4 rounded-full bg-[#E3FDFD] text-[#244653] flex items-center justify-center text-[10px] font-bold">
+                        {{ inv[0].toUpperCase() }}
+                      </span>
+                      <span>{{ inv }}</span>
+                      <button 
+                        type="button" 
+                        (click)="removeInterviewerEmail(inv)"
+                        class="p-0.5 text-[#4E6770] hover:text-rose-600 transition-colors ml-0.5 cursor-pointer"
+                        title="Remove interviewer">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                      </button>
+                    </div>
+                  }
+                </div>
+              } @else {
+                <p class="text-[11px] text-[#4E6770]/80 italic">
+                  No interviewers added yet (optional). Recruiter can add one or more team members.
+                </p>
+              }
             </div>
 
             <!-- Location Input Box -->

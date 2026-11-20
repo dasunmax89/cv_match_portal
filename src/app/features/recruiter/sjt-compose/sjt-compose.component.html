@@ -1,56 +1,66 @@
-<div class="bg-white rounded-2xl shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden border border-[#D5EDED]">
-  <div class="px-6 py-4 border-b border-[#D5EDED] flex justify-between items-center bg-[#F8FBFA]">
-    <h2 class="text-lg font-bold text-[#172B32] flex items-center gap-2">
-      <svg class="w-5 h-5 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2">
-        </path>
-      </svg>
-      Create & Edit SJT Questionnaire
-    </h2>
-    <button (click)="close.emit()" class="text-[#4E6770] hover:text-[#172B32] transition-colors p-1 rounded-lg hover:bg-[#E3FDFD]">
+<div class="bg-white rounded-3xl shadow-2xl w-full max-w-6xl max-h-[92vh] flex flex-col overflow-hidden border border-[#D5EDED]">
+  <div class="px-6 sm:px-8 py-5 border-b border-[#D5EDED] flex justify-between items-center bg-[#F8FBFA]">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-[#E3FDFD] border border-[#A6E3E9] text-[#244653] flex items-center justify-center">
+        <svg class="w-5 h-5 text-[#244653]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2">
+          </path>
+        </svg>
+      </div>
+      <div>
+        <h2 class="text-lg font-bold text-[#172B32]">
+          Situational Judgement Test (SJT) Questionnaire
+        </h2>
+        <p class="text-xs text-[#4E6770]">Customize behavioral assessment questions, choices, rationales, and scoring</p>
+      </div>
+    </div>
+    <button (click)="close.emit()" class="text-[#4E6770] hover:text-[#172B32] transition-colors p-2 rounded-xl hover:bg-[#E3FDFD] cursor-pointer" title="Close">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
       </svg>
     </button>
   </div>
 
-  <div class="flex-1 overflow-y-auto p-6 bg-[#F8FBFA] space-y-6">
+  <div class="flex-1 overflow-y-auto p-6 sm:p-8 bg-[#F8FBFA] space-y-6">
     @if (error()) {
-    <div class="bg-rose-50 text-rose-700 p-3 rounded-xl text-sm border border-rose-200">
-      {{ error() }}
+    <div class="bg-rose-50 text-rose-700 p-4 rounded-2xl text-sm border border-rose-200 flex items-center gap-2">
+      <svg class="w-5 h-5 text-rose-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+      <span>{{ error() }}</span>
     </div>
     }
 
     <!-- Generation Inputs -->
-    <div class="bg-white p-5 rounded-2xl border border-[#D5EDED] shadow-2xs space-y-4">
-      <h3 class="text-sm font-bold text-[#172B32] border-b border-[#D5EDED] pb-2 flex items-center gap-2">
+    <div class="bg-white p-6 rounded-2xl border border-[#D5EDED] shadow-2xs space-y-4">
+      <h3 class="text-sm font-bold text-[#172B32] border-b border-[#D5EDED] pb-2.5 flex items-center gap-2">
         <svg class="w-4 h-4 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
         </svg>
         AI Generation Criteria
       </h3>
 
-      <div class="grid grid-cols-1 gap-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label class="block text-xs font-semibold text-[#172B32] mb-1">Custom Requirements (Optional)</label>
-          <textarea [(ngModel)]="requirements" rows="3"
+          <textarea [(ngModel)]="requirements" rows="2"
             placeholder="e.g. Focus heavily on startup experience and fast-paced delivery..."
             class="w-full text-sm rounded-xl border-[#D5EDED] shadow-2xs focus:border-[#71C9CE] focus:ring-2 focus:ring-[#71C9CE]/20 bg-[#F8FBFA] placeholder-[#4E6770]/60 p-3 border text-[#172B32] outline-none transition-all">
           </textarea>
         </div>
         <div>
           <label class="block text-xs font-semibold text-[#172B32] mb-1">Test Criteria (Optional)</label>
-          <textarea [(ngModel)]="testCriteria" rows="3"
+          <textarea [(ngModel)]="testCriteria" rows="2"
             placeholder="e.g. Scenarios should involve difficult clients and technical debt..."
             class="w-full text-sm rounded-xl border-[#D5EDED] shadow-2xs focus:border-[#71C9CE] focus:ring-2 focus:ring-[#71C9CE]/20 bg-[#F8FBFA] placeholder-[#4E6770]/60 p-3 border text-[#172B32] outline-none transition-all">
           </textarea>
         </div>
       </div>
 
-      <div class="flex justify-end pt-2">
+      <div class="flex justify-end pt-1">
         <button (click)="generateSjt()" [disabled]="isGenerating() || isSaving()"
-          class="px-4 py-2.5 bg-[#244653] text-white text-sm font-semibold rounded-xl hover:bg-[#1A343E] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-xs">
+          class="px-4 py-2.5 bg-[#244653] text-white text-xs font-bold rounded-xl hover:bg-[#1A343E] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-2xs cursor-pointer">
           @if (isGenerating()) {
           <svg class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -58,85 +68,170 @@
               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
             </path>
           </svg>
-          Generating...
+          Generating Questions...
           } @else {
           <svg class="w-4 h-4 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
           </svg>
-          Generate Questions
+          Generate Questions via AI
           }
         </button>
       </div>
     </div>
 
-    <!-- Generated Questions Editor -->
-    @if (questions().length > 0) {
+    <!-- Questionnaire Section -->
     <div class="space-y-4">
-      <h3 class="text-sm font-bold text-[#172B32] flex items-center justify-between">
-        <span>Questionnaire ({{ questions().length }} Questions)</span>
-        <span class="text-xs font-semibold text-[#244653] bg-[#CBF1F5] px-2.5 py-0.5 rounded-full border border-[#71C9CE]">Editable</span>
-      </h3>
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <h3 class="text-sm font-bold text-[#172B32]">Questions List</h3>
+          <span class="text-xs font-semibold text-[#244653] bg-[#CBF1F5] px-2.5 py-0.5 rounded-full border border-[#71C9CE]">
+            {{ questions().length }} {{ questions().length === 1 ? 'Question' : 'Questions' }}
+          </span>
+        </div>
+
+        <button type="button" (click)="addCustomQuestion()"
+          class="px-3.5 py-2 bg-[#244653] hover:bg-[#1A343E] text-white text-xs font-bold rounded-xl transition-all shadow-2xs flex items-center gap-1.5 cursor-pointer">
+          <svg class="w-3.5 h-3.5 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+          </svg>
+          Add Custom Question
+        </button>
+      </div>
+
+      @if (questions().length === 0) {
+        <div class="bg-white p-8 rounded-2xl border border-dashed border-[#D5EDED] text-center space-y-3">
+          <div class="w-12 h-12 bg-[#E3FDFD] text-[#244653] border border-[#A6E3E9] rounded-2xl flex items-center justify-center mx-auto">
+            <svg class="w-6 h-6 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+          </div>
+          <div>
+            <h4 class="text-sm font-bold text-[#172B32]">No SJT Questions in Questionnaire</h4>
+            <p class="text-xs text-[#4E6770] mt-1">Use the AI generator above or click below to add custom questions with choices.</p>
+          </div>
+          <button type="button" (click)="addCustomQuestion()"
+            class="px-4 py-2 bg-[#244653] hover:bg-[#1A343E] text-white text-xs font-bold rounded-xl shadow-2xs transition-all inline-flex items-center gap-2 cursor-pointer">
+            <svg class="w-4 h-4 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            Add First Question
+          </button>
+        </div>
+      }
 
       @for (q of questions(); track q.id; let i = $index) {
-      <div class="bg-white p-5 rounded-2xl border border-[#D5EDED] shadow-2xs space-y-4">
-        <div>
-          <label class="block text-xs font-bold text-[#172B32] mb-1.5 uppercase tracking-wider flex items-center gap-2">
-            <span class="w-6 h-6 rounded-md bg-[#244653] text-[#CBF1F5] inline-flex items-center justify-center text-xs">Q{{ i + 1 }}</span>
-            Scenario
-          </label>
-          <textarea [(ngModel)]="q.scenario" rows="2"
-            class="w-full text-sm font-medium text-[#172B32] rounded-xl border-[#D5EDED] shadow-2xs focus:border-[#71C9CE] focus:ring-2 focus:ring-[#71C9CE]/20 p-3 border bg-[#F8FBFA] outline-none">
-          </textarea>
-        </div>
+        <div class="bg-white p-6 rounded-2xl border border-[#D5EDED] shadow-2xs space-y-4 hover:border-[#A6E3E9] transition-colors">
+          <div class="flex items-center justify-between border-b border-[#D5EDED] pb-3">
+            <label class="text-xs font-bold text-[#172B32] uppercase tracking-wider flex items-center gap-2">
+              <span class="w-7 h-7 rounded-lg bg-[#244653] text-[#CBF1F5] inline-flex items-center justify-center font-bold text-xs shadow-2xs">
+                Q{{ i + 1 }}
+              </span>
+              Scenario Description
+            </label>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          @for (opt of q.options; track opt.key) {
-          <div class="p-3.5 bg-[#F8FBFA] rounded-xl border border-[#D5EDED]">
-            <div class="flex items-center gap-2 mb-2">
-              <span
-                class="w-6 h-6 flex-shrink-0 bg-white border border-[#D5EDED] text-[#244653] text-xs font-black rounded-md flex items-center justify-center shadow-2xs">{{
-                opt.key }}</span>
-              <span class="text-xs font-semibold text-[#4E6770]">Score: {{ q.rubric[opt.key]?.score }} pts</span>
-            </div>
-            <textarea [(ngModel)]="opt.text" rows="2"
-              class="w-full text-sm text-[#172B32] rounded-lg border-[#D5EDED] shadow-2xs focus:border-[#71C9CE] focus:ring-1 focus:ring-[#71C9CE] p-2.5 border bg-white mb-2 outline-none">
-            </textarea>
-            <div>
-              <label class="block text-[10px] font-bold text-[#4E6770] mb-1 uppercase tracking-wider">Rationale</label>
-              <textarea *ngIf="q.rubric && q.rubric[opt.key]" [(ngModel)]="q.rubric[opt.key].rationale" rows="2"
-                class="w-full text-xs text-[#244653] rounded-lg border-[#A6E3E9] shadow-2xs focus:border-[#71C9CE] focus:ring-1 focus:ring-[#71C9CE] p-2 border bg-[#E3FDFD]/50 outline-none">
-              </textarea>
-            </div>
+            <!-- Delete Question Button -->
+            <button type="button" (click)="removeQuestion(i)"
+              class="px-3 py-1.5 text-xs font-semibold text-rose-600 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-xl transition-colors cursor-pointer inline-flex items-center gap-1.5 shadow-2xs"
+              title="Delete this question">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+              </svg>
+              <span>Delete Question</span>
+            </button>
           </div>
-          }
+
+          <div>
+            <textarea [(ngModel)]="q.scenario" rows="2"
+              placeholder="Describe a workplace challenge or situational scenario that tests candidate judgement..."
+              class="w-full text-sm font-medium text-[#172B32] rounded-xl border-[#D5EDED] shadow-2xs focus:border-[#71C9CE] focus:ring-2 focus:ring-[#71C9CE]/20 p-3.5 border bg-[#F8FBFA] outline-none">
+            </textarea>
+          </div>
+
+          <!-- Multiple Choice Options & Rubric Scoring -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            @for (opt of q.options; track opt.key) {
+              <div class="p-4 bg-[#F8FBFA] rounded-xl border border-[#D5EDED] space-y-2.5">
+                <div class="flex items-center justify-between gap-2">
+                  <div class="flex items-center gap-2">
+                    <span class="w-6 h-6 flex-shrink-0 bg-white border border-[#D5EDED] text-[#244653] text-xs font-black rounded-md flex items-center justify-center shadow-2xs">
+                      {{ opt.key }}
+                    </span>
+                    <span class="text-xs font-bold text-[#172B32]">Option {{ opt.key }}</span>
+                  </div>
+
+                  <!-- Editable Score Selector -->
+                  <div class="flex items-center gap-1.5" *ngIf="q.rubric && q.rubric[opt.key]">
+                    <label class="text-[11px] font-semibold text-[#4E6770]">Score:</label>
+                    <select [(ngModel)]="q.rubric[opt.key].score"
+                      class="text-xs font-bold bg-white border border-[#D5EDED] rounded-lg px-2 py-1 text-[#244653] focus:border-[#71C9CE] outline-none cursor-pointer">
+                      <option [ngValue]="4">4 pts (Optimal)</option>
+                      <option [ngValue]="3">3 pts (Good)</option>
+                      <option [ngValue]="2">2 pts (Standard)</option>
+                      <option [ngValue]="1">1 pt (Sub-optimal)</option>
+                      <option [ngValue]="0">0 pts (Ineffective)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <textarea [(ngModel)]="opt.text" rows="2"
+                  placeholder="Enter the behavioral choice text for Option {{ opt.key }}..."
+                  class="w-full text-sm text-[#172B32] rounded-lg border-[#D5EDED] shadow-2xs focus:border-[#71C9CE] focus:ring-1 focus:ring-[#71C9CE] p-2.5 border bg-white outline-none">
+                </textarea>
+
+                <div>
+                  <label class="block text-[10px] font-bold text-[#4E6770] mb-1 uppercase tracking-wider">Evaluation Rationale</label>
+                  <textarea *ngIf="q.rubric && q.rubric[opt.key]" [(ngModel)]="q.rubric[opt.key].rationale" rows="2"
+                    placeholder="Rationale explaining why this score is awarded..."
+                    class="w-full text-xs text-[#244653] rounded-lg border-[#A6E3E9] shadow-2xs focus:border-[#71C9CE] focus:ring-1 focus:ring-[#71C9CE] p-2 border bg-[#E3FDFD]/50 outline-none">
+                  </textarea>
+                </div>
+              </div>
+            }
+          </div>
         </div>
-      </div>
+      }
+
+      <!-- Add Button at the bottom of question list -->
+      @if (questions().length > 0) {
+        <div class="pt-2 flex justify-center">
+          <button type="button" (click)="addCustomQuestion()"
+            class="w-full py-3.5 border-2 border-dashed border-[#A6E3E9] hover:border-[#71C9CE] bg-white hover:bg-[#E3FDFD]/50 text-[#244653] font-bold text-sm rounded-2xl transition-all flex items-center justify-center gap-2 shadow-2xs cursor-pointer">
+            <svg class="w-4 h-4 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            Add Custom SJT Question
+          </button>
+        </div>
       }
     </div>
-    }
   </div>
 
-  <div class="px-6 py-4 border-t border-[#D5EDED] bg-[#F8FBFA] flex justify-end gap-3">
-    <button (click)="close.emit()"
-      class="px-4 py-2 text-sm font-semibold text-[#4E6770] bg-white border border-[#D5EDED] rounded-xl hover:bg-[#F8FBFA] transition-colors">
-      Cancel
-    </button>
-    <button (click)="saveSjt()" [disabled]="questions().length === 0 || isSaving() || isGenerating()"
-      class="px-5 py-2 text-sm font-semibold text-white bg-[#244653] rounded-xl hover:bg-[#1A343E] transition-colors shadow-2xs disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
-      @if (isSaving()) {
-      <svg class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
-        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-        <path class="opacity-75" fill="currentColor"
-          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-        </path>
-      </svg>
-      Saving...
-      } @else {
-      <svg class="w-4 h-4 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-      </svg>
-      Save Questionnaire
-      }
-    </button>
+  <div class="px-6 sm:px-8 py-4 border-t border-[#D5EDED] bg-[#F8FBFA] flex justify-between items-center">
+    <p class="text-xs text-[#4E6770]">
+      {{ questions().length }} {{ questions().length === 1 ? 'question' : 'questions' }} in assessment
+    </p>
+    <div class="flex items-center gap-3">
+      <button (click)="close.emit()"
+        class="px-4 py-2 text-sm font-semibold text-[#4E6770] bg-white border border-[#D5EDED] rounded-xl hover:bg-[#F8FBFA] transition-colors cursor-pointer">
+        Cancel
+      </button>
+      <button (click)="saveSjt()" [disabled]="questions().length === 0 || isSaving() || isGenerating()"
+        class="px-5 py-2 text-sm font-semibold text-white bg-[#244653] rounded-xl hover:bg-[#1A343E] transition-colors shadow-2xs disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 cursor-pointer">
+        @if (isSaving()) {
+        <svg class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+          </path>
+        </svg>
+        Saving...
+        } @else {
+        <svg class="w-4 h-4 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+        Save Questionnaire
+        }
+      </button>
+    </div>
   </div>
 </div>

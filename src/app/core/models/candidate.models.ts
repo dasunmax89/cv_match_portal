@@ -62,6 +62,10 @@ export interface InterviewResult {
 
 export interface InterviewDetails {
   scheduled_at?: string;
+  start_time?: string;
+  end_time?: string;
+  duration_minutes?: number;
+  interviewers?: string[];
   location?: string;
   custom_message?: string;
   updated_at?: string;
@@ -310,6 +314,10 @@ export interface JobResponse {
   criteria: ParsedCriteria;
   assessment?: PublicSJTAssessment | JobSJTAssessment;
   createdAt: string;
+  company_name?: string;
+  companyName?: string;
+  company_id?: string;
+  recruiter_email?: string;
 }
 
 export interface CandidateApplication {

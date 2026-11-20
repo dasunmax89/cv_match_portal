@@ -22,6 +22,9 @@ export class JobDetailComponent implements OnInit {
   error = signal<string | null>(null);
 
   isSjtComposeOpen = signal<boolean>(false);
+  startWithNewQuestion = signal<boolean>(false);
+  isDeletingQuestion = signal<number | null>(null);
+  sjtActionError = signal<string | null>(null);
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('jobId');
@@ -61,12 +64,46 @@ export class JobDetailComponent implements OnInit {
     }
   }
 
-  openSjtCompose() {
+  openSjtCompose(withNewQuestion: boolean = false) {
+    this.startWithNewQuestion.set(withNewQuestion);
     this.isSjtComposeOpen.set(true);
   }
 
   closeSjtCompose() {
     this.isSjtComposeOpen.set(false);
+    this.startWithNewQuestion.set(false);
+  }
+
+  deleteQuestion(index: number) {
+    const currentJob = this.job();
+    if (!currentJob || !currentJob.assessment || !currentJob.assessment.questions) return;
+
+    const confirmed = window.confirm(`Are you sure you want to remove question Q${index + 1}?`);
+    if (!confirmed) return;
+
+    this.isDeletingQuestion.set(index);
+    this.sjtActionError.set(null);
+
+    const updatedQuestions = currentJob.assessment.questions.filter((_, i) => i !== index);
+    const updatedAssessment = {
+      ...currentJob.assessment,
+      questions: updatedQuestions
+    };
+
+    this.apiService.updateJobSjt(currentJob.id, updatedAssessment).subscribe({
+      next: (savedAssessment) => {
+        this.job.set({
+          ...currentJob,
+          assessment: savedAssessment
+        });
+        this.isDeletingQuestion.set(null);
+      },
+      error: (err) => {
+        console.error('Failed to delete question:', err);
+        this.sjtActionError.set(err.error?.detail || 'Failed to remove question. Please try again.');
+        this.isDeletingQuestion.set(null);
+      }
+    });
   }
 
   onSjtSaved(updatedAssessment: any) {
@@ -75,5 +112,6 @@ export class JobDetailComponent implements OnInit {
       this.job.set({ ...currentJob, assessment: updatedAssessment });
     }
     this.isSjtComposeOpen.set(false);
+    this.startWithNewQuestion.set(false);
   }
 }

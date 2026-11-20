@@ -116,6 +116,7 @@ export class CompanyProfileComponent implements OnInit {
   sentInvites: SentTeamInvite[] = [];
   isLoadingInvites = false;
   isRedirectingToPayrexx = false;
+  resendingEmail: string | null = null;
 
   ngOnInit() {
     this.loadUserData();
@@ -345,11 +346,9 @@ export class CompanyProfileComponent implements OnInit {
     }
 
     const alreadySent = this.sentInvites.find(i => (i.email || '').toLowerCase() === emailClean);
-    if (alreadySent) {
+    if (alreadySent && alreadySent.status === 'Completed') {
       invite.status = 'error';
-      invite.errorMessage = alreadySent.status === 'Completed'
-        ? `An invitation to ${emailClean} has already been accepted.`
-        : `An invitation to ${emailClean} is already pending payment.`;
+      invite.errorMessage = `An invitation to ${emailClean} has already been accepted and activated.`;
       return;
     }
 
@@ -374,6 +373,31 @@ export class CompanyProfileComponent implements OnInit {
       error: (err) => {
         invite.status = 'error';
         invite.errorMessage = err?.error?.detail || err?.message || 'Failed to send invite.';
+      }
+    });
+  }
+
+  resendInvite(inv: SentTeamInvite) {
+    if (!inv.email) return;
+    this.resendingEmail = inv.email;
+    const user = this.authService.recruiterUser() || {};
+    const companyId = user.id || user.company_id || user.companyId || 'COMP-DEFAULT';
+    const companyName = this.companyName || user.companyName || 'Recruiter Workspace';
+    const recruiterEmail = this.workEmail || user.workEmail || user.work_email || user.email || '';
+
+    this.apiService.inviteRecruiterTeam({
+      emails: [inv.email.trim().toLowerCase()],
+      company_id: companyId,
+      company_name: companyName,
+      recruiter_email: recruiterEmail
+    }).subscribe({
+      next: () => {
+        this.resendingEmail = null;
+        this.loadSentInvites();
+      },
+      error: (err) => {
+        this.resendingEmail = null;
+        console.error('Failed to resend invite:', err);
       }
     });
   }

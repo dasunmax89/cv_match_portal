@@ -113,6 +113,7 @@ export class Onboarding implements OnInit {
 
   sentInvites: SentTeamInvite[] = [];
   isLoadingInvites = false;
+  resendingEmail: string | null = null;
   errorMessage = '';
 
   ngOnInit() {
@@ -379,6 +380,29 @@ export class Onboarding implements OnInit {
         } else {
           invite.errorMessage = err?.error?.detail || err?.message || 'Failed to send invite.';
         }
+      }
+    });
+  }
+
+  resendInvite(inv: SentTeamInvite) {
+    if (!inv.email) return;
+    this.resendingEmail = inv.email;
+    const user = this.authService.recruiterUser() || {};
+    const companyId = user.id || user.company_id || user.companyId || 'COMP-DEFAULT';
+    const companyName = this.companyName || user.companyName || 'Recruiter Workspace';
+
+    this.apiService.inviteRecruiterTeam({
+      emails: [inv.email.trim().toLowerCase()],
+      company_id: companyId,
+      company_name: companyName
+    }).subscribe({
+      next: () => {
+        this.resendingEmail = null;
+        this.loadSentInvites();
+      },
+      error: (err) => {
+        this.resendingEmail = null;
+        console.error('Failed to resend invite:', err);
       }
     });
   }

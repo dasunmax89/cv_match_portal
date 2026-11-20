@@ -1,14 +1,14 @@
 import { Component, signal, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ApiService } from '../../../core/services/api.service';
 import { AuthService } from '../../../core/services/auth.service';
-import { PublicSJTAssessment, CandidateAnswer } from '../../../core/models/candidate.models';
+import { PublicSJTAssessment, CandidateAnswer, JobResponse } from '../../../core/models/candidate.models';
 
 @Component({
   selector: 'app-apply',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './apply.component.html'
 })
 export class ApplyComponent implements OnInit {
@@ -17,6 +17,8 @@ export class ApplyComponent implements OnInit {
   public authService = inject(AuthService);
 
   jobId = signal<string>('');
+  job = signal<JobResponse | null>(null);
+  loadingJob = signal<boolean>(false);
   isDragging = signal<boolean>(false);
   selectedFile = signal<File | null>(null);
   
@@ -37,7 +39,41 @@ export class ApplyComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('jobId');
     if (id) {
       this.jobId.set(id);
+
+      // Pre-populate job from router history state if navigated from job board
+      const navJob = history.state?.job;
+      const navTitle = history.state?.jobTitle || navJob?.title || navJob?.criteria?.title;
+      if (navJob) {
+        this.job.set(navJob);
+      } else if (navTitle) {
+        this.job.set({ id, title: navTitle } as any);
+      }
+
+      this.loadJobDetails(id);
     }
+  }
+
+  loadJobDetails(id: string) {
+    this.loadingJob.set(true);
+    this.apiService.getPublicJobDetails(id).subscribe({
+      next: (data) => {
+        this.job.set(data);
+        this.loadingJob.set(false);
+      },
+      error: (err) => {
+        console.error('Failed to load job details', err);
+        this.loadingJob.set(false);
+      }
+    });
+  }
+
+  getJobTitle(): string {
+    const j = this.job();
+    if (j?.title) return j.title;
+    if (j?.criteria?.title) return j.criteria.title;
+    const a = this.assessment();
+    if (a?.title) return a.title;
+    return '';
   }
 
   getCandidateFullName(): string {
@@ -113,9 +149,12 @@ export class ApplyComponent implements OnInit {
   }
 
   proceedToAssessment() {
-
     if (!this.selectedFile()) {
       alert('Please attach your PDF resume to proceed.');
+      return;
+    }
+
+    if (this.loadingInitialAssessment()) {
       return;
     }
 

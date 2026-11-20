@@ -311,7 +311,17 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             <div class="bg-white p-3 rounded-lg border border-[#D5EDED] space-y-0.5">
               <span class="text-[10px] font-bold uppercase text-[#4E6770]">Scheduled Date & Time</span>
-              <p class="font-bold text-[#172B32] text-sm">{{ formatDisplayDate(app.interview?.scheduled_at) }}</p>
+              <p class="font-bold text-[#172B32] text-sm">
+                {{ formatDisplayDate(app.interview?.scheduled_at) }}
+                @if (app.interview?.start_time && app.interview?.end_time) {
+                  <span class="text-xs font-semibold text-[#244653] block mt-0.5">
+                    {{ app.interview?.start_time }} – {{ app.interview?.end_time }}
+                    @if (app.interview?.duration_minutes) {
+                      ({{ app.interview?.duration_minutes }} mins)
+                    }
+                  </span>
+                }
+              </p>
             </div>
 
             <div class="bg-white p-3 rounded-lg border border-[#D5EDED] space-y-0.5">

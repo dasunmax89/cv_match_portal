@@ -5,23 +5,62 @@
       <!-- Idle State (Form Steps) -->
       @if (submitState() === 'idle' || submitState() === 'error') {
 
-      <!-- Wizard Step Header -->
+      <!-- Wizard Step Header / Title Section -->
       <div
-        class="bg-[#244653] text-white px-8 py-6 flex items-center justify-between border-b border-[#71C9CE]/30">
-        <div>
-          <span
-            class="text-[11px] font-bold uppercase tracking-wider text-[#244653] bg-[#CBF1F5] px-2.5 py-0.5 rounded-full border border-[#71C9CE]/50">
-            Step {{ step() }} of 2
-          </span>
-          <h2 class="text-xl font-bold mt-2 tracking-tight">
-            {{ step() === 1 ? 'Upload Your Resume' : 'Behavioral Readiness Check' }}
-          </h2>
-        </div>
-        <div class="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-full border border-white/20">
-          <span class="w-2.5 h-2.5 rounded-full"
-            [ngClass]="step() === 1 ? 'bg-[#71C9CE] animate-pulse' : 'bg-[#A6E3E9]'"></span>
-          <span class="text-xs font-semibold text-[#CBF1F5]">{{ step() === 1 ? 'Resume Upload' : '10 SJT Questions'
-            }}</span>
+        class="bg-[#244653] text-white px-6 sm:px-8 py-6 border-b border-[#71C9CE]/30">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div class="space-y-1.5 min-w-0">
+            <div class="flex items-center gap-2.5 flex-wrap">
+              <span
+                class="text-[11px] font-bold uppercase tracking-wider text-[#244653] bg-[#CBF1F5] px-2.5 py-0.5 rounded-full border border-[#71C9CE]/50 shrink-0">
+                Step {{ step() }} of 2
+              </span>
+              <span class="text-xs font-semibold text-[#A6E3E9] tracking-wider uppercase">
+                Job Application
+              </span>
+            </div>
+
+            <!-- Job Title in Title Section -->
+            <div class="space-y-0.5">
+              <h1 class="text-xl sm:text-2xl font-extrabold text-white tracking-tight truncate" [title]="getJobTitle() || 'Job Application'">
+                {{ getJobTitle() || 'Job Application' }}
+              </h1>
+              <p class="text-xs text-[#CBF1F5] font-medium flex items-center gap-2 flex-wrap">
+                <span class="font-semibold text-white/95">
+                  {{ step() === 1 ? 'Step 1: Upload Your Resume' : 'Step 2: Behavioral Readiness Check' }}
+                </span>
+                @if (job()?.criteria?.seniority_level) {
+                  <span class="text-white/40">•</span>
+                  <span class="bg-white/10 px-2 py-0.5 rounded-md text-[11px] text-[#A6E3E9]">
+                    {{ job()!.criteria.seniority_level }}
+                  </span>
+                }
+                @if (job()?.company_name) {
+                  <span class="text-white/40">•</span>
+                  <span class="text-[#CBF1F5]">{{ job()!.company_name }}</span>
+                }
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3 shrink-0 self-start sm:self-center">
+            <div class="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-full border border-white/20">
+              <span class="w-2.5 h-2.5 rounded-full"
+                [ngClass]="step() === 1 ? 'bg-[#71C9CE] animate-pulse' : 'bg-[#A6E3E9]'"></span>
+              <span class="text-xs font-semibold text-[#CBF1F5]">
+                {{ step() === 1 ? 'Resume Upload' : (assessment()?.questions?.length ? assessment()!.questions.length + ' SJT Questions' : 'SJT Questions') }}
+              </span>
+            </div>
+
+            <a routerLink="/candidate/dashboard" 
+               class="text-[#A6E3E9] hover:text-white p-1.5 rounded-xl hover:bg-white/10 transition-colors cursor-pointer"
+               title="Back to Opportunities"
+               aria-label="Back to Opportunities">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </a>
+          </div>
         </div>
       </div>
 
@@ -37,7 +76,7 @@
       <div class="p-8 space-y-6">
 
         <!-- Applicant Recorded Profile Info Box -->
-        <div class="bg-[#F8FBFA] border border-[#D5EDED] rounded-2xl p-4 flex items-center justify-between gap-4">
+        <div class="bg-[#F8FBFA] border border-[#D5EDED] rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div class="flex items-center gap-3 min-w-0">
             <div
               class="w-10 h-10 rounded-full bg-[#244653] text-white font-bold flex items-center justify-center text-sm shrink-0 shadow-sm">
@@ -49,10 +88,18 @@
               <p class="text-xs text-[#4E6770] truncate">{{ getCandidateEmail() }}</p>
             </div>
           </div>
-          <span
-            class="px-2.5 py-1 bg-[#CBF1F5] text-[#244653] text-[11px] font-bold rounded-full border border-[#71C9CE]/50 shrink-0">
-            Verified Candidate
-          </span>
+
+          @if (getJobTitle()) {
+            <div class="bg-white px-3.5 py-2 rounded-xl border border-[#D5EDED] shrink-0 text-left sm:text-right">
+              <p class="text-[10px] font-bold uppercase tracking-wider text-[#4E6770]">Target Role</p>
+              <p class="text-xs font-bold text-[#244653] truncate max-w-[220px]">{{ getJobTitle() }}</p>
+            </div>
+          } @else {
+            <span
+              class="px-2.5 py-1 bg-[#CBF1F5] text-[#244653] text-[11px] font-bold rounded-full border border-[#71C9CE]/50 shrink-0">
+              Verified Candidate
+            </span>
+          }
         </div>
 
         <!-- Resume / CV PDF Drag & Drop Zone -->
@@ -170,10 +217,19 @@
 
         }
 
-        <button type="button" (click)="proceedToAssessment()" [disabled]="!selectedFile() || loadingAssessment()"
+        <button type="button" (click)="proceedToAssessment()" 
+          [disabled]="!selectedFile() || loadingInitialAssessment() || loadingAssessment()"
           class="w-full bg-[#244653] hover:bg-[#1A343E] text-white py-3.5 px-4 rounded-xl font-bold text-sm shadow-sm hover:shadow transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer">
-          @if (loadingAssessment()) {
-          <svg class="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+          @if (loadingInitialAssessment()) {
+          <svg class="animate-spin h-5 w-5 text-[#CBF1F5]" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+            </path>
+          </svg>
+          <span>Analyzing Resume with AI...</span>
+          } @else if (loadingAssessment()) {
+          <svg class="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" aria-hidden="true">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor"
               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
@@ -182,7 +238,7 @@
           <span>Loading Assessment...</span>
           } @else {
           <span>Proceed to Behavioral Check</span>
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
           </svg>
           }
@@ -299,15 +355,22 @@
       <div class="p-12 flex flex-col items-center justify-center text-center">
         <div
           class="w-20 h-20 bg-[#CBF1F5] text-[#244653] border border-[#71C9CE] rounded-3xl flex items-center justify-center mb-6 shadow-sm">
-          <svg class="w-10 h-10 text-[#244653]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-10 h-10 text-[#244653]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
           </svg>
         </div>
         <h3 class="text-2xl font-bold text-[#172B32] mb-2">Application Submitted!</h3>
         <p class="text-[#4E6770] text-xs sm:text-sm max-w-sm">
-          Thank you for applying. Your resume and behavioral assessment responses have been recorded and sent to the
-          recruiter.
+          Thank you for applying for <strong class="text-[#172B32]">{{ getJobTitle() || 'this position' }}</strong>. Your resume and behavioral assessment responses have been recorded and sent to the recruiter.
         </p>
+        <div class="mt-6 flex flex-wrap gap-3 justify-center">
+          <a routerLink="/candidate/applied-jobs" class="px-5 py-2.5 bg-[#244653] hover:bg-[#1A343E] text-white text-xs font-bold rounded-xl transition-all shadow-xs">
+            View Applied Jobs
+          </a>
+          <a routerLink="/candidate/dashboard" class="px-5 py-2.5 bg-white border border-[#D5EDED] hover:bg-[#F8FBFA] text-[#172B32] text-xs font-bold rounded-xl transition-all">
+            Browse More Positions
+          </a>
+        </div>
       </div>
       }
 

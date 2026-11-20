@@ -59,11 +59,25 @@ export class CandidateReviewComponent implements OnInit {
     return score >= this.sensitivityThreshold();
   }
 
+  canDraftOffer(candidate?: CandidateMatch | null): boolean {
+    if (!candidate || candidate.status === 'Rejected') return false;
+    // If an offer already exists (Draft, Offered, Accepted), allow reviewing or editing
+    if (candidate.offer) return true;
+    // New offers should only be available once the candidate has completed and passed the interview
+    return candidate.interview?.outcome === 'Passed' || candidate.status === 'Interview Passed';
+  }
+
   // --- Interview Scheduling Modal State ---
   isScheduleModalOpen = signal<boolean>(false);
   schedulingCandidate = signal<CandidateMatch | null>(null);
   interviewDate = signal<string>('');
   interviewTime = signal<string>('10:00');
+  interviewStartTime = signal<string>('10:00');
+  interviewEndTime = signal<string>('11:00');
+  interviewDurationMinutes = signal<number>(60);
+  interviewerInput = signal<string>('');
+  interviewerEmails = signal<string[]>([]);
+  interviewerEmailError = signal<string | null>(null);
   interviewLocation = signal<string>('');
   interviewCustomMessage = signal<string>('');
   isScheduling = signal<boolean>(false);
@@ -266,11 +280,95 @@ export class CandidateReviewComponent implements OnInit {
   }
 
   setQuickTime(time: string) {
-    this.interviewTime.set(time);
+    this.onStartTimeChange(time);
   }
 
   setQuickLocation(loc: string) {
     this.interviewLocation.set(loc);
+  }
+
+  calculateEndTime(start: string, durationMin: number): string {
+    if (!start) return '';
+    const [h, m] = start.split(':').map(Number);
+    if (isNaN(h) || isNaN(m)) return '';
+    const totalMin = h * 60 + m + durationMin;
+    const endH = Math.floor(totalMin / 60) % 24;
+    const endM = totalMin % 60;
+    return `${String(endH).padStart(2, '0')}:${String(endM).padStart(2, '0')}`;
+  }
+
+  calculateDuration(start: string, end: string): number {
+    if (!start || !end) return 0;
+    const [h1, m1] = start.split(':').map(Number);
+    const [h2, m2] = end.split(':').map(Number);
+    if (isNaN(h1) || isNaN(m1) || isNaN(h2) || isNaN(m2)) return 0;
+    return (h2 * 60 + m2) - (h1 * 60 + m1);
+  }
+
+  onStartTimeChange(newStart: string) {
+    this.interviewStartTime.set(newStart);
+    this.interviewTime.set(newStart);
+    const dur = this.interviewDurationMinutes();
+    if (dur > 0) {
+      this.interviewEndTime.set(this.calculateEndTime(newStart, dur));
+    }
+  }
+
+  onEndTimeChange(newEnd: string) {
+    this.interviewEndTime.set(newEnd);
+    const dur = this.calculateDuration(this.interviewStartTime(), newEnd);
+    if (dur > 0) {
+      this.interviewDurationMinutes.set(dur);
+    }
+  }
+
+  setDuration(minutes: number) {
+    this.interviewDurationMinutes.set(minutes);
+    this.interviewEndTime.set(this.calculateEndTime(this.interviewStartTime(), minutes));
+  }
+
+  setQuickStartTime(time: string) {
+    this.onStartTimeChange(time);
+  }
+
+  getDurationDisplay(): string {
+    const mins = this.interviewDurationMinutes();
+    if (mins <= 0) return 'Invalid duration';
+    if (mins < 60) return `${mins} min${mins > 1 ? 's' : ''}`;
+    const hours = Math.floor(mins / 60);
+    const remMins = mins % 60;
+    if (remMins === 0) return `${hours} hr${hours > 1 ? 's' : ''}`;
+    return `${hours} hr${hours > 1 ? 's' : ''} ${remMins} min${remMins > 1 ? 's' : ''}`;
+  }
+
+  addInterviewerEmail() {
+    const raw = this.interviewerInput().trim().toLowerCase();
+    this.interviewerEmailError.set(null);
+    if (!raw) return;
+
+    const parts = raw.split(/[,;\s]+/).filter(Boolean);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const current = [...this.interviewerEmails()];
+
+    for (const email of parts) {
+      if (!emailRegex.test(email)) {
+        this.interviewerEmailError.set(`"${email}" is not a valid email address.`);
+        return;
+      }
+      if (current.includes(email)) {
+        this.interviewerEmailError.set(`"${email}" has already been added.`);
+        return;
+      }
+      current.push(email);
+    }
+
+    this.interviewerEmails.set(current);
+    this.interviewerInput.set('');
+  }
+
+  removeInterviewerEmail(emailToRemove: string) {
+    this.interviewerEmails.update(list => list.filter(e => e !== emailToRemove));
+    this.interviewerEmailError.set(null);
   }
 
   openScheduleModal(candidate?: CandidateMatch) {
@@ -283,11 +381,23 @@ export class CandidateReviewComponent implements OnInit {
       return;
     }
 
+    const existing = target.interview;
     this.schedulingCandidate.set(target);
-    this.interviewDate.set(this.getDefaultTomorrow());
-    this.interviewTime.set('10:00');
-    this.interviewLocation.set('');
-    this.interviewCustomMessage.set('');
+    this.interviewDate.set(existing?.scheduled_at ? existing.scheduled_at.split('T')[0] : this.getDefaultTomorrow());
+    
+    const startTime = existing?.start_time || (existing?.scheduled_at?.includes('T') ? existing.scheduled_at.split('T')[1].substring(0, 5) : '10:00');
+    const duration = existing?.duration_minutes || 60;
+    const endTime = existing?.end_time || this.calculateEndTime(startTime, duration);
+
+    this.interviewStartTime.set(startTime);
+    this.interviewTime.set(startTime);
+    this.interviewDurationMinutes.set(duration);
+    this.interviewEndTime.set(endTime);
+    this.interviewLocation.set(existing?.location || '');
+    this.interviewCustomMessage.set(existing?.custom_message || '');
+    this.interviewerEmails.set(existing?.interviewers ? [...existing.interviewers] : []);
+    this.interviewerInput.set('');
+    this.interviewerEmailError.set(null);
     this.scheduleError.set(null);
     this.scheduleSuccessMessage.set(null);
     this.isScheduling.set(false);
@@ -299,6 +409,8 @@ export class CandidateReviewComponent implements OnInit {
     this.schedulingCandidate.set(null);
     this.scheduleError.set(null);
     this.scheduleSuccessMessage.set(null);
+    this.interviewerEmailError.set(null);
+    this.interviewerInput.set('');
   }
 
   confirmScheduleAndShortlist() {
@@ -313,17 +425,37 @@ export class CandidateReviewComponent implements OnInit {
       return;
     }
 
+    // Auto-add any pending email typed in the interviewer input field
+    if (this.interviewerInput().trim()) {
+      this.addInterviewerEmail();
+      if (this.interviewerEmailError()) {
+        this.scheduleError.set(this.interviewerEmailError());
+        return;
+      }
+    }
+
     const dateVal = this.interviewDate();
-    const timeVal = this.interviewTime();
+    const startTimeVal = this.interviewStartTime() || this.interviewTime();
+    const endTimeVal = this.interviewEndTime();
+    const durationMin = this.interviewDurationMinutes();
     const locVal = this.interviewLocation().trim();
     const customMsg = this.interviewCustomMessage().trim();
+    const interviewersList = this.interviewerEmails();
 
     if (!dateVal) {
       this.scheduleError.set('Please select an interview date.');
       return;
     }
-    if (!timeVal) {
-      this.scheduleError.set('Please select an interview time.');
+    if (!startTimeVal) {
+      this.scheduleError.set('Please select an interview start time.');
+      return;
+    }
+    if (!endTimeVal) {
+      this.scheduleError.set('Please select an interview end time.');
+      return;
+    }
+    if (durationMin <= 0) {
+      this.scheduleError.set('Interview end time must be after the start time.');
       return;
     }
     if (!locVal) {
@@ -334,7 +466,7 @@ export class CandidateReviewComponent implements OnInit {
     this.isScheduling.set(true);
     this.scheduleError.set(null);
 
-    const scheduledAt = `${dateVal}T${timeVal}:00`;
+    const scheduledAt = `${dateVal}T${startTimeVal}:00`;
     const user = this.authService.recruiterUser();
 
     this.apiService.updateMatchStatus(
@@ -343,6 +475,10 @@ export class CandidateReviewComponent implements OnInit {
       'Shortlisted', 
       {
         scheduled_at: scheduledAt,
+        start_time: startTimeVal,
+        end_time: endTimeVal,
+        duration_minutes: durationMin,
+        interviewers: interviewersList,
         location: locVal,
         custom_message: customMsg || undefined
       },
@@ -355,7 +491,9 @@ export class CandidateReviewComponent implements OnInit {
           this.selectedTableCandidate.set(updatedMatch);
         }
         this.isScheduling.set(false);
-        this.scheduleSuccessMessage.set(`Interview scheduled! Invitation email sent to ${target.candidateEmail}`);
+        const invCount = interviewersList.length;
+        const invNotice = invCount > 0 ? ` and ${invCount} interviewer${invCount > 1 ? 's' : ''}` : '';
+        this.scheduleSuccessMessage.set(`Interview scheduled! Invitation email sent to ${target.candidateEmail}${invNotice}.`);
         
         setTimeout(() => {
           const wasStackCurrent = !this.selectedTableCandidate() && this.currentCandidate?.id === target.id;
@@ -434,6 +572,10 @@ export class CandidateReviewComponent implements OnInit {
     }
     const target = candidate || this.currentCandidate;
     if (!target) return;
+    if (!this.canDraftOffer(target)) {
+      this.showToast('Contract offers can only be drafted after the candidate has completed and passed the interview.', 'info');
+      return;
+    }
     this.offerTargetCandidate.set(target);
     this.isOfferModalOpen.set(true);
   }
