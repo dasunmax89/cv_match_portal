@@ -40,6 +40,20 @@ export class CandidateAppliedJobsComponent implements OnInit {
   offerActionSuccess = signal<string | null>(null);
   popularCurrencies = POPULAR_CURRENCIES;
 
+  // Compliance Document Uploads (Passport & TIN)
+  passportFileName = signal<string>('');
+  passportFileUrl = signal<string>('');
+  isUploadingPassport = signal<boolean>(false);
+  passportUploadError = signal<string | null>(null);
+
+  tinFileName = signal<string>('');
+  tinFileUrl = signal<string>('');
+  isUploadingTin = signal<boolean>(false);
+  tinUploadError = signal<string | null>(null);
+
+  isDownloadingPdf = signal<boolean>(false);
+  allowedDocExtensions = ['.pdf', '.jpg', '.jpeg', '.png', '.webp'];
+
   ngOnInit() {
     this.fetchAppliedJobs();
   }
@@ -127,6 +141,14 @@ export class CandidateAppliedJobsComponent implements OnInit {
     this.showDeclinePrompt.set(false);
     this.declineReason.set('');
     this.agreeToOfferTerms.set(false);
+    this.passportUploadError.set(null);
+    this.tinUploadError.set(null);
+
+    // Initialize document uploads from existing offer
+    this.passportFileUrl.set(app.offer?.passport_url || '');
+    this.passportFileName.set(app.offer?.passport_filename || (app.offer?.passport_url ? 'Passport Document' : ''));
+    this.tinFileUrl.set(app.offer?.tin_certificate_url || '');
+    this.tinFileName.set(app.offer?.tin_certificate_filename || (app.offer?.tin_certificate_url ? 'TIN Certificate' : ''));
 
     const user = this.authService.candidateUser();
     const candidateName = user?.name || user?.candidateName || '';
@@ -138,6 +160,182 @@ export class CandidateAppliedJobsComponent implements OnInit {
     this.offerActionError.set(null);
     this.offerActionSuccess.set(null);
     this.showDeclinePrompt.set(false);
+    this.passportUploadError.set(null);
+    this.tinUploadError.set(null);
+  }
+
+  validateDocFile(file: File): string | null {
+    const ext = '.' + (file.name.split('.').pop() || '').toLowerCase();
+    if (!this.allowedDocExtensions.includes(ext)) {
+      return `Invalid format (${ext}). Only PDF or image files (.pdf, .jpg, .jpeg, .png, .webp) are allowed.`;
+    }
+    if (file.size > 15 * 1024 * 1024) {
+      return 'File size exceeds 15MB limit. Please upload a smaller file.';
+    }
+    return null;
+  }
+
+  onPassportFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    input.value = '';
+    if (!file) return;
+
+    const validationError = this.validateDocFile(file);
+    if (validationError) {
+      this.passportUploadError.set(validationError);
+      return;
+    }
+
+    const app = this.selectedOfferForModal();
+    if (!app || !app.id) return;
+
+    this.isUploadingPassport.set(true);
+    this.passportUploadError.set(null);
+
+    this.apiService.uploadContractComplianceDocument(app.id, file, 'passport').subscribe({
+      next: (res) => {
+        this.isUploadingPassport.set(false);
+        this.passportFileName.set(res.filename || file.name);
+        this.passportFileUrl.set(res.url);
+
+        // Keep local application offer reference up-to-date
+        if (app.offer) {
+          app.offer.passport_url = res.url;
+          app.offer.passport_filename = res.filename || file.name;
+          app.offer.passport_uploaded_at = res.uploaded_at;
+        }
+
+        const currentModal = this.selectedOfferForModal();
+        if (currentModal && currentModal.offer) {
+          this.selectedOfferForModal.set({
+            ...currentModal,
+            offer: {
+              ...currentModal.offer,
+              passport_url: res.url,
+              passport_filename: res.filename || file.name,
+              passport_uploaded_at: res.uploaded_at
+            }
+          });
+        }
+
+        this.applications.set(this.applications().map(a => {
+          if (a.id === app.id && a.offer) {
+            return {
+              ...a,
+              offer: {
+                ...a.offer,
+                passport_url: res.url,
+                passport_filename: res.filename || file.name,
+                passport_uploaded_at: res.uploaded_at
+              }
+            };
+          }
+          return a;
+        }));
+      },
+      error: (err) => {
+        this.isUploadingPassport.set(false);
+        console.error('Passport upload failed:', err);
+        this.passportUploadError.set(err?.error?.detail || 'Failed to upload passport. Please try again.');
+      }
+    });
+  }
+
+  onTinFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    input.value = '';
+    if (!file) return;
+
+    const validationError = this.validateDocFile(file);
+    if (validationError) {
+      this.tinUploadError.set(validationError);
+      return;
+    }
+
+    const app = this.selectedOfferForModal();
+    if (!app || !app.id) return;
+
+    this.isUploadingTin.set(true);
+    this.tinUploadError.set(null);
+
+    this.apiService.uploadContractComplianceDocument(app.id, file, 'tin_certificate').subscribe({
+      next: (res) => {
+        this.isUploadingTin.set(false);
+        this.tinFileName.set(res.filename || file.name);
+        this.tinFileUrl.set(res.url);
+
+        // Keep local application offer reference up-to-date
+        if (app.offer) {
+          app.offer.tin_certificate_url = res.url;
+          app.offer.tin_certificate_filename = res.filename || file.name;
+          app.offer.tin_certificate_uploaded_at = res.uploaded_at;
+        }
+
+        const currentModal = this.selectedOfferForModal();
+        if (currentModal && currentModal.offer) {
+          this.selectedOfferForModal.set({
+            ...currentModal,
+            offer: {
+              ...currentModal.offer,
+              tin_certificate_url: res.url,
+              tin_certificate_filename: res.filename || file.name,
+              tin_certificate_uploaded_at: res.uploaded_at
+            }
+          });
+        }
+
+        this.applications.set(this.applications().map(a => {
+          if (a.id === app.id && a.offer) {
+            return {
+              ...a,
+              offer: {
+                ...a.offer,
+                tin_certificate_url: res.url,
+                tin_certificate_filename: res.filename || file.name,
+                tin_certificate_uploaded_at: res.uploaded_at
+              }
+            };
+          }
+          return a;
+        }));
+      },
+      error: (err) => {
+        this.isUploadingTin.set(false);
+        console.error('TIN certificate upload failed:', err);
+        this.tinUploadError.set(err?.error?.detail || 'Failed to upload TIN certificate. Please try again.');
+      }
+    });
+  }
+
+  downloadContractPdf(app?: CandidateApplication | null, event?: MouseEvent): void {
+    if (event) {
+      event.stopPropagation();
+    }
+    const target = app || this.selectedOfferForModal();
+    if (!target || !target.id) return;
+
+    this.isDownloadingPdf.set(true);
+    this.apiService.downloadCandidateContractPdf(target.id).subscribe({
+      next: (blob: Blob) => {
+        this.isDownloadingPdf.set(false);
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        const cleanTitle = (target.jobTitle || 'Employment').replace(/[^a-zA-Z0-9_-]/g, '_');
+        link.download = `Employment_Contract_${cleanTitle}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err) => {
+        this.isDownloadingPdf.set(false);
+        console.error('Failed to download contract PDF:', err);
+        this.offerActionError.set('Could not download contract PDF. Please verify details and try again.');
+      }
+    });
   }
 
   submitSignOffer() {
@@ -164,7 +362,11 @@ export class CandidateAppliedJobsComponent implements OnInit {
     const payload: SignOfferRequest = {
       legal_name: signature,
       signed_name: signature,
-      candidate_email: candidateEmail
+      candidate_email: candidateEmail,
+      passport_url: this.passportFileUrl() || undefined,
+      passport_filename: this.passportFileName() || undefined,
+      tin_certificate_url: this.tinFileUrl() || undefined,
+      tin_certificate_filename: this.tinFileName() || undefined
     };
 
     this.apiService.candidateSignOffer(app.id, payload).subscribe({

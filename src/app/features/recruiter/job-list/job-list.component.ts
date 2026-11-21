@@ -94,6 +94,81 @@ export class RecruiterJobListComponent implements OnInit {
     return !!(job.assessment && job.assessment.questions && job.assessment.questions.length > 0);
   }
 
+  getCleanJobTitle(job: JobOverviewItem): string {
+    const title = job.title || job.criteria?.title || 'Job Opening';
+    return title.replace(/\bApperal\b/gi, 'Apparel');
+  }
+
+  getDistinctCandidates(job: JobOverviewItem): CandidateMatch[] {
+    const candidates = job.applied_candidates || [];
+    const seen = new Set<string>();
+    const distinct: CandidateMatch[] = [];
+    for (const c of candidates) {
+      const key = (c.id || c.candidateEmail || '').trim().toLowerCase();
+      if (key && seen.has(key)) {
+        continue;
+      }
+      if (key) {
+        seen.add(key);
+      }
+      distinct.push(c);
+    }
+    return distinct;
+  }
+
+  getTopMatchScore(job: JobOverviewItem): string {
+    const candidates = this.getDistinctCandidates(job);
+    const scores = candidates
+      .map(c => c.evaluation?.overall_match_score)
+      .filter((s): s is number => typeof s === 'number' && !isNaN(s) && s >= 0);
+    if (scores.length === 0) {
+      return 'Pending';
+    }
+    const maxScore = Math.round(Math.max(...scores));
+    return `${maxScore}%`;
+  }
+
+  getTopMatchBadgeClass(job: JobOverviewItem): string {
+    const scoreStr = this.getTopMatchScore(job);
+    if (scoreStr === 'Pending') {
+      return 'bg-[#F8FBFA] text-[#4E6770] border-[#D5EDED] font-medium';
+    }
+    const score = parseInt(scoreStr, 10);
+    if (score >= 80) {
+      return 'bg-[#CBF1F5] text-[#244653] border-[#71C9CE] font-bold';
+    }
+    if (score >= 65) {
+      return 'bg-[#E3FDFD] text-[#244653] border-[#A6E3E9] font-semibold';
+    }
+    return 'bg-amber-50 text-amber-800 border-amber-200 font-semibold';
+  }
+
+  getRoleSummary(job: JobOverviewItem): string {
+    let summary = '';
+    if (job.criteria?.core_responsibilities?.length) {
+      summary = job.criteria.core_responsibilities[0];
+    } else if (job.preliminary_job_order?.job_description || job.preliminaryJobOrder?.job_description) {
+      summary = job.preliminary_job_order?.job_description || job.preliminaryJobOrder?.job_description || '';
+    } else if (job.criteria?.job_description) {
+      summary = job.criteria.job_description;
+    } else if ((job as any).description) {
+      summary = (job as any).description;
+    }
+    return summary.replace(/^["'“‘]+|["'”’]+$/g, '').trim() || 'No role summary provided.';
+  }
+
+  getHeadcount(job: JobOverviewItem): number | null {
+    return job.preliminary_job_order?.total_approved_quantity || job.preliminaryJobOrder?.total_approved_quantity || null;
+  }
+
+  getSalary(job: JobOverviewItem): string | null {
+    const pjo = job.preliminary_job_order || job.preliminaryJobOrder;
+    if (!pjo?.monthly_salary) return null;
+    const formattedSalary = Number(pjo.monthly_salary).toLocaleString();
+    const currency = pjo.salary_currency || 'RM';
+    return `${formattedSalary} ${currency}`;
+  }
+
   getScoreColor(score?: number): string {
     if (score === undefined || score === null) return 'text-[#4E6770] bg-[#F8FBFA] border-[#D5EDED]';
     if (score >= 80) return 'text-[#244653] bg-[#CBF1F5] border-[#71C9CE] font-bold';

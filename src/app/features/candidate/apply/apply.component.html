@@ -102,6 +102,58 @@
           }
         </div>
 
+        <!-- Preliminary Job Order Information Section -->
+        @if (job()?.preliminary_job_order || job()?.preliminaryJobOrder) {
+          @let order = job()?.preliminary_job_order || job()?.preliminaryJobOrder;
+          <div class="bg-[#F8FBFA] border border-[#D5EDED] rounded-2xl p-5 space-y-4">
+            <div class="flex items-center justify-between border-b border-[#D5EDED] pb-3">
+              <div>
+                <span class="text-[10px] font-bold uppercase tracking-wider text-[#244653] bg-[#CBF1F5] px-2 py-0.5 rounded-full border border-[#71C9CE]/40">
+                  Job Order Overview
+                </span>
+                <h3 class="text-xs font-bold text-[#172B32] uppercase tracking-wider mt-1">Preliminary Job Order Information</h3>
+              </div>
+              <span class="text-xs font-bold text-[#244653] bg-[#E3FDFD] px-2.5 py-0.5 rounded-full border border-[#A6E3E9]">
+                {{ order?.job_category }}
+              </span>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
+              <div class="bg-white p-2.5 rounded-xl border border-[#D5EDED]">
+                <span class="text-[10px] font-bold text-[#4E6770] uppercase block">Headcount Quota</span>
+                <span class="text-xs font-extrabold text-[#244653] block mt-0.5">{{ order?.total_approved_quantity }} Headcount</span>
+              </div>
+              <div class="bg-white p-2.5 rounded-xl border border-[#D5EDED]">
+                <span class="text-[10px] font-bold text-[#4E6770] uppercase block">Monthly Salary</span>
+                <span class="text-xs font-extrabold text-[#244653] block mt-0.5">{{ order?.monthly_salary | number }} {{ order?.salary_currency || 'RM' }}</span>
+              </div>
+              <div class="bg-white p-2.5 rounded-xl border border-[#D5EDED]">
+                <span class="text-[10px] font-bold text-[#4E6770] uppercase block">Work Hours</span>
+                <span class="text-xs font-medium text-[#172B32] block mt-0.5">{{ order?.regular_work_hours }}</span>
+              </div>
+              <div class="bg-white p-2.5 rounded-xl border border-[#D5EDED]">
+                <span class="text-[10px] font-bold text-[#4E6770] uppercase block">Contract Period</span>
+                <span class="text-xs font-medium text-[#172B32] block mt-0.5">{{ order?.contract_period }}</span>
+              </div>
+            </div>
+
+            <div class="space-y-2 text-xs">
+              @if (order?.minimum_qualifications) {
+                <div class="bg-white p-3 rounded-xl border border-[#D5EDED]">
+                  <span class="text-[10px] font-bold text-[#4E6770] uppercase block mb-0.5">Minimum Qualifications</span>
+                  <p class="text-[#172B32] leading-relaxed">{{ order?.minimum_qualifications }}</p>
+                </div>
+              }
+              @if (order?.other_employee_benefits) {
+                <div class="bg-white p-3 rounded-xl border border-[#D5EDED]">
+                  <span class="text-[10px] font-bold text-[#4E6770] uppercase block mb-0.5">Other Employee Benefits</span>
+                  <p class="text-[#172B32] leading-relaxed">{{ order?.other_employee_benefits }}</p>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
         <!-- Resume / CV PDF Drag & Drop Zone -->
         <div class="space-y-2">
           <div class="flex justify-between items-center">

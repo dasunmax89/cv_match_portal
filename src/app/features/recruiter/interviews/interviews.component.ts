@@ -14,7 +14,8 @@ import {
   POPULAR_CURRENCIES,
   CurrencyOption,
   CreateOfferRequest,
-  ContractOffer
+  ContractOffer,
+  InviteeEvaluation
 } from '../../../core/models/candidate.models';
 import { OfferDraftModalComponent } from '../offer-draft-modal/offer-draft-modal.component';
 
@@ -62,6 +63,194 @@ export class RecruiterInterviewsComponent implements OnInit {
   popularCurrencies = POPULAR_CURRENCIES;
   isOfferDrawerOpen = signal<boolean>(false);
   offerInterview = signal<ScheduledInterviewItem | null>(null);
+
+  // Finish Interview Action & Toast State
+  finishSuccessToast = signal<string | null>(null);
+
+  // Panel Invitee Feedback & Consensus Calculations
+  panelEvaluations = computed<InviteeEvaluation[]>(() => {
+    const item = this.selectedInterview();
+    if (!item) return [];
+    const fromInterview = item.interview?.invitee_evaluations || item.interview?.evaluations || item.evaluations || [];
+    const interviewers = item.interview?.interviewers || [];
+
+    const map = new Map<string, InviteeEvaluation>();
+    for (const ev of fromInterview) {
+      if (ev.email) map.set(ev.email.toLowerCase().trim(), ev);
+    }
+
+    const result: InviteeEvaluation[] = [];
+    for (const email of interviewers) {
+      const clean = email.toLowerCase().trim();
+      if (map.has(clean)) {
+        result.push(map.get(clean)!);
+        map.delete(clean);
+      } else {
+        result.push({
+          id: clean,
+          email: clean,
+          status: 'pending'
+        });
+      }
+    }
+    for (const remaining of map.values()) {
+      result.push(remaining);
+    }
+    return result;
+  });
+
+  isPanelEvaluationResolved(status?: string): boolean {
+    if (!status) return false;
+    const s = status.toLowerCase().trim();
+    return s === 'given' || s === 'submitted' || s === 'not opt in' || s === 'declined' || s === 'opt_out' || s === 'opted out' || s === 'opted_out';
+  }
+
+  hasPendingPanelFeedback = computed<boolean>(() => {
+    const evals = this.panelEvaluations();
+    if (!evals || evals.length === 0) return false;
+    return evals.some(e => !this.isPanelEvaluationResolved(e.status));
+  });
+
+  pendingPanelistsCount = computed<number>(() => {
+    const evals = this.panelEvaluations();
+    if (!evals || evals.length === 0) return 0;
+    return evals.filter(e => !this.isPanelEvaluationResolved(e.status)).length;
+  });
+
+  canPassInterview = computed<boolean>(() => {
+    return !this.hasPendingPanelFeedback();
+  });
+
+  panelConsensus = computed(() => {
+    const evals = this.panelEvaluations();
+    const givenList = evals.filter(e => e.status === 'given');
+    const givenCount = givenList.length;
+    const totalInvited = evals.length;
+    const pendingCount = evals.filter(e => !this.isPanelEvaluationResolved(e.status)).length;
+    const notOptInCount = evals.filter(e => {
+      const s = (e.status || '').toLowerCase().trim();
+      return s === 'not opt in' || s === 'declined' || s === 'opt_out' || s === 'opted out' || s === 'opted_out';
+    }).length;
+
+    if (givenCount === 0) {
+      return {
+        hasGiven: false,
+        totalInvited,
+        givenCount,
+        pendingCount,
+        notOptInCount,
+        avgRating: 0,
+        avgTech: 0,
+        avgCulture: 0,
+        avgComm: 0,
+        avgRatingDisplay: '0.0',
+        avgTechDisplay: '0.0',
+        avgCultureDisplay: '0.0',
+        avgCommDisplay: '0.0'
+      };
+    }
+
+    const sumRating = givenList.reduce((acc, e) => acc + (e.rating || 0), 0);
+    const sumTech = givenList.reduce((acc, e) => acc + (e.technical_score || 0), 0);
+    const sumCulture = givenList.reduce((acc, e) => acc + (e.culture_score || 0), 0);
+    const sumComm = givenList.reduce((acc, e) => acc + (e.communication_score || 0), 0);
+
+    const avgRating = sumRating / givenCount;
+    const avgTech = sumTech / givenCount;
+    const avgCulture = sumCulture / givenCount;
+    const avgComm = sumComm / givenCount;
+
+    return {
+      hasGiven: true,
+      totalInvited,
+      givenCount,
+      pendingCount,
+      notOptInCount,
+      avgRating,
+      avgTech,
+      avgCulture,
+      avgComm,
+      avgRatingDisplay: avgRating.toFixed(1),
+      avgTechDisplay: avgTech.toFixed(1),
+      avgCultureDisplay: avgCulture.toFixed(1),
+      avgCommDisplay: avgComm.toFixed(1)
+    };
+  });
+
+  isInterviewFinished(item: ScheduledInterviewItem): boolean {
+    if (item.interview?.is_finished) return true;
+    if (item.interview?.status === 'Completed') return true;
+    if (item.interview?.outcome) return true;
+    if (item.status === 'Interview Passed' || item.status === 'Rejected') return true;
+    return false;
+  }
+
+  finishInterview(item: ScheduledInterviewItem, event?: MouseEvent) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    this.isActionLoading.set(true);
+    this.apiService.finishInterview(item.jobId, item.id).subscribe({
+      next: (updatedMatch) => {
+        this.isActionLoading.set(false);
+        this.updateLocalInterviewData(item.jobId, item.id, updatedMatch);
+        const invCount = item.interview?.interviewers?.length || 0;
+        const msg = invCount > 0
+          ? `Interview marked as finished! Feedback links & secret verification codes emailed to ${invCount} panel interviewer${invCount > 1 ? 's' : ''}.`
+          : `Interview marked as finished! Candidate is ready for evaluation.`;
+        this.finishSuccessToast.set(msg);
+        setTimeout(() => this.finishSuccessToast.set(null), 6000);
+      },
+      error: (err) => {
+        this.isActionLoading.set(false);
+        console.error('Failed to finish interview:', err);
+        alert(err?.error?.detail || 'Failed to mark interview as finished. Please try again.');
+      }
+    });
+  }
+
+  resendInviteeEmail(email: string, event?: MouseEvent) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    const item = this.selectedInterview();
+    if (!item) return;
+
+    this.isActionLoading.set(true);
+    this.apiService.resendInviteeFeedback(item.jobId, item.id, email).subscribe({
+      next: () => {
+        this.isActionLoading.set(false);
+        this.decisionSuccess.set(`Feedback link and secret code resent to ${email}`);
+        setTimeout(() => this.decisionSuccess.set(null), 4000);
+      },
+      error: (err) => {
+        this.isActionLoading.set(false);
+        this.decisionError.set(err?.error?.detail || 'Failed to resend feedback email.');
+      }
+    });
+  }
+
+  applyPanelConsensus() {
+    const consensus = this.panelConsensus();
+    if (!consensus.hasGiven) return;
+
+    this.rating.set(Math.round(consensus.avgRating) || 5);
+    this.technicalScore.set(Math.round(consensus.avgTech) || 4);
+    this.cultureScore.set(Math.round(consensus.avgCulture) || 4);
+    this.communicationScore.set(Math.round(consensus.avgComm) || 4);
+
+    const summaryLine = `[Panel Consensus (${consensus.givenCount} reviews)]: Overall ${consensus.avgRatingDisplay}/5, Tech ${consensus.avgTechDisplay}/5, Culture ${consensus.avgCultureDisplay}/5, Comm ${consensus.avgCommDisplay}/5`;
+    const curNotes = this.internalNotes().trim();
+    if (!curNotes.includes('[Panel Consensus')) {
+      this.internalNotes.set(curNotes ? `${curNotes}\n\n${summaryLine}` : summaryLine);
+    }
+
+    this.decisionSuccess.set(`Calculated panel consensus applied to scorecard! (${consensus.givenCount} panel evaluations)`);
+    setTimeout(() => this.decisionSuccess.set(null), 4000);
+  }
 
   ngOnInit() {
     this.fetchOverview();
@@ -261,6 +450,13 @@ export class RecruiterInterviewsComponent implements OnInit {
     const item = this.selectedInterview();
     if (!item) return;
 
+    if (outcome === 'Passed' && this.hasPendingPanelFeedback()) {
+      this.decisionError.set(
+        `Cannot pass interview until all interview panelist feedback is of state feedback given or declined/opt out (${this.pendingPanelistsCount()} pending).`
+      );
+      return;
+    }
+
     this.pendingOutcome.set(outcome);
     this.decisionError.set(null);
     this.decisionSuccess.set(null);
@@ -289,6 +485,13 @@ export class RecruiterInterviewsComponent implements OnInit {
   confirmDecision(advanceToOffer: boolean = false) {
     const item = this.selectedInterview();
     if (!item) return;
+
+    if (this.pendingOutcome() === 'Passed' && this.hasPendingPanelFeedback()) {
+      this.decisionError.set(
+        `Cannot pass interview until all interview panelist feedback is of state feedback given or declined/opt out (${this.pendingPanelistsCount()} pending).`
+      );
+      return;
+    }
 
     this.isActionLoading.set(true);
     this.decisionError.set(null);
@@ -468,6 +671,13 @@ export class RecruiterInterviewsComponent implements OnInit {
         icon: '✕'
       };
     }
+    if (this.isInterviewFinished(item) && !outcome) {
+      return {
+        label: 'Finished (Ready for Eval)',
+        css: 'bg-[#CBF1F5] text-[#244653] border border-[#71C9CE] font-bold',
+        icon: '✓'
+      };
+    }
     if (this.isPast(item.interview?.scheduled_at)) {
       return {
         label: 'Awaiting Results',
@@ -506,10 +716,23 @@ export class RecruiterInterviewsComponent implements OnInit {
   }
 
   // --- Contract Offer Actions ---
+  canOfferContract(item?: ScheduledInterviewItem | null): boolean {
+    if (!item) return false;
+    if (item.offer) return true;
+    const outcome = item.interview?.outcome;
+    const status = item.status;
+    return outcome === 'Passed' || status === 'Interview Passed' || status === 'Passed' ||
+      status === 'Offer Drafting' || status === 'Offer Extended' || status === 'Offered' || status === 'Contract Signed';
+  }
+
   openOfferDrawer(item: ScheduledInterviewItem, event?: MouseEvent) {
     if (event) {
       event.preventDefault();
       event.stopPropagation();
+    }
+    if (!this.canOfferContract(item)) {
+      alert('Contract offers can only be offered after the candidate has completed and passed the interview.');
+      return;
     }
     // Cleanly close evaluation drawer to prevent backdrop overlay conflict
     if (this.isDrawerOpen()) {

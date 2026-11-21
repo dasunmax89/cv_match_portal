@@ -31,6 +31,17 @@
     </div>
   </div>
 
+  <!-- Finish Interview Success Toast Banner -->
+  @if (finishSuccessToast(); as toast) {
+  <div class="p-4 bg-emerald-50 border border-emerald-300 text-emerald-900 rounded-2xl flex items-center justify-between shadow-2xs animate-in fade-in duration-200">
+    <div class="flex items-center gap-2.5">
+      <span class="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-sm">✓</span>
+      <p class="text-xs font-bold">{{ toast }}</p>
+    </div>
+    <button (click)="finishSuccessToast.set(null)" type="button" class="text-emerald-700 hover:text-emerald-950 font-bold text-sm px-2 cursor-pointer">✕</button>
+  </div>
+  }
+
   <!-- Metric Banner Cards -->
   @if (overviewData(); as overview) {
   <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3.5">
@@ -396,7 +407,7 @@
                       <span>Offer Extended</span>
                     </button>
                     }
-                  } @else if (item.interview?.outcome === 'Passed' || item.status === 'Interview Passed') {
+                  } @else if (canOfferContract(item)) {
                     <button (click)="openOfferDrawer(item, $event)" type="button"
                       class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#244653] hover:bg-[#1A343E] text-white rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer"
                       title="Candidate cleared interview! Click to generate and dispatch formal employment contract">
@@ -405,9 +416,31 @@
                       </svg>
                       <span>Draft Offer</span>
                     </button>
+                  } @else {
+                    <button type="button" disabled
+                      class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 text-slate-400 border border-slate-200 rounded-xl text-xs font-medium cursor-not-allowed opacity-60"
+                      title="Offer contract is disabled until candidate has completed and passed the interview">
+                      <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                      </svg>
+                      <span>Offer Contract</span>
+                    </button>
                   }
 
-                  <!-- Evaluation Button -->
+                  <!-- Finished Button (Shown only when interview is NOT finished) -->
+                  @if (!isInterviewFinished(item)) {
+                  <button (click)="finishInterview(item, $event)" type="button" [disabled]="isActionLoading()"
+                    class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-[#244653] hover:bg-[#1A343E] text-[#CBF1F5] hover:text-white rounded-xl text-xs font-bold transition-all shadow-2xs cursor-pointer disabled:opacity-50"
+                    title="Mark interview session as finished and email unique feedback links with secret codes to panel interviewers">
+                    <svg class="w-3.5 h-3.5 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span>Finished</span>
+                  </button>
+                  }
+
+                  <!-- Evaluation Button (ONLY visible after interview is finished) -->
+                  @if (isInterviewFinished(item)) {
                   <button (click)="openEvaluationDrawer(item, $event)" type="button"
                     class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-white hover:bg-[#E3FDFD] text-[#244653] border border-[#D5EDED] hover:border-[#71C9CE] rounded-xl text-xs font-bold transition-all shadow-2xs cursor-pointer">
                     <svg class="w-3.5 h-3.5 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -415,6 +448,7 @@
                     </svg>
                     <span>{{ item.interview?.outcome ? 'View / Edit Results' : 'Evaluate Candidate' }}</span>
                   </button>
+                  }
                 </div>
               </td>
             </tr>
@@ -436,7 +470,7 @@
 @if (isDrawerOpen() && selectedInterview(); as interview) {
 <div class="fixed inset-0 z-50 overflow-hidden bg-[#244653]/60 backdrop-blur-xs flex justify-end animate-in fade-in duration-200"
      (click)="closeEvaluationDrawer()">
-  <div class="relative w-full max-w-2xl bg-white shadow-2xl h-full flex flex-col z-10 animate-in slide-in-from-right duration-200 border-l border-[#D5EDED]"
+  <div class="relative w-full max-w-4xl lg:max-w-5xl bg-white shadow-2xl h-full flex flex-col z-10 animate-in slide-in-from-right duration-200 border-l border-[#D5EDED]"
        (click)="$event.stopPropagation()">
     
     <!-- STEP 1: EVALUATION SCORECARD HEADER -->
@@ -470,9 +504,11 @@
 
       <div class="flex items-center space-x-2">
         <button (click)="openOfferDrawer(interview, $event)" type="button"
-          class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#CBF1F5] hover:bg-[#A6E3E9] text-[#244653] border border-[#71C9CE] rounded-xl text-xs font-bold transition-all shadow-2xs cursor-pointer"
-          title="Open employment contract offer drawer">
-          <svg class="w-3.5 h-3.5 text-[#244653]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          [disabled]="!canOfferContract(interview)"
+          [ngClass]="!canOfferContract(interview) ? 'opacity-40 cursor-not-allowed bg-slate-100 text-slate-400 border-slate-200' : 'bg-[#CBF1F5] hover:bg-[#A6E3E9] text-[#244653] border-[#71C9CE] cursor-pointer shadow-2xs'"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 border rounded-xl text-xs font-bold transition-all"
+          [title]="!canOfferContract(interview) ? 'Offer contract is disabled until candidate has passed the interview' : 'Open employment contract offer drawer'">
+          <svg class="w-3.5 h-3.5" [ngClass]="!canOfferContract(interview) ? 'text-slate-400' : 'text-[#244653]'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
           <span>{{ interview.offer ? 'View Contract' : 'Offer Contract' }}</span>
@@ -614,6 +650,159 @@
         }
       </div>
 
+      <!-- ================================================================= -->
+      <!-- PANEL INTERVIEWERS FEEDBACK & CONSENSUS (Invitee Status & Calc)   -->
+      <!-- ================================================================= -->
+      <div class="space-y-3 pt-3 border-t border-[#D5EDED]">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <span class="text-sm">👥</span>
+            <h4 class="text-xs font-bold uppercase tracking-wider text-[#172B32]">
+              Panel Interviewers Feedback ({{ panelEvaluations().length }})
+            </h4>
+          </div>
+          
+          <div class="flex items-center gap-1.5 text-[11px] font-semibold">
+            @if (panelConsensus().givenCount > 0) {
+            <span class="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200">
+              {{ panelConsensus().givenCount }} Given
+            </span>
+            }
+            @if (panelConsensus().pendingCount > 0) {
+            <span class="px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 border border-amber-200">
+              {{ panelConsensus().pendingCount }} Pending
+            </span>
+            }
+            @if (panelConsensus().notOptInCount > 0) {
+            <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 border border-slate-300">
+              {{ panelConsensus().notOptInCount }} Declined / Opted Out
+            </span>
+            }
+          </div>
+        </div>
+
+        @if (panelEvaluations().length === 0) {
+        <div class="p-3 bg-[#F8FBFA] border border-[#D5EDED] rounded-xl text-xs text-[#4E6770] flex items-center justify-between">
+          <span>No panel interviewers were invited for this interview.</span>
+        </div>
+        } @else {
+
+        <!-- Panel Consensus Box with Calculated Averages ("canculate") -->
+        @if (panelConsensus().hasGiven) {
+        <div class="p-4 bg-gradient-to-br from-[#E3FDFD]/80 to-[#CBF1F5]/40 border border-[#71C9CE] rounded-2xl space-y-3 shadow-2xs">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div class="flex items-center space-x-2">
+              <span class="text-sm">🧮</span>
+              <div>
+                <h5 class="text-xs font-black text-[#244653]">Calculated Panel Consensus</h5>
+                <p class="text-[10px] text-[#4E6770]">Average scores across {{ panelConsensus().givenCount }} submitted panel evaluations</p>
+              </div>
+            </div>
+
+            <button (click)="applyPanelConsensus()" type="button"
+              class="px-3 py-1.5 bg-[#244653] hover:bg-[#1A343E] text-[#CBF1F5] hover:text-white rounded-xl text-xs font-bold transition-all shadow-2xs flex items-center gap-1.5 self-start sm:self-auto cursor-pointer"
+              title="Apply calculated averages to the scorecard below">
+              <span>Calculate &amp; Apply to Scorecard</span>
+              <span>&darr;</span>
+            </button>
+          </div>
+
+          <!-- Calculated Competency Metrics Grid -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
+            <div class="p-2.5 bg-white/90 rounded-xl border border-[#A6E3E9] shadow-2xs">
+              <span class="text-[10px] uppercase font-bold text-[#4E6770] block">Overall Rating</span>
+              <span class="text-sm font-black text-[#244653]">⭐ {{ panelConsensus().avgRatingDisplay }}<span class="text-[10px] font-normal text-[#4E6770]"> / 5</span></span>
+            </div>
+            <div class="p-2.5 bg-white/90 rounded-xl border border-[#A6E3E9] shadow-2xs">
+              <span class="text-[10px] uppercase font-bold text-[#4E6770] block">Technical</span>
+              <span class="text-sm font-black text-[#244653]">{{ panelConsensus().avgTechDisplay }}<span class="text-[10px] font-normal text-[#4E6770]"> / 5</span></span>
+            </div>
+            <div class="p-2.5 bg-white/90 rounded-xl border border-[#A6E3E9] shadow-2xs">
+              <span class="text-[10px] uppercase font-bold text-[#4E6770] block">Culture</span>
+              <span class="text-sm font-black text-[#244653]">{{ panelConsensus().avgCultureDisplay }}<span class="text-[10px] font-normal text-[#4E6770]"> / 5</span></span>
+            </div>
+            <div class="p-2.5 bg-white/90 rounded-xl border border-[#A6E3E9] shadow-2xs">
+              <span class="text-[10px] uppercase font-bold text-[#4E6770] block">Communication</span>
+              <span class="text-sm font-black text-[#244653]">{{ panelConsensus().avgCommDisplay }}<span class="text-[10px] font-normal text-[#4E6770]"> / 5</span></span>
+            </div>
+          </div>
+        </div>
+        }
+
+        <!-- Invitee Evaluation List -->
+        <div class="space-y-2">
+          @for (inv of panelEvaluations(); track inv.email) {
+          <div class="p-3 bg-white border border-[#D5EDED] rounded-xl space-y-2 shadow-2xs">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-2.5">
+                <div class="w-7 h-7 rounded-lg bg-[#244653] text-[#CBF1F5] font-black text-[10px] flex items-center justify-center">
+                  {{ getInitials(inv.email) }}
+                </div>
+                <div>
+                  <span class="text-xs font-bold text-[#172B32] block">{{ inv.email }}</span>
+                  <span class="text-[10px] text-[#4E6770]">Panel Interviewer</span>
+                </div>
+              </div>
+
+              <!-- Feedback Status Badge: pending, given, not opt in -->
+              <div>
+                @if (inv.status === 'given') {
+                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                  <span>✓</span>
+                  <span>Feedback Given</span>
+                </span>
+                } @else if (inv.status === 'not opt in' || inv.status === 'declined' || inv.status === 'opt_out' || inv.status === 'opted out') {
+                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-300">
+                  <span>✕</span>
+                  <span>Declined / Opted Out</span>
+                </span>
+                } @else {
+                <div class="flex items-center gap-2">
+                  <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200">
+                    <span>⌛</span>
+                    <span>Pending Feedback</span>
+                  </span>
+                  <button (click)="resendInviteeEmail(inv.email, $event)" type="button" [disabled]="isActionLoading()"
+                    class="text-[10px] font-bold text-[#244653] hover:text-[#71C9CE] underline cursor-pointer disabled:opacity-50">
+                    Resend Code
+                  </button>
+                </div>
+                }
+              </div>
+            </div>
+
+            <!-- Details if feedback given -->
+            @if (inv.status === 'given') {
+            <div class="pt-2 border-t border-[#D5EDED]/70 space-y-2 text-xs">
+              <div class="flex items-center gap-3 text-[11px] font-medium text-[#244653] flex-wrap">
+                <span>⭐ Rating: <strong>{{ inv.rating }}/5</strong></span>
+                <span>• Tech: <strong>{{ inv.technical_score }}/5</strong></span>
+                <span>• Culture: <strong>{{ inv.culture_score }}/5</strong></span>
+                <span>• Comm: <strong>{{ inv.communication_score }}/5</strong></span>
+                @if (inv.submitted_at) {
+                <span class="text-[10px] text-[#4E6770] font-normal ml-auto">Submitted: {{ formatDisplayDate(inv.submitted_at) }}</span>
+                }
+              </div>
+
+              @if (inv.internal_notes) {
+              <div class="p-2 bg-[#F8FBFA] rounded-lg border border-[#D5EDED] text-[11px] text-[#172B32]">
+                <strong class="text-[#244653]">🔒 Notes:</strong> {{ inv.internal_notes }}
+              </div>
+              }
+
+              @if (inv.candidate_feedback) {
+              <div class="p-2 bg-[#F8FBFA] rounded-lg border border-[#D5EDED] text-[11px] text-[#4E6770]">
+                <strong class="text-[#244653]">💬 Feedback:</strong> {{ inv.candidate_feedback }}
+              </div>
+              }
+            </div>
+            }
+          </div>
+          }
+        </div>
+        }
+      </div>
+
       <!-- Candidate Evaluation Scorecard Form -->
       <div class="space-y-5 pt-2 border-t border-[#D5EDED]">
         <div>
@@ -694,6 +883,20 @@
         </div>
       </div>
 
+      <!-- Pass Interview Locked Alert Banner when Panelist Feedback is Pending -->
+      @if (hasPendingPanelFeedback()) {
+      <div class="p-3.5 bg-amber-50/90 border border-amber-200 rounded-xl flex items-start gap-2.5 text-xs text-amber-950 shadow-2xs">
+        <span class="text-base leading-none shrink-0 mt-0.5">⚠️</span>
+        <div class="space-y-0.5 leading-relaxed">
+          <strong class="font-extrabold text-amber-900 block">Pass Interview Locked</strong>
+          <span>
+            You cannot pass this interview until all panelist feedback is of state <strong>Feedback Given</strong> or <strong>Declined/Opted Out</strong>.
+            Currently awaiting <strong>{{ pendingPanelistsCount() }} panelist(s)</strong>.
+          </span>
+        </div>
+      </div>
+      }
+
     </div>
 
     <!-- Step 1 Footer Actions -->
@@ -706,10 +909,12 @@
       <div class="w-full sm:w-auto flex flex-wrap items-center gap-2">
         <!-- Direct Offer Contract Button -->
         <button (click)="openOfferDrawer(interview, $event)" type="button"
-          class="px-4 py-2.5 bg-[#CBF1F5] hover:bg-[#A6E3E9] text-[#244653] border border-[#71C9CE] rounded-xl text-xs font-extrabold shadow-2xs transition-all cursor-pointer"
-          title="Open employment contract offer drawer">
+          [disabled]="!canOfferContract(interview)"
+          [ngClass]="!canOfferContract(interview) ? 'opacity-40 cursor-not-allowed bg-slate-100 text-slate-400 border-slate-200' : 'bg-[#CBF1F5] hover:bg-[#A6E3E9] text-[#244653] border-[#71C9CE] cursor-pointer shadow-2xs'"
+          class="px-4 py-2.5 border rounded-xl text-xs font-extrabold transition-all"
+          [title]="!canOfferContract(interview) ? 'Offer contract is disabled until candidate has passed the interview' : 'Open employment contract offer drawer'">
           <span class="flex items-center gap-1.5">
-            <svg class="w-3.5 h-3.5 text-[#244653]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-3.5 h-3.5" [ngClass]="!canOfferContract(interview) ? 'text-slate-400' : 'text-[#244653]'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
             <span>{{ interview.offer ? 'Manage Contract' : 'Offer Contract' }}</span>
@@ -723,8 +928,15 @@
         </button>
 
         <!-- Pass Interview Button -->
-        <button (click)="openDecisionConfirmation('Passed')" type="button" [disabled]="isActionLoading()"
-          class="px-5 py-2.5 bg-[#244653] hover:bg-[#1A343E] text-white rounded-xl text-xs font-extrabold shadow-xs transition-all cursor-pointer disabled:opacity-50">
+        <button (click)="openDecisionConfirmation('Passed')" type="button"
+          [disabled]="isActionLoading() || !canPassInterview()"
+          [ngClass]="!canPassInterview() 
+            ? 'opacity-40 cursor-not-allowed bg-slate-200 text-slate-500 border border-slate-300 shadow-none' 
+            : 'bg-[#244653] hover:bg-[#1A343E] text-white cursor-pointer shadow-xs'"
+          class="px-5 py-2.5 rounded-xl text-xs font-extrabold transition-all"
+          [title]="!canPassInterview() 
+            ? 'Cannot pass interview until all panelist feedback is given or declined/opted out (' + pendingPanelistsCount() + ' pending)' 
+            : 'Pass Interview &rarr;'">
           ✓ Pass Interview &rarr;
         </button>
       </div>
@@ -749,6 +961,18 @@
           <strong>{{ interview.candidateName }}</strong> will be marked as <span class="underline font-bold">Interview Passed</span>. You can review the email notification and add personal next steps below.
         </p>
       </div>
+
+      @if (hasPendingPanelFeedback()) {
+      <div class="p-3.5 bg-amber-50/90 border border-amber-200 rounded-xl flex items-start gap-2.5 text-xs text-amber-950 shadow-2xs">
+        <span class="text-base leading-none shrink-0 mt-0.5">⚠️</span>
+        <div class="space-y-0.5 leading-relaxed">
+          <strong class="font-extrabold text-amber-900 block">Pass Decision Locked</strong>
+          <span>
+            Passing is disabled because {{ pendingPanelistsCount() }} panelist(s) have not yet provided feedback or declined/opted out.
+          </span>
+        </div>
+      </div>
+      }
       } @else {
       <div class="p-5 bg-rose-600 rounded-2xl text-white shadow-xs space-y-2">
         <div class="flex items-center space-x-2.5">
@@ -842,13 +1066,17 @@
 
       <div class="w-full sm:w-auto flex flex-wrap items-center justify-end gap-2.5">
         @if (pendingOutcome() === 'Passed') {
-        <button (click)="confirmDecision(false)" type="button" [disabled]="isActionLoading()"
-          class="px-4 py-2.5 bg-[#E3FDFD] hover:bg-[#CBF1F5] text-[#244653] border border-[#A6E3E9] rounded-xl text-xs font-bold transition-all cursor-pointer disabled:opacity-50">
+        <button (click)="confirmDecision(false)" type="button" [disabled]="isActionLoading() || !canPassInterview()"
+          [ngClass]="!canPassInterview() ? 'opacity-40 cursor-not-allowed bg-slate-200 text-slate-500 border-slate-300 shadow-none' : 'bg-[#E3FDFD] hover:bg-[#CBF1F5] text-[#244653] border-[#A6E3E9] cursor-pointer shadow-2xs'"
+          class="px-4 py-2.5 border rounded-xl text-xs font-bold transition-all"
+          [title]="!canPassInterview() ? 'Cannot pass interview until all panelist feedback is given or declined/opted out (' + pendingPanelistsCount() + ' pending)' : 'Confirm Pass Notice'">
           Confirm Pass Notice
         </button>
 
-        <button (click)="confirmDecision(true)" type="button" [disabled]="isActionLoading()"
-          class="inline-flex items-center gap-2 px-5 py-2.5 bg-[#244653] hover:bg-[#1A343E] text-white rounded-xl text-xs font-extrabold shadow-xs transition-all cursor-pointer disabled:opacity-50">
+        <button (click)="confirmDecision(true)" type="button" [disabled]="isActionLoading() || !canPassInterview()"
+          [ngClass]="!canPassInterview() ? 'opacity-40 cursor-not-allowed bg-slate-300 text-slate-500 shadow-none' : 'bg-[#244653] hover:bg-[#1A343E] text-white cursor-pointer shadow-xs'"
+          class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-extrabold transition-all"
+          [title]="!canPassInterview() ? 'Cannot pass interview until all panelist feedback is given or declined/opted out (' + pendingPanelistsCount() + ' pending)' : 'Pass & Advance to Offer Contract &rarr;'">
           @if (isActionLoading()) {
           <span class="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
           }

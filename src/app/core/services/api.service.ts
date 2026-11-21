@@ -6,6 +6,9 @@ import {
   ParsedCriteria, 
   CandidateMatch, 
   JobResponse, 
+  AnalyzeJobDescriptionResponse,
+  SaveJobRequest,
+  PreliminaryJobOrder,
   PublicSJTAssessment, 
   CandidateAnswer, 
   JobOverviewItem, 
@@ -18,7 +21,9 @@ import {
   SignOfferRequest,
   DeclineOfferRequest,
   UpdateCommissionRequest,
-  ManagementPlacementsResponse
+  ManagementPlacementsResponse,
+  InviteeFeedbackInfoResponse,
+  SubmitInviteeFeedbackPayload
 } from '../models/candidate.models';
 import { hashPasswordClient } from '../utils/crypto.utils';
 
@@ -162,6 +167,23 @@ export class ApiService {
   }
 
 
+  analyzeJd(title: string | undefined, file: File): Observable<AnalyzeJobDescriptionResponse> {
+    const formData = new FormData();
+    if (title && title.trim()) {
+      formData.append('title', title.trim());
+    }
+    formData.append('file', file);
+    return this.http.post<AnalyzeJobDescriptionResponse>(`${this.baseUrl}/recruiter/jobs/analyze`, formData);
+  }
+
+  saveJob(payload: SaveJobRequest): Observable<JobResponse> {
+    return this.http.post<JobResponse>(`${this.baseUrl}/recruiter/jobs/save`, payload);
+  }
+
+  updatePreliminaryJobOrder(jobId: string, payload: PreliminaryJobOrder): Observable<JobResponse> {
+    return this.http.put<JobResponse>(`${this.baseUrl}/recruiter/jobs/${jobId}/preliminary-order`, payload);
+  }
+
   uploadJd(title: string | undefined, file: File): Observable<JobResponse> {
     const formData = new FormData();
     if (title && title.trim()) {
@@ -206,6 +228,47 @@ export class ApiService {
     return this.http.post<any>(
       `${this.baseUrl}/recruiter/jobs/${jobId}/matches/${matchId}/interview-notes`,
       payload
+    );
+  }
+
+  finishInterview(jobId: string, matchId: string): Observable<any> {
+    return this.http.post<any>(
+      `${this.baseUrl}/recruiter/jobs/${jobId}/matches/${matchId}/finish-interview`,
+      {}
+    );
+  }
+
+  resendInviteeFeedback(jobId: string, matchId: string, inviteeEmail: string): Observable<any> {
+    return this.http.post<any>(
+      `${this.baseUrl}/recruiter/jobs/${jobId}/matches/${matchId}/resend-invitee-feedback`,
+      { invitee_email: inviteeEmail }
+    );
+  }
+
+  getInviteeFeedbackInfo(token: string): Observable<InviteeFeedbackInfoResponse> {
+    return this.http.get<InviteeFeedbackInfoResponse>(
+      `${this.baseUrl}/interviews/feedback/${encodeURIComponent(token)}`
+    );
+  }
+
+  verifyInviteeCode(token: string, secretCode: string): Observable<{ authenticated: boolean; email: string; status: string }> {
+    return this.http.post<{ authenticated: boolean; email: string; status: string }>(
+      `${this.baseUrl}/interviews/feedback/${encodeURIComponent(token)}/verify`,
+      { secret_code: secretCode }
+    );
+  }
+
+  submitInviteeFeedback(token: string, payload: SubmitInviteeFeedbackPayload): Observable<any> {
+    return this.http.post<any>(
+      `${this.baseUrl}/interviews/feedback/${encodeURIComponent(token)}/submit`,
+      payload
+    );
+  }
+
+  optOutInviteeFeedback(token: string, secretCode?: string): Observable<any> {
+    return this.http.post<any>(
+      `${this.baseUrl}/interviews/feedback/${encodeURIComponent(token)}/opt-out`,
+      { secret_code: secretCode }
     );
   }
 
@@ -382,6 +445,30 @@ export class ApiService {
 
   candidateDeclineOffer(matchId: string, payload: DeclineOfferRequest): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/candidate/matches/${encodeURIComponent(matchId)}/offer/decline`, payload);
+  }
+
+  uploadContractComplianceDocument(matchId: string, file: File, docType: 'passport' | 'tin_certificate'): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file, file.name);
+    formData.append('doc_type', docType);
+    return this.http.post<any>(
+      `${this.baseUrl}/candidate/matches/${encodeURIComponent(matchId)}/offer/upload-document`,
+      formData
+    );
+  }
+
+  downloadCandidateContractPdf(matchId: string): Observable<Blob> {
+    return this.http.get(
+      `${this.baseUrl}/candidate/matches/${encodeURIComponent(matchId)}/offer/pdf`,
+      { responseType: 'blob' }
+    );
+  }
+
+  downloadRecruiterContractPdf(jobId: string, matchId: string): Observable<Blob> {
+    return this.http.get(
+      `${this.baseUrl}/recruiter/jobs/${encodeURIComponent(jobId)}/matches/${encodeURIComponent(matchId)}/offer/pdf`,
+      { responseType: 'blob' }
+    );
   }
 
   getManagementPlacements(): Observable<ManagementPlacementsResponse> {

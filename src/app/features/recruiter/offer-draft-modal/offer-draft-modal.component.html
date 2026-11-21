@@ -1,7 +1,7 @@
 @if (isOpen) {
 <div class="fixed inset-0 z-[60] overflow-hidden bg-[#244653]/60 backdrop-blur-xs flex justify-end animate-in fade-in duration-200"
      (click)="handleClose()">
-  <div class="relative w-full max-w-3xl bg-white shadow-2xl h-full flex flex-col z-10 animate-in slide-in-from-right duration-200 border-l border-[#D5EDED]"
+  <div class="relative w-full max-w-5xl bg-white shadow-2xl h-full flex flex-col z-10 animate-in slide-in-from-right duration-200 border-l border-[#D5EDED]"
        (click)="$event.stopPropagation()">
 
     <!-- Header Section -->
@@ -59,15 +59,29 @@
         </button>
       </div>
 
-      @if (activeTab() === 'preview') {
-      <button (click)="printContractPreview()" type="button"
-        class="text-xs text-[#244653] hover:text-[#172B32] font-semibold flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white border border-[#D5EDED] hover:border-[#71C9CE] shadow-2xs transition-all cursor-pointer">
-        <svg class="w-3.5 h-3.5 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-        </svg>
-        Print / PDF
-      </button>
-      }
+      <div class="flex items-center gap-2">
+        <button (click)="downloadContractPdf()" type="button" [disabled]="isDownloadingPdf()"
+          class="text-xs text-[#244653] hover:text-[#172B32] font-semibold flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-[#71C9CE] hover:bg-[#E3FDFD] shadow-2xs transition-all cursor-pointer">
+          @if (isDownloadingPdf()) {
+            <span class="w-3.5 h-3.5 border-2 border-[#244653] border-t-transparent rounded-full animate-spin"></span>
+          } @else {
+            <svg class="w-3.5 h-3.5 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          }
+          <span>Download PDF</span>
+        </button>
+
+        @if (activeTab() === 'preview') {
+        <button (click)="printContractPreview()" type="button"
+          class="text-xs text-[#244653] hover:text-[#172B32] font-semibold flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-white border border-[#D5EDED] hover:border-[#71C9CE] shadow-2xs transition-all cursor-pointer">
+          <svg class="w-3.5 h-3.5 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+          </svg>
+          Print
+        </button>
+        }
+      </div>
     </div>
 
     <!-- Scrollable Body Content -->
@@ -97,6 +111,50 @@
       <!-- ======================================================== -->
       @if (activeTab() === 'terms') {
       <div class="space-y-6">
+
+        @if (existingOffer?.status === 'Accepted') {
+        <div class="p-4 rounded-2xl bg-[#CBF1F5] border border-[#71C9CE] space-y-3 shadow-2xs">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-lg bg-[#244653] text-[#CBF1F5] font-black text-xs flex items-center justify-center">✓</span>
+              <span class="text-xs font-black uppercase text-[#244653]">Offer Accepted & Digitally Signed</span>
+            </div>
+            <span class="text-[11px] font-bold text-[#244653]">
+              Signed on {{ existingOffer?.signed_at ? (existingOffer?.signed_at | date:'medium') : 'Recently' }}
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-[#71C9CE]/40">
+            <div class="p-3 bg-white rounded-xl border border-[#71C9CE] flex items-center justify-between text-xs">
+              <div class="flex items-center gap-2 truncate">
+                <span>🛂</span>
+                <span class="font-bold text-[#172B32] shrink-0">Passport:</span>
+                <span class="text-[#4E6770] truncate">{{ existingOffer?.passport_filename || (existingOffer?.passport_url ? 'Passport Document' : 'Not Uploaded') }}</span>
+              </div>
+              @if (existingOffer?.passport_url) {
+                <a [href]="existingOffer?.passport_url" target="_blank" rel="noopener noreferrer"
+                  class="ml-2 px-2.5 py-1 bg-[#E3FDFD] hover:bg-[#CBF1F5] text-[#244653] rounded-lg font-bold text-[11px] shrink-0 border border-[#A6E3E9]">
+                  View
+                </a>
+              }
+            </div>
+
+            <div class="p-3 bg-white rounded-xl border border-[#71C9CE] flex items-center justify-between text-xs">
+              <div class="flex items-center gap-2 truncate">
+                <span>📜</span>
+                <span class="font-bold text-[#172B32] shrink-0">TIN:</span>
+                <span class="text-[#4E6770] truncate">{{ existingOffer?.tin_certificate_filename || (existingOffer?.tin_certificate_url ? 'TIN Certificate' : 'Not Uploaded') }}</span>
+              </div>
+              @if (existingOffer?.tin_certificate_url) {
+                <a [href]="existingOffer?.tin_certificate_url" target="_blank" rel="noopener noreferrer"
+                  class="ml-2 px-2.5 py-1 bg-[#E3FDFD] hover:bg-[#CBF1F5] text-[#244653] rounded-lg font-bold text-[11px] shrink-0 border border-[#A6E3E9]">
+                  View
+                </a>
+              }
+            </div>
+          </div>
+        </div>
+        }
 
         <!-- 1. Compensation Package & Currency -->
         <div class="space-y-3.5">

@@ -1,13 +1,12 @@
 <div class="min-h-screen bg-[#F8FBFA] py-12 px-4 sm:px-6 lg:px-8">
-  <div class="max-w-4xl mx-auto">
+  <div class="max-w-5xl mx-auto">
     <div class="mb-10 text-center space-y-2">
       <span
         class="px-3.5 py-1 bg-[#E3FDFD] text-[#244653] text-xs font-bold rounded-full uppercase tracking-wider border border-[#A6E3E9]">
         Open Opportunities
       </span>
-      <h1 class="text-4xl font-extrabold text-[#172B32] tracking-tight">Open Positions</h1>
-      <p class="text-base text-[#4E6770]">Find your next opportunity and let our AI match your unique skillset to
-        high-impact teams.</p>
+      <h1 class="text-4xl font-extrabold text-[#172B32] tracking-tight">Open Positions & Job Orders</h1>
+      <p class="text-base text-[#4E6770]">Find your next opportunity and let our AI match your unique skillset to high-impact teams.</p>
     </div>
 
     @if (isLoading()) {
@@ -27,62 +26,249 @@
         💼
       </div>
       <h3 class="text-lg font-bold text-[#172B32]">No open positions</h3>
-      <p class="text-sm text-[#4E6770] mt-1 max-w-sm mx-auto">We don't have any matching openings at the moment. Please
-        check back soon or explore other categories.</p>
+      <p class="text-sm text-[#4E6770] mt-1 max-w-sm mx-auto">We don't have any matching openings at the moment. Please check back soon or explore other categories.</p>
     </div>
     } @else {
     <div class="space-y-6">
       @for (job of jobs(); track job.id) {
-      <div
-        class="bg-white rounded-3xl shadow-xs border border-[#D5EDED] p-6 sm:p-7 hover:border-[#71C9CE] hover:shadow-md transition-all duration-200">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        @let order = job.preliminary_job_order || job.preliminaryJobOrder;
+        <div
+          class="bg-white rounded-3xl shadow-xs border border-[#D5EDED] p-6 sm:p-7 hover:border-[#71C9CE] hover:shadow-md transition-all duration-200 space-y-5">
+          <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
 
-          <div>
-            <h2 class="text-xl sm:text-2xl font-bold text-[#172B32] hover:text-[#244653] transition-colors">{{ job.title
-              }}</h2>
-            <div class="flex flex-wrap items-center gap-2 mt-2.5">
+            <div class="space-y-2">
+              <div class="flex items-center gap-2 flex-wrap">
+                @if (order?.job_category) {
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#CBF1F5] text-[#244653] border border-[#71C9CE]/40">
+                    {{ order?.job_category }}
+                  </span>
+                }
+                @if (order?.total_approved_quantity) {
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#E3FDFD] text-[#244653] border border-[#A6E3E9]">
+                    {{ order?.total_approved_quantity }} Headcount Quota
+                  </span>
+                }
+              </div>
+
+              <h2 class="text-xl sm:text-2xl font-bold text-[#172B32] hover:text-[#244653] transition-colors cursor-pointer"
+                  (click)="openJobModal(job)">
+                {{ job.title || job.criteria.title }}
+              </h2>
+
+              <div class="flex flex-wrap items-center gap-2 text-xs text-[#4E6770]">
+                <span class="font-medium text-[#172B32]">
+                  {{ job.criteria.seniority_level }}
+                </span>
+                <span>•</span>
+                <span>
+                  {{ job.criteria.minimum_years_experience }}+ Years Exp.
+                </span>
+
+                @if (order?.monthly_salary) {
+                  <span>•</span>
+                  <span class="font-bold text-[#244653]">
+                    {{ order?.monthly_salary | number }} {{ order?.salary_currency || 'RM' }} / month
+                  </span>
+                }
+
+                @if (order?.regular_work_hours) {
+                  <span>•</span>
+                  <span class="text-[#4E6770]">
+                    {{ order?.regular_work_hours }}
+                  </span>
+                }
+
+                @if (hasBehavioralCheck(job)) {
+                  <span>•</span>
+                  <span
+                    class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-[#CBF1F5] text-[#244653]"
+                    title="Includes O*NET Behavioral SJT Check">
+                    <svg class="w-3.5 h-3.5 text-[#244653] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Behavioral Assessment
+                  </span>
+                }
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2.5 shrink-0 self-start sm:self-center">
+              <button type="button" (click)="openJobModal(job)"
+                      class="inline-flex justify-center items-center px-4 py-2.5 text-xs font-bold rounded-xl text-[#244653] bg-[#E3FDFD] hover:bg-[#CBF1F5] border border-[#A6E3E9] transition-all shadow-2xs cursor-pointer">
+                View Job Details
+              </button>
+              <a [routerLink]="['/candidate/apply', job.id]"
+                [state]="{ job: job, jobTitle: job.title || job.criteria.title }"
+                class="inline-flex justify-center items-center px-5 py-2.5 text-xs font-bold rounded-xl text-white bg-[#244653] hover:bg-[#1A343E] transition-all shadow-xs cursor-pointer">
+                Apply Now
+              </a>
+            </div>
+          </div>
+
+          <!-- Description Snippet -->
+          @if (order?.job_description) {
+            <p class="text-xs text-[#4E6770] leading-relaxed line-clamp-2 italic bg-[#F8FBFA] p-3 rounded-xl border border-[#D5EDED]/70">
+              {{ order?.job_description }}
+            </p>
+          }
+
+          <div class="pt-4 border-t border-[#D5EDED]">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-[#4E6770] mb-2">Required Skills</h4>
+            <div class="flex flex-wrap gap-1.5">
+              @for (skill of job.criteria.required_skills; track skill) {
               <span
-                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#E3FDFD] text-[#244653] border border-[#A6E3E9]">
-                {{ job.criteria.seniority_level }}
-              </span>
-              <span class="text-xs font-medium text-[#4E6770]">
-                {{ job.criteria.minimum_years_experience }}+ Years Exp.
-              </span>
-              @if (hasBehavioralCheck(job)) {
-              <span
-                class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#CBF1F5] text-[#244653] border border-[#71C9CE]"
-                title="Includes O*NET Behavioral SJT Check">
-                <svg class="w-3.5 h-3.5 text-[#244653] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                Behavioral Check
+                class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-[#F8FBFA] text-[#244653] border border-[#D5EDED]">
+                {{ skill }}
               </span>
               }
             </div>
           </div>
-
-          <a [routerLink]="['/candidate/apply', job.id]"
-            [state]="{ job: job, jobTitle: job.title || job.criteria.title }"
-            class="inline-flex justify-center items-center px-6 py-2.5 text-sm font-semibold rounded-xl text-white bg-[#244653] hover:bg-[#1A343E] transition-all shadow-xs shrink-0 cursor-pointer">
-            Apply Now
-          </a>
         </div>
-
-        <div class="mt-6 pt-5 border-t border-[#D5EDED]">
-          <h4 class="text-xs font-bold uppercase tracking-wider text-[#4E6770] mb-2.5">Required Skills</h4>
-          <div class="flex flex-wrap gap-2">
-            @for (skill of job.criteria.required_skills; track skill) {
-            <span
-              class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-[#F8FBFA] text-[#244653] border border-[#D5EDED]">
-              {{ skill }}
-            </span>
-            }
-          </div>
-        </div>
-      </div>
       }
     </div>
     }
   </div>
+
+  <!-- Job Details Modal for Candidates -->
+  @if (selectedJobForModal(); as job) {
+    @let order = job.preliminary_job_order || job.preliminaryJobOrder;
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-[#244653]/60 backdrop-blur-xs animate-fadeIn"
+         (click)="closeJobModal()">
+      <div class="bg-white rounded-3xl shadow-2xl border border-[#D5EDED] w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden animate-scaleUp"
+           (click)="$event.stopPropagation()">
+        
+        <!-- Modal Header -->
+        <div class="p-6 border-b border-[#D5EDED] bg-gradient-to-r from-[#CBF1F5]/30 via-white to-[#E3FDFD]/40 flex justify-between items-start shrink-0">
+          <div>
+            <div class="flex items-center gap-2 mb-1.5">
+              <span class="text-xs font-bold uppercase tracking-wider text-[#244653] bg-[#CBF1F5] px-2.5 py-0.5 rounded-full border border-[#71C9CE]/50">
+                Job Order Overview
+              </span>
+              @if (order?.job_category) {
+                <span class="text-xs font-bold text-[#244653] bg-[#E3FDFD] px-2.5 py-0.5 rounded-full border border-[#A6E3E9]">
+                  {{ order?.job_category }}
+                </span>
+              }
+            </div>
+            <h2 class="text-2xl font-black text-[#172B32]">{{ job.title || job.criteria.title }}</h2>
+            <p class="text-xs text-[#4E6770] mt-0.5">{{ job.criteria.seniority_level }} • Requisition ID: <span class="font-mono text-[#244653]">{{ job.id }}</span></p>
+          </div>
+          <button (click)="closeJobModal()" class="p-2 rounded-full text-[#4E6770] hover:text-[#172B32] hover:bg-[#E3FDFD] transition-colors cursor-pointer">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+          </button>
+        </div>
+
+        <!-- Modal Scrollable Content -->
+        <div class="p-6 overflow-y-auto space-y-6 flex-grow text-sm">
+          
+          <!-- Key Metric Cards Grid -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+            <div class="bg-[#F8FBFA] p-3.5 rounded-2xl border border-[#D5EDED]">
+              <span class="text-[10px] font-bold uppercase text-[#4E6770] block">Approved Headcount</span>
+              <span class="text-base font-extrabold text-[#244653] mt-0.5 block">
+                {{ order?.total_approved_quantity || 'Open Quota' }} <span class="text-xs font-semibold">Headcount</span>
+              </span>
+            </div>
+
+            <div class="bg-[#F8FBFA] p-3.5 rounded-2xl border border-[#D5EDED]">
+              <span class="text-[10px] font-bold uppercase text-[#4E6770] block">Monthly Salary</span>
+              <span class="text-base font-extrabold text-[#244653] mt-0.5 block">
+                @if (order?.monthly_salary) {
+                  {{ order?.monthly_salary | number }} {{ order?.salary_currency || 'RM' }}
+                } @else {
+                  Competitive
+                }
+              </span>
+            </div>
+
+            <div class="bg-[#F8FBFA] p-3.5 rounded-2xl border border-[#D5EDED]">
+              <span class="text-[10px] font-bold uppercase text-[#4E6770] block">Work Hours</span>
+              <span class="text-xs font-semibold text-[#172B32] mt-0.5 block">
+                {{ order?.regular_work_hours || 'Standard Industry Hours' }}
+              </span>
+            </div>
+
+            <div class="bg-[#F8FBFA] p-3.5 rounded-2xl border border-[#D5EDED]">
+              <span class="text-[10px] font-bold uppercase text-[#4E6770] block">Contract Period</span>
+              <span class="text-xs font-semibold text-[#172B32] mt-0.5 block">
+                {{ order?.contract_period || '1 Year Renewable' }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Preliminary Job Order Information Section -->
+          @if (order) {
+            <div class="space-y-4">
+              <div>
+                <h3 class="text-xs font-bold uppercase text-[#4E6770] tracking-wider mb-1.5">3. Minimum Qualifications</h3>
+                <p class="text-xs sm:text-sm text-[#172B32] leading-relaxed bg-[#F8FBFA] p-4 rounded-2xl border border-[#D5EDED]">
+                  {{ order.minimum_qualifications }}
+                </p>
+              </div>
+
+              <div>
+                <h3 class="text-xs font-bold uppercase text-[#4E6770] tracking-wider mb-1.5">7. Other Employee Benefits</h3>
+                <p class="text-xs sm:text-sm text-[#172B32] leading-relaxed bg-[#F8FBFA] p-4 rounded-2xl border border-[#D5EDED]">
+                  {{ order.other_employee_benefits }}
+                </p>
+              </div>
+
+              @if (order.job_description) {
+                <div>
+                  <h3 class="text-xs font-bold uppercase text-[#4E6770] tracking-wider mb-1.5">1. Job Description</h3>
+                  <p class="text-xs sm:text-sm text-[#172B32] leading-relaxed bg-[#F8FBFA] p-4 rounded-2xl border border-[#D5EDED] whitespace-pre-line">
+                    {{ order.job_description }}
+                  </p>
+                </div>
+              }
+            </div>
+          }
+
+          <!-- Required Skills -->
+          <div>
+            <h3 class="text-xs font-bold uppercase text-[#4E6770] tracking-wider mb-2">Required Skills</h3>
+            <div class="flex flex-wrap gap-1.5">
+              @for (sk of job.criteria.required_skills || []; track sk) {
+                <span class="px-3 py-1 rounded-xl text-xs font-semibold bg-[#E3FDFD] text-[#244653] border border-[#A6E3E9]">
+                  {{ sk }}
+                </span>
+              }
+            </div>
+          </div>
+
+          <!-- Core Responsibilities -->
+          @if (job.criteria.core_responsibilities && job.criteria.core_responsibilities.length > 0) {
+            <div>
+              <h3 class="text-xs font-bold uppercase text-[#4E6770] tracking-wider mb-2">Core Responsibilities</h3>
+              <ul class="space-y-1.5 list-disc list-inside text-xs text-[#172B32]">
+                @for (resp of job.criteria.core_responsibilities; track resp) {
+                  <li>{{ resp }}</li>
+                }
+              </ul>
+            </div>
+          }
+
+        </div>
+
+        <!-- Modal Footer Actions -->
+        <div class="p-4 sm:p-5 border-t border-[#D5EDED] bg-[#F8FBFA] flex items-center justify-between gap-3 shrink-0">
+          <button (click)="closeJobModal()" class="px-5 py-2.5 rounded-xl bg-white hover:bg-gray-100 text-[#4E6770] font-semibold text-xs border border-[#D5EDED] transition-colors cursor-pointer">
+            Close
+          </button>
+          <a [routerLink]="['/candidate/apply', job.id]"
+             (click)="closeJobModal()"
+             [state]="{ job: job, jobTitle: job.title || job.criteria.title }"
+             class="px-6 py-2.5 rounded-xl bg-[#244653] hover:bg-[#1A343E] text-white font-bold text-xs shadow-xs transition-colors flex items-center gap-2 cursor-pointer">
+            <span>Apply For This Position</span>
+            <svg class="w-4 h-4 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  }
+
 </div>

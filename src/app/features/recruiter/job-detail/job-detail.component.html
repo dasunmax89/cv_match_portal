@@ -99,6 +99,63 @@
         </div>
       </div>
 
+      <!-- Preliminary Job Order Information Card -->
+      @if (jobData.preliminary_job_order || jobData.preliminaryJobOrder) {
+        @let order = jobData.preliminary_job_order || jobData.preliminaryJobOrder;
+        <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-xs border border-[#D5EDED] space-y-6">
+          <div class="flex items-center justify-between border-b border-[#D5EDED] pb-4">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-[#244653] bg-[#E3FDFD] px-3 py-1 rounded-full border border-[#A6E3E9]">
+                Job Order
+              </span>
+              <h2 class="text-xl font-bold text-[#172B32] mt-1">Preliminary Job Order Information</h2>
+            </div>
+            <span class="px-3 py-1 bg-[#F8FBFA] text-[#244653] font-bold text-xs rounded-xl border border-[#D5EDED]">
+              {{ order?.job_category }}
+            </span>
+          </div>
+
+          <!-- Key Metrics -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div class="bg-[#F8FBFA] p-4 rounded-2xl border border-[#D5EDED]">
+              <p class="text-xs text-[#4E6770] font-semibold uppercase tracking-wider">Approved Quota</p>
+              <p class="text-lg font-bold text-[#244653] mt-1">{{ order?.total_approved_quantity }} Headcount</p>
+            </div>
+            <div class="bg-[#F8FBFA] p-4 rounded-2xl border border-[#D5EDED]">
+              <p class="text-xs text-[#4E6770] font-semibold uppercase tracking-wider">Monthly Salary</p>
+              <p class="text-lg font-bold text-[#244653] mt-1">{{ order?.monthly_salary | number }} {{ order?.salary_currency }}</p>
+            </div>
+            <div class="bg-[#F8FBFA] p-4 rounded-2xl border border-[#D5EDED]">
+              <p class="text-xs text-[#4E6770] font-semibold uppercase tracking-wider">Work Hours</p>
+              <p class="text-xs font-bold text-[#172B32] mt-1">{{ order?.regular_work_hours }}</p>
+            </div>
+            <div class="bg-[#F8FBFA] p-4 rounded-2xl border border-[#D5EDED]">
+              <p class="text-xs text-[#4E6770] font-semibold uppercase tracking-wider">Contract Period</p>
+              <p class="text-xs font-bold text-[#172B32] mt-1">{{ order?.contract_period }}</p>
+            </div>
+          </div>
+
+          <!-- Details Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+            <div class="bg-[#F8FBFA] p-4 rounded-2xl border border-[#D5EDED]">
+              <p class="text-xs text-[#4E6770] font-bold uppercase tracking-wider mb-1.5">Minimum Qualifications</p>
+              <p class="text-[#172B32] leading-relaxed">{{ order?.minimum_qualifications }}</p>
+            </div>
+            <div class="bg-[#F8FBFA] p-4 rounded-2xl border border-[#D5EDED]">
+              <p class="text-xs text-[#4E6770] font-bold uppercase tracking-wider mb-1.5">Other Employee Benefits</p>
+              <p class="text-[#172B32] leading-relaxed">{{ order?.other_employee_benefits }}</p>
+            </div>
+          </div>
+
+          @if (order?.job_description) {
+            <div class="bg-[#F8FBFA] p-4 rounded-2xl border border-[#D5EDED] text-xs">
+              <p class="text-xs text-[#4E6770] font-bold uppercase tracking-wider mb-1.5">Job Description</p>
+              <p class="text-[#172B32] leading-relaxed whitespace-pre-line">{{ order?.job_description }}</p>
+            </div>
+          }
+        </div>
+      }
+
       <!-- Two-column Layout: Left (Criteria & Responsibilities), Right (SJT Questionnaire) -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         

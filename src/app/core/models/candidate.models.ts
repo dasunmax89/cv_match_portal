@@ -1,3 +1,30 @@
+export interface PreliminaryJobOrder {
+  job_category: string;
+  job_description: string;
+  total_approved_quantity: number;
+  minimum_qualifications: string;
+  monthly_salary: number;
+  salary_currency: string;
+  regular_work_hours: string;
+  contract_period: string;
+  other_employee_benefits: string;
+}
+
+export interface AnalyzeJobDescriptionResponse {
+  title: string;
+  criteria: ParsedCriteria;
+  preliminary_job_order: PreliminaryJobOrder;
+  assessment?: PublicSJTAssessment | JobSJTAssessment;
+}
+
+export interface SaveJobRequest {
+  title: string;
+  preliminary_job_order: PreliminaryJobOrder;
+  criteria?: ParsedCriteria;
+  assessment?: PublicSJTAssessment | JobSJTAssessment;
+  prompt_version?: string;
+}
+
 export interface ParsedCriteria {
   title: string;
   seniority_level: string;
@@ -5,6 +32,16 @@ export interface ParsedCriteria {
   nice_to_have_skills: string[];
   minimum_years_experience: number;
   core_responsibilities: string[];
+  company_name?: string;
+  job_category?: string;
+  job_description?: string;
+  total_approved_quantity?: number;
+  minimum_qualifications?: string;
+  monthly_salary?: number;
+  salary_currency?: string;
+  regular_work_hours?: string;
+  contract_period?: string;
+  other_employee_benefits?: string;
 }
 
 export interface SJTQuestionOption {
@@ -60,6 +97,22 @@ export interface InterviewResult {
   evaluated_at?: string;
 }
 
+export interface InviteeEvaluation {
+  id: string;
+  email: string;
+  token?: string;
+  secret_code?: string;
+  status: 'pending' | 'given' | 'not opt in' | 'declined' | string;
+  rating?: number;
+  technical_score?: number;
+  culture_score?: number;
+  communication_score?: number;
+  internal_notes?: string;
+  candidate_feedback?: string;
+  submitted_at?: string;
+  created_at?: string;
+}
+
 export interface InterviewDetails {
   scheduled_at?: string;
   start_time?: string;
@@ -70,8 +123,12 @@ export interface InterviewDetails {
   custom_message?: string;
   updated_at?: string;
   status?: string; // 'Scheduled' | 'Completed' | 'Cancelled' | 'No-Show'
+  is_finished?: boolean;
+  finished_at?: string;
   outcome?: 'Pending' | 'Passed' | 'Failed';
   result?: InterviewResult;
+  invitee_evaluations?: InviteeEvaluation[];
+  evaluations?: InviteeEvaluation[];
 }
 
 export interface InterviewDecisionRequest {
@@ -140,6 +197,12 @@ export interface ContractOffer {
   status: 'Draft' | 'Offered' | 'Accepted' | 'Declined' | 'Started' | 'Cancelled';
   created_at: string;
   updated_at?: string;
+  passport_url?: string;
+  passport_filename?: string;
+  passport_uploaded_at?: string;
+  tin_certificate_url?: string;
+  tin_certificate_filename?: string;
+  tin_certificate_uploaded_at?: string;
 }
 
 export interface CreateOfferRequest {
@@ -162,6 +225,12 @@ export interface SignOfferRequest {
   signed_name?: string;
   confirmed_start_date?: string;
   candidate_email?: string;
+  passport_url?: string;
+  passport_filename?: string;
+  tin_certificate_url?: string;
+  tin_certificate_filename?: string;
+  passport_base64?: string;
+  tin_base64?: string;
 }
 
 export interface DeclineOfferRequest {
@@ -251,6 +320,7 @@ export interface ScheduledInterviewItem {
   client_interview_probes?: string[];
   interview?: InterviewDetails;
   offer?: ContractOffer;
+  evaluations?: InviteeEvaluation[];
   resumeUrl?: string;
   linkedin_url?: string;
   createdAt?: string;
@@ -318,6 +388,8 @@ export interface JobResponse {
   companyName?: string;
   company_id?: string;
   recruiter_email?: string;
+  preliminary_job_order?: PreliminaryJobOrder;
+  preliminaryJobOrder?: PreliminaryJobOrder;
 }
 
 export interface CandidateApplication {
@@ -328,6 +400,8 @@ export interface CandidateApplication {
   minimumYearsExperience?: number;
   requiredSkills?: string[];
   coreResponsibilities?: string[];
+  preliminary_job_order?: PreliminaryJobOrder;
+  preliminaryJobOrder?: PreliminaryJobOrder;
   candidateName: string;
   candidateEmail: string;
   profile_image?: string;
@@ -345,6 +419,7 @@ export interface CandidateApplication {
   behavioral_evaluation?: CandidateBehavioralEvaluation;
   interview?: InterviewDetails;
   offer?: ContractOffer;
+  evaluations?: InviteeEvaluation[];
   resumeUrl?: string;
   linkedin_url?: string;
   facebook_url?: string;
@@ -369,6 +444,7 @@ export interface CandidateAppliedJobSummary {
   profileImage?: string;
   interview?: InterviewDetails;
   offer?: ContractOffer;
+  evaluations?: InviteeEvaluation[];
   resumeUrl?: string;
   createdAt: string;
 }
@@ -388,6 +464,35 @@ export interface CandidateDirectoryItem {
   totalApplications: number;
   latestAppliedAt?: string;
   applications: CandidateAppliedJobSummary[];
+}
+
+export interface InviteeFeedbackInfoResponse {
+  valid: boolean;
+  candidate_name: string;
+  job_title: string;
+  company_name?: string;
+  scheduled_at?: string;
+  invitee_email: string;
+  status: 'pending' | 'given' | 'not opt in';
+  evaluation?: {
+    rating?: number;
+    technical_score?: number;
+    culture_score?: number;
+    communication_score?: number;
+    internal_notes?: string;
+    candidate_feedback?: string;
+    submitted_at?: string;
+  };
+}
+
+export interface SubmitInviteeFeedbackPayload {
+  secret_code: string;
+  rating: number;
+  technical_score: number;
+  culture_score: number;
+  communication_score: number;
+  internal_notes?: string;
+  candidate_feedback?: string;
 }
 
 

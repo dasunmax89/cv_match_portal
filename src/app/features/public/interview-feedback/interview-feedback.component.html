@@ -1,0 +1,353 @@
+<div class="min-h-screen bg-[#F8FBFA] flex flex-col justify-between font-sans text-[#172B32]">
+
+  <!-- Top Navbar / Header -->
+  <header class="bg-white border-b border-[#D5EDED] px-4 sm:px-8 py-4 shadow-2xs">
+    <div class="max-w-4xl mx-auto flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <img src="logo.png" alt="Magic Match Logo" class="h-9 w-auto">
+        <div>
+          <span class="text-sm font-extrabold text-[#244653] tracking-tight block">Magic Match</span>
+          <span class="text-[11px] text-[#4E6770] font-medium block">Interviewer Evaluation Panel</span>
+        </div>
+      </div>
+      <span class="px-3 py-1 rounded-full text-xs font-bold bg-[#E3FDFD] text-[#244653] border border-[#A6E3E9]">
+        🔒 Panelist Portal
+      </span>
+    </div>
+  </header>
+
+  <!-- Main Body Content -->
+  <main class="flex-1 max-w-3xl w-full mx-auto px-4 py-8 sm:py-12">
+
+    <!-- Loading State -->
+    @if (isLoading()) {
+    <div class="bg-white p-12 rounded-2xl border border-[#D5EDED] shadow-xs text-center space-y-4">
+      <div class="w-12 h-12 border-4 border-[#CBF1F5] border-t-[#244653] rounded-full animate-spin mx-auto"></div>
+      <p class="text-sm font-semibold text-[#4E6770]">Verifying interview feedback link...</p>
+    </div>
+    }
+
+    <!-- Error State (Invalid Token) -->
+    @else if (errorMessage()) {
+    <div class="bg-white p-8 sm:p-10 rounded-2xl border border-rose-200 shadow-xs text-center space-y-4">
+      <div class="w-14 h-14 rounded-2xl bg-rose-50 text-rose-600 border border-rose-200 flex items-center justify-center mx-auto text-2xl font-bold">
+        ✕
+      </div>
+      <h2 class="text-xl font-extrabold text-[#172B32]">Invalid or Expired Feedback Link</h2>
+      <p class="text-sm text-[#4E6770] max-w-md mx-auto leading-relaxed">
+        {{ errorMessage() }}
+      </p>
+      <div class="pt-2">
+        <a routerLink="/" class="inline-flex items-center px-4 py-2 bg-[#244653] hover:bg-[#1A343E] text-white rounded-xl text-xs font-semibold shadow-xs transition-colors">
+          Return to Home
+        </a>
+      </div>
+    </div>
+    }
+
+    <!-- Already Submitted Confirmation -->
+    @else if (isSubmitted()) {
+    <div class="bg-white rounded-2xl border border-[#D5EDED] shadow-xs overflow-hidden">
+      <div class="bg-gradient-to-r from-[#244653] to-[#1A343E] p-6 text-white text-center">
+        <div class="w-12 h-12 rounded-xl bg-[#CBF1F5] text-[#244653] flex items-center justify-center mx-auto text-2xl font-black shadow-xs mb-3">
+          ✓
+        </div>
+        <h2 class="text-xl font-black">Evaluation Recorded!</h2>
+        <p class="text-xs text-[#CBF1F5] mt-1">Thank you. Your feedback has been securely submitted to the hiring team.</p>
+      </div>
+
+      <div class="p-6 space-y-5">
+        <div class="bg-[#F8FBFA] p-4 rounded-xl border border-[#D5EDED] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <span class="text-[10px] uppercase font-bold text-[#4E6770] tracking-wider">Candidate</span>
+            <h3 class="text-base font-extrabold text-[#172B32]">{{ feedbackInfo()?.candidate_name }}</h3>
+            <p class="text-xs text-[#244653] font-medium">{{ feedbackInfo()?.job_title }}</p>
+          </div>
+          <span class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 self-start sm:self-auto">
+            ✓ Feedback Given
+          </span>
+        </div>
+
+        <!-- Summary of Given Scores -->
+        <div class="space-y-3">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-[#4E6770]">Your Submitted Ratings</h4>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+            <div class="p-3 bg-[#E3FDFD]/50 border border-[#A6E3E9] rounded-xl">
+              <span class="text-[10px] font-bold text-[#4E6770] uppercase block">Overall</span>
+              <span class="text-lg font-black text-[#244653]">⭐ {{ rating() }}/5</span>
+            </div>
+            <div class="p-3 bg-[#F8FBFA] border border-[#D5EDED] rounded-xl">
+              <span class="text-[10px] font-bold text-[#4E6770] uppercase block">Technical</span>
+              <span class="text-lg font-black text-[#172B32]">{{ technicalScore() }}/5</span>
+            </div>
+            <div class="p-3 bg-[#F8FBFA] border border-[#D5EDED] rounded-xl">
+              <span class="text-[10px] font-bold text-[#4E6770] uppercase block">Culture</span>
+              <span class="text-lg font-black text-[#172B32]">{{ cultureScore() }}/5</span>
+            </div>
+            <div class="p-3 bg-[#F8FBFA] border border-[#D5EDED] rounded-xl">
+              <span class="text-[10px] font-bold text-[#4E6770] uppercase block">Communication</span>
+              <span class="text-lg font-black text-[#172B32]">{{ communicationScore() }}/5</span>
+            </div>
+          </div>
+        </div>
+
+        @if (internalNotes()) {
+        <div class="space-y-1">
+          <span class="text-[11px] font-bold text-[#172B32] flex items-center gap-1.5">
+            <span>🔒 Confidential Hiring Team Notes</span>
+          </span>
+          <p class="text-xs text-[#4E6770] bg-[#F8FBFA] p-3 rounded-xl border border-[#D5EDED] whitespace-pre-wrap leading-relaxed">
+            {{ internalNotes() }}
+          </p>
+        </div>
+        }
+
+        @if (candidateFeedback()) {
+        <div class="space-y-1">
+          <span class="text-[11px] font-bold text-[#172B32] flex items-center gap-1.5">
+            <span>💬 Constructive Candidate Feedback</span>
+          </span>
+          <p class="text-xs text-[#4E6770] bg-[#F8FBFA] p-3 rounded-xl border border-[#D5EDED] whitespace-pre-wrap leading-relaxed">
+            {{ candidateFeedback() }}
+          </p>
+        </div>
+        }
+      </div>
+    </div>
+    }
+
+    <!-- Opted Out State -->
+    @else if (isOptedOut()) {
+    <div class="bg-white p-8 rounded-2xl border border-[#D5EDED] shadow-xs text-center space-y-4">
+      <div class="w-12 h-12 rounded-xl bg-slate-100 text-slate-500 flex items-center justify-center mx-auto text-xl font-bold">
+        ✕
+      </div>
+      <h2 class="text-lg font-extrabold text-[#172B32]">Not Participating</h2>
+      <p class="text-xs text-[#4E6770] max-w-md mx-auto">
+        You have opted out of evaluating candidate <strong>{{ feedbackInfo()?.candidate_name }}</strong>. The hiring team has been updated.
+      </p>
+    </div>
+    }
+
+    <!-- STEP 1: Secret Authentication Screen (Before unlocking evaluation) -->
+    @else if (!isAuthenticated()) {
+    <div class="bg-white rounded-2xl border border-[#D5EDED] shadow-xs overflow-hidden">
+      <!-- Header Banner -->
+      <div class="bg-gradient-to-r from-[#244653] to-[#1A343E] p-6 text-white">
+        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-[#CBF1F5] text-[#244653] uppercase tracking-wider inline-block mb-2">
+          Interview Complete
+        </span>
+        <h2 class="text-xl font-black tracking-tight">Record Interview Results</h2>
+        <p class="text-xs text-[#CBF1F5] mt-1">
+          Rate key competencies, log team feedback, and capture candidate-facing notes.
+        </p>
+      </div>
+
+      <!-- Candidate & Session Quick Details -->
+      <div class="p-6 border-b border-[#D5EDED] bg-[#F8FBFA] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <span class="text-[10px] font-bold uppercase tracking-wider text-[#4E6770]">Candidate &amp; Role</span>
+          <h3 class="text-base font-extrabold text-[#172B32]">{{ feedbackInfo()?.candidate_name }}</h3>
+          <p class="text-xs text-[#244653] font-semibold">{{ feedbackInfo()?.job_title }} • {{ feedbackInfo()?.company_name || 'Magic Match' }}</p>
+        </div>
+        <div class="text-xs text-[#4E6770] font-medium sm:text-right">
+          <span>📅 {{ formatDisplayDate(feedbackInfo()?.scheduled_at) }}</span>
+          <span class="block text-[11px] text-[#244653] font-mono mt-0.5">{{ feedbackInfo()?.invitee_email }}</span>
+        </div>
+      </div>
+
+      <!-- Authentication Form Card -->
+      <div class="p-6 sm:p-8 space-y-6">
+        <div class="text-center max-w-md mx-auto space-y-2">
+          <div class="w-12 h-12 rounded-2xl bg-[#E3FDFD] text-[#244653] border border-[#A6E3E9] flex items-center justify-center mx-auto text-xl shadow-2xs">
+            🔒
+          </div>
+          <h3 class="text-base font-extrabold text-[#172B32]">Enter Secret Authentication Code</h3>
+          <p class="text-xs text-[#4E6770] leading-relaxed">
+            A secret 6-digit verification code was emailed to <strong class="text-[#172B32] font-mono">{{ feedbackInfo()?.invitee_email }}</strong> when this interview was finished. Please enter it below to access the evaluation form.
+          </p>
+        </div>
+
+        @if (authError()) {
+        <div class="p-3.5 bg-rose-50 border border-rose-200 text-rose-800 text-xs rounded-xl text-center font-medium">
+          {{ authError() }}
+        </div>
+        }
+
+        <div class="max-w-xs mx-auto space-y-3">
+          <label class="block text-[11px] font-bold text-center uppercase tracking-wider text-[#4E6770]">Secret Code</label>
+          <input type="text" [(ngModel)]="secretCode" (keyup.enter)="verifyCode()" maxlength="10"
+            placeholder="e.g. 482910"
+            class="w-full px-4 py-3 bg-[#F8FBFA] border-2 border-[#D5EDED] focus:border-[#71C9CE] focus:bg-white text-center font-mono text-2xl font-black text-[#172B32] tracking-widest rounded-xl outline-none transition-all shadow-2xs placeholder-[#4E6770]/40">
+          
+          <button (click)="verifyCode()" type="button" [disabled]="isActionLoading() || !secretCode().trim()"
+            class="w-full py-3 bg-[#244653] hover:bg-[#1A343E] disabled:opacity-50 text-[#CBF1F5] font-extrabold rounded-xl text-xs transition-all shadow-xs cursor-pointer">
+            @if (isActionLoading()) {
+              <span>Verifying Code...</span>
+            } @else {
+              <span>Unlock Evaluation Form &rarr;</span>
+            }
+          </button>
+        </div>
+
+        <div class="pt-4 border-t border-[#D5EDED] text-center">
+          <button (click)="optOut()" type="button" class="text-xs text-[#4E6770] hover:text-rose-700 font-semibold cursor-pointer transition-colors">
+            Not participating? Click here to opt out
+          </button>
+        </div>
+      </div>
+    </div>
+    }
+
+    <!-- STEP 2: The Evaluation Popup / Form (Unlocked) -->
+    @else {
+    <div class="bg-white rounded-2xl border border-[#D5EDED] shadow-xl overflow-hidden animate-in fade-in duration-200">
+      
+      <!-- Top Title Header -->
+      <div class="bg-gradient-to-r from-[#244653] to-[#1A343E] p-6 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-[#CBF1F5] text-[#244653] uppercase tracking-wider inline-block mb-1.5">
+            Panel Evaluation
+          </span>
+          <h2 class="text-2xl font-black tracking-tight">Record Interview Results</h2>
+          <p class="text-xs text-[#CBF1F5] mt-0.5">
+            Rate key competencies, log team feedback, and capture candidate-facing notes.
+          </p>
+        </div>
+
+        <div class="bg-white/10 backdrop-blur-xs px-3.5 py-2 rounded-xl border border-white/20 text-xs self-start sm:self-auto">
+          <span class="block text-[10px] text-[#CBF1F5] uppercase font-bold">Candidate</span>
+          <span class="font-extrabold text-white">{{ feedbackInfo()?.candidate_name }}</span>
+          <span class="block text-[11px] text-[#CBF1F5]">{{ feedbackInfo()?.job_title }}</span>
+        </div>
+      </div>
+
+      <!-- Errors Banner -->
+      @if (submitError()) {
+      <div class="m-6 mb-0 p-3.5 bg-rose-50 border border-rose-200 text-rose-800 text-xs rounded-xl font-medium">
+        {{ submitError() }}
+      </div>
+      }
+
+      <!-- Form Body -->
+      <div class="p-6 sm:p-8 space-y-6">
+
+        <!-- Overall Impression Rating (1 to 5 Stars) -->
+        <div class="bg-[#F8FBFA] p-5 rounded-2xl border border-[#D5EDED] space-y-2.5">
+          <label class="block text-xs font-bold text-[#172B32] uppercase tracking-wider">Overall Impression Rating</label>
+          <div class="flex items-center space-x-2">
+            @for (star of [1, 2, 3, 4, 5]; track star) {
+            <button (click)="rating.set(star)" type="button"
+              class="w-11 h-11 rounded-xl flex items-center justify-center text-xl font-bold transition-all cursor-pointer select-none"
+              [ngClass]="star <= rating() ? 'bg-amber-400 text-amber-950 shadow-xs scale-105' : 'bg-slate-200 text-slate-400 hover:bg-slate-300'">
+              ★
+            </button>
+            }
+            <span class="text-xs font-bold text-[#172B32] ml-3">
+              {{ getRatingLabel(rating()) }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Competency Score Grid (Technical, Culture, Communication) -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <!-- Technical Capability -->
+          <div class="p-4 bg-white border border-[#D5EDED] rounded-2xl space-y-2 shadow-2xs">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-[#172B32]">Technical Capability</span>
+              <span class="font-extrabold text-xs text-[#244653] bg-[#CBF1F5] px-2 py-0.5 rounded-md border border-[#71C9CE]">{{ technicalScore() }}/5</span>
+            </div>
+            <input type="range" min="1" max="5" [ngModel]="technicalScore()" (ngModelChange)="technicalScore.set($event)"
+              class="w-full h-2 bg-[#D5EDED] rounded-lg appearance-none cursor-pointer accent-[#244653]">
+            <div class="flex justify-between text-[10px] text-[#4E6770] font-semibold">
+              <span>Basic (1)</span>
+              <span>Strong (5)</span>
+            </div>
+          </div>
+
+          <!-- Culture & Values -->
+          <div class="p-4 bg-white border border-[#D5EDED] rounded-2xl space-y-2 shadow-2xs">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-[#172B32]">Culture &amp; Values</span>
+              <span class="font-extrabold text-xs text-[#244653] bg-[#CBF1F5] px-2 py-0.5 rounded-md border border-[#71C9CE]">{{ cultureScore() }}/5</span>
+            </div>
+            <input type="range" min="1" max="5" [ngModel]="cultureScore()" (ngModelChange)="cultureScore.set($event)"
+              class="w-full h-2 bg-[#D5EDED] rounded-lg appearance-none cursor-pointer accent-[#244653]">
+            <div class="flex justify-between text-[10px] text-[#4E6770] font-semibold">
+              <span>Low Fit (1)</span>
+              <span>Superb (5)</span>
+            </div>
+          </div>
+
+          <!-- Communication -->
+          <div class="p-4 bg-white border border-[#D5EDED] rounded-2xl space-y-2 shadow-2xs">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-[#172B32]">Communication</span>
+              <span class="font-extrabold text-xs text-[#244653] bg-[#CBF1F5] px-2 py-0.5 rounded-md border border-[#71C9CE]">{{ communicationScore() }}/5</span>
+            </div>
+            <input type="range" min="1" max="5" [ngModel]="communicationScore()" (ngModelChange)="communicationScore.set($event)"
+              class="w-full h-2 bg-[#D5EDED] rounded-lg appearance-none cursor-pointer accent-[#244653]">
+            <div class="flex justify-between text-[10px] text-[#4E6770] font-semibold">
+              <span>Weak (1)</span>
+              <span>Articulate (5)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Confidential Internal Team Notes -->
+        <div class="space-y-1.5">
+          <label class="block text-xs font-bold text-[#172B32] flex items-center justify-between">
+            <span class="flex items-center gap-1.5">
+              <span>🔒 Confidential Hiring Team Notes (Internal Only)</span>
+            </span>
+            <span class="text-[10px] text-[#4E6770] font-semibold bg-[#F8FBFA] px-2 py-0.5 rounded border border-[#D5EDED]">Never shared with candidate</span>
+          </label>
+          <textarea [ngModel]="internalNotes()" (ngModelChange)="internalNotes.set($event)" rows="3"
+            placeholder="Record technical depth observations, compensation discussions, red flags, or team feedback..."
+            class="w-full px-4 py-3 bg-white border border-[#D5EDED] rounded-xl text-[#172B32] placeholder-[#4E6770]/60 text-xs focus:ring-2 focus:ring-[#71C9CE]/20 focus:border-[#71C9CE] transition-all outline-none leading-relaxed"></textarea>
+        </div>
+
+        <!-- Constructive Candidate Feedback -->
+        <div class="space-y-1.5">
+          <label class="block text-xs font-bold text-[#172B32] flex items-center justify-between">
+            <span class="flex items-center gap-1.5">
+              <span>💬 Constructive Candidate Feedback</span>
+            </span>
+            <span class="text-[10px] text-[#4E6770] font-normal">Included in candidate update notification</span>
+          </label>
+          <textarea [ngModel]="candidateFeedback()" (ngModelChange)="candidateFeedback.set($event)" rows="3"
+            placeholder="Included in candidate update notification"
+            class="w-full px-4 py-3 bg-white border border-[#D5EDED] rounded-xl text-[#172B32] placeholder-[#4E6770]/60 text-xs focus:ring-2 focus:ring-[#71C9CE]/20 focus:border-[#71C9CE] transition-all outline-none leading-relaxed"></textarea>
+        </div>
+
+      </div>
+
+      <!-- Action Buttons Footer -->
+      <div class="p-6 bg-[#F8FBFA] border-t border-[#D5EDED] flex flex-col sm:flex-row items-center justify-between gap-3">
+        <button (click)="optOut()" type="button" [disabled]="isActionLoading()"
+          class="w-full sm:w-auto px-4 py-2.5 bg-white hover:bg-rose-50 text-rose-700 border border-[#D5EDED] hover:border-rose-300 rounded-xl text-xs font-bold transition-all shadow-2xs cursor-pointer">
+          Decline / Opt Out
+        </button>
+
+        <button (click)="submitEvaluation()" type="button" [disabled]="isActionLoading()"
+          class="w-full sm:w-auto px-6 py-3 bg-[#244653] hover:bg-[#1A343E] disabled:opacity-50 text-[#CBF1F5] hover:text-white font-extrabold rounded-xl text-xs transition-all shadow-xs cursor-pointer flex items-center justify-center gap-2">
+          @if (isActionLoading()) {
+            <span>Submitting Evaluation...</span>
+          } @else {
+            <span>★ Submit Interview Evaluation</span>
+          }
+        </button>
+      </div>
+
+    </div>
+    }
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="py-6 text-center text-xs text-[#4E6770] border-t border-[#D5EDED] bg-white">
+    <p>&copy; 2026 Magic Match Recruitment Platform. Confidential hiring team portal.</p>
+  </footer>
+
+</div>
+

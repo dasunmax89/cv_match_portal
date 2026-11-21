@@ -566,8 +566,8 @@
 
   <!-- Candidate Details Inspection Modal / Slide-over Drawer -->
   @if (selectedTableCandidate(); as candidate) {
-    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#172B32]/60 backdrop-blur-xs animate-fadeIn">
-      <div class="bg-white rounded-2xl shadow-2xl border border-[#D5EDED] w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden animate-scaleUp">
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-[#172B32]/60 backdrop-blur-xs animate-fadeIn">
+      <div class="bg-white rounded-2xl shadow-2xl border border-[#D5EDED] w-full max-w-5xl xl:max-w-6xl max-h-[92vh] flex flex-col overflow-hidden animate-scaleUp">
         
         <!-- Modal Header -->
         <div class="p-6 border-b border-[#D5EDED] bg-[#F8FBFA] flex justify-between items-start">
@@ -888,9 +888,9 @@
   <!-- Interview Scheduling Modal Popup -->
   @if (isScheduleModalOpen()) {
     @if (schedulingCandidate(); as candidate) {
-      <div class="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-[#172B32]/60 backdrop-blur-sm animate-fadeIn"
+      <div class="fixed inset-0 z-[70] flex items-center justify-center p-4 sm:p-6 bg-[#172B32]/60 backdrop-blur-sm animate-fadeIn"
            (click)="closeScheduleModal()">
-        <div class="bg-white rounded-2xl shadow-2xl border border-[#D5EDED] w-full max-w-xl overflow-hidden animate-scaleUp flex flex-col max-h-[92vh]"
+        <div class="bg-white rounded-2xl shadow-2xl border border-[#D5EDED] w-full max-w-3xl lg:max-w-4xl overflow-hidden animate-scaleUp flex flex-col max-h-[92vh]"
              (click)="$event.stopPropagation()">
              
           <!-- Modal Header with Brand Gradient Accent -->

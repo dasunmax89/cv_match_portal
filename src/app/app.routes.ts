@@ -30,6 +30,10 @@ export const routes: Routes = [
     loadComponent: () => import('./features/payment/payment-failed/payment-failed.component').then(m => m.PaymentFailedComponent)
   },
   {
+    path: 'interview-feedback',
+    loadComponent: () => import('./features/public/interview-feedback/interview-feedback.component').then(m => m.InviteeFeedbackComponent)
+  },
+  {
     path: '**',
     redirectTo: ''
   }

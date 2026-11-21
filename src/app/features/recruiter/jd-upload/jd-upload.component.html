@@ -1,32 +1,83 @@
-<div class="max-w-4xl mx-auto p-6 space-y-6">
+<div class="max-w-5xl mx-auto p-4 sm:p-6 space-y-6">
+  
+  <!-- Flow Stepper Header -->
   <div class="mb-4">
-    <h1 class="text-3xl font-extrabold text-[#172B32] tracking-tight">Create New Job</h1>
-    <p class="text-[#4E6770] mt-1.5 text-sm">Upload a job description PDF and let our AI extract the core requirements and generate candidate evaluation criteria.</p>
+    <div class="flex items-center space-x-2 text-xs font-bold text-[#4E6770] uppercase tracking-wider mb-1.5">
+      <span class="inline-flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold"
+            [ngClass]="currentStep() === 'upload' ? 'bg-[#244653] text-white' : 'bg-[#CBF1F5] text-[#244653]'">
+        1
+      </span>
+      <span>Upload Requisition</span>
+      <span class="text-[#D5EDED]">/</span>
+      <span class="inline-flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold"
+            [ngClass]="currentStep() === 'review' ? 'bg-[#244653] text-white' : (currentStep() === 'saved' ? 'bg-[#CBF1F5] text-[#244653]' : 'bg-gray-200 text-gray-500')">
+        2
+      </span>
+      <span>Fill & Verify Job Order</span>
+      <span class="text-[#D5EDED]">/</span>
+      <span class="inline-flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold"
+            [ngClass]="currentStep() === 'saved' ? 'bg-[#244653] text-white' : 'bg-gray-200 text-gray-500'">
+        3
+      </span>
+      <span>Save Job</span>
+    </div>
+
+    <h1 class="text-3xl font-extrabold text-[#172B32] tracking-tight">
+      @if (currentStep() === 'upload') {
+        Analyze Job Description & Order
+      } @else if (currentStep() === 'review') {
+        Preliminary Job Order Information
+      } @else {
+        Job Requisition Saved
+      }
+    </h1>
+    <p class="text-[#4E6770] mt-1.5 text-sm">
+      @if (currentStep() === 'upload') {
+        Upload a job requisition PDF. AI extracts core requirements and autofills the preliminary job order form for recruiter verification.
+      } @else if (currentStep() === 'review') {
+        Review and edit the autofilled job order fields. All fields marked with * are mandatory before saving the job requisition.
+      } @else {
+        Job requisition and preliminary order have been verified and saved to the hiring portal.
+      }
+    </p>
   </div>
 
-  @if (!parsedCriteria()) {
-    @if (errorMessage()) {
-      <div class="p-4 bg-rose-50 border border-rose-200 rounded-xl text-rose-700 flex items-start space-x-3 text-sm font-medium">
-        <svg class="w-5 h-5 text-rose-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        <div class="flex-1">{{ errorMessage() }}</div>
+  <!-- Global Error Banner -->
+  @if (errorMessage()) {
+    <div class="p-4 bg-rose-50 border border-rose-200 rounded-2xl text-rose-700 flex items-start space-x-3 text-sm font-medium">
+      <svg class="w-5 h-5 text-rose-500 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <div class="flex-1">
+        <p class="font-bold">{{ errorMessage() }}</p>
+        @if (validationErrors().length > 0) {
+          <ul class="list-disc pl-5 mt-1.5 space-y-0.5 text-xs text-rose-600">
+            @for (err of validationErrors(); track err) {
+              <li>{{ err }}</li>
+            }
+          </ul>
+        }
       </div>
-    }
+    </div>
+  }
 
-    <div class="bg-white rounded-2xl shadow-xs border border-[#D5EDED] p-8">
-      <form [formGroup]="jdForm" class="space-y-6">
+  <!-- ======================================================== -->
+  <!-- STEP 1: UPLOAD & ANALYZE JD -->
+  <!-- ======================================================== -->
+  @if (currentStep() === 'upload') {
+    <div class="bg-white rounded-3xl shadow-xs border border-[#D5EDED] p-6 sm:p-8">
+      <form [formGroup]="uploadForm" class="space-y-6">
         <div>
           <label class="block text-xs font-bold text-[#172B32] uppercase tracking-wider mb-1.5">
             Job Title <span class="text-xs text-[#4E6770] font-normal lowercase">(optional — AI auto-extracts from PDF if left blank)</span>
           </label>
-          <input type="text" formControlName="title" placeholder="e.g. Senior Frontend Engineer (or leave blank to auto-detect)" 
-                 class="w-full px-4 py-2.5 border border-[#D5EDED] rounded-xl focus:ring-2 focus:ring-[#71C9CE]/20 focus:border-[#71C9CE] outline-none transition-all text-sm text-[#172B32] placeholder-[#4E6770]/60">
+          <input type="text" formControlName="title" placeholder="e.g. General Workers / Construction Operator (or leave blank to auto-detect)" 
+                 class="w-full px-4 py-3 border border-[#D5EDED] rounded-2xl focus:ring-2 focus:ring-[#71C9CE]/20 focus:border-[#71C9CE] outline-none transition-all text-sm text-[#172B32] placeholder-[#4E6770]/60 bg-[#F8FBFA]/50">
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-[#172B32] uppercase tracking-wider mb-1.5">Job Description (PDF)</label>
-          <div class="border-2 border-dashed rounded-2xl p-10 text-center transition-colors cursor-pointer"
+          <label class="block text-xs font-bold text-[#172B32] uppercase tracking-wider mb-1.5">Job Description (PDF) *</label>
+          <div class="border-2 border-dashed rounded-3xl p-10 text-center transition-all cursor-pointer"
                [ngClass]="{'border-[#71C9CE] bg-[#E3FDFD]/60': isDragging(), 'border-[#D5EDED] hover:border-[#71C9CE] bg-[#F8FBFA]': !isDragging()}"
                (dragover)="onDragOver($event)" 
                (dragleave)="onDragLeave($event)" 
@@ -43,151 +94,395 @@
           </div>
         </div>
 
-        <div class="flex justify-end pt-4">
-          <button type="button" (click)="upload()" [disabled]="isUploading()"
-                  class="bg-[#244653] hover:bg-[#1A343E] text-white px-6 py-2.5 rounded-xl font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center shadow-xs cursor-pointer text-sm">
-            @if (isUploading()) {
-              <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+        <div class="flex justify-end pt-2">
+          <button type="button" (click)="analyze()" [disabled]="isAnalyzing()"
+                  class="bg-[#244653] hover:bg-[#1A343E] text-white px-7 py-3 rounded-2xl font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center shadow-xs cursor-pointer text-sm">
+            @if (isAnalyzing()) {
+              <svg class="animate-spin -ml-1 mr-2.5 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              Processing with AI...
+              Analyzing Requisition with AI...
             } @else {
-              Analyze Requirements
+              <svg class="w-4 h-4 mr-2 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              Analyze & Fill Form
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+
+  <!-- ======================================================== -->
+  <!-- STEP 2: PRELIMINARY JOB ORDER FORM (AUTOFILLED & EDITABLE) -->
+  <!-- ======================================================== -->
+  @else if (currentStep() === 'review') {
+    <div class="bg-white rounded-3xl shadow-xs border border-[#D5EDED] overflow-hidden">
+      <!-- Section Header Banner -->
+      <div class="bg-[#244653] px-6 sm:px-8 py-5 flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#CBF1F5] text-[#244653] mb-1.5">
+            <svg class="w-3.5 h-3.5 text-[#244653]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            AI Autofilled • Edit & Verify Before Saving
+          </span>
+          <h2 class="text-xl font-bold text-white">Preliminary Job Order Information</h2>
+          <p class="text-xs text-[#CBF1F5]/80 mt-0.5">Please verify and edit all order details below. Mandatory filling is required before saving.</p>
+        </div>
+
+        <button type="button" (click)="startOver()" 
+                class="text-xs font-semibold text-[#CBF1F5] hover:text-white hover:underline transition-colors cursor-pointer">
+          Upload Different JD
+        </button>
+      </div>
+
+      <form [formGroup]="orderForm" class="p-6 sm:p-8 space-y-8">
+        
+        <!-- Job Title -->
+        <div>
+          <label class="block text-xs font-bold text-[#172B32] uppercase tracking-wider mb-1.5">
+            Job Title <span class="text-rose-500">*</span>
+          </label>
+          <input type="text" formControlName="title" placeholder="e.g. General Construction Worker"
+                 class="w-full px-4 py-2.5 border rounded-2xl text-sm font-semibold text-[#172B32] outline-none transition-all"
+                 [ngClass]="formSubmitted() && orderForm.get('title')?.invalid ? 'border-rose-300 bg-rose-50/40 focus:ring-2 focus:ring-rose-200' : 'border-[#D5EDED] bg-white focus:ring-2 focus:ring-[#71C9CE]/20 focus:border-[#71C9CE]'">
+          @if (formSubmitted() && orderForm.get('title')?.invalid) {
+            <p class="text-xs text-rose-600 mt-1 font-medium">Job Title is mandatory.</p>
+          }
+        </div>
+
+        <!-- Row 1: Job Category & Total Approved Quantity -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- 1. Job Category (DROPDOWN) -->
+          <div>
+            <label class="block text-xs font-bold text-[#172B32] uppercase tracking-wider mb-1.5">
+              1. Job Category (Dropdown) <span class="text-rose-500">*</span>
+            </label>
+            <select formControlName="job_category"
+                    class="w-full px-4 py-2.5 border rounded-2xl text-sm font-medium text-[#172B32] outline-none transition-all bg-white"
+                    [ngClass]="formSubmitted() && orderForm.get('job_category')?.invalid ? 'border-rose-300 bg-rose-50/40 focus:ring-2 focus:ring-rose-200' : 'border-[#D5EDED] focus:ring-2 focus:ring-[#71C9CE]/20 focus:border-[#71C9CE]'">
+              <option value="" disabled>-- Select Job Category --</option>
+              @for (cat of jobCategories; track cat) {
+                <option [value]="cat">{{ cat }}</option>
+              }
+            </select>
+            @if (formSubmitted() && orderForm.get('job_category')?.invalid) {
+              <p class="text-xs text-rose-600 mt-1 font-medium">Job Category selection is mandatory.</p>
+            }
+
+            @if (orderForm.get('job_category')?.value === 'Other') {
+              <div class="mt-2.5">
+                <input type="text" formControlName="custom_category" placeholder="Specify custom Job Category"
+                       class="w-full px-3.5 py-2 border border-[#D5EDED] rounded-xl text-xs text-[#172B32] focus:ring-2 focus:ring-[#71C9CE]/20 focus:border-[#71C9CE] outline-none">
+              </div>
+            }
+          </div>
+
+          <!-- 2. Total Approved Quantity (INT) -->
+          <div>
+            <label class="block text-xs font-bold text-[#172B32] uppercase tracking-wider mb-1.5">
+              2. Total Approved Quantity (Headcount) <span class="text-rose-500">*</span>
+            </label>
+            <div class="relative">
+              <input type="number" formControlName="total_approved_quantity" min="1" step="1" placeholder="e.g. 200"
+                     class="w-full pl-4 pr-28 py-2.5 border rounded-2xl text-sm font-bold text-[#172B32] outline-none transition-all"
+                     [ngClass]="formSubmitted() && orderForm.get('total_approved_quantity')?.invalid ? 'border-rose-300 bg-rose-50/40 focus:ring-2 focus:ring-rose-200' : 'border-[#D5EDED] bg-white focus:ring-2 focus:ring-[#71C9CE]/20 focus:border-[#71C9CE]'">
+              <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-xs font-bold text-[#4E6770] uppercase">
+                Headcount
+              </div>
+            </div>
+            @if (formSubmitted() && orderForm.get('total_approved_quantity')?.invalid) {
+              <p class="text-xs text-rose-600 mt-1 font-medium">Total approved quantity must be at least 1 headcount.</p>
+            }
+          </div>
+        </div>
+
+        <!-- Row 2: Monthly Salary & Currency Selector -->
+        <div>
+          <label class="block text-xs font-bold text-[#172B32] uppercase tracking-wider mb-1.5">
+            4. Monthly Salary & Currency Selector <span class="text-rose-500">*</span>
+          </label>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="sm:col-span-1">
+              <select formControlName="salary_currency"
+                      class="w-full px-4 py-2.5 border rounded-2xl text-sm font-bold text-[#244653] outline-none transition-all bg-[#F8FBFA]"
+                      [ngClass]="formSubmitted() && orderForm.get('salary_currency')?.invalid ? 'border-rose-300' : 'border-[#D5EDED] focus:ring-2 focus:ring-[#71C9CE]/20 focus:border-[#71C9CE]'">
+                @for (c of currencies; track c.code) {
+                  <option [value]="c.code">{{ c.label }}</option>
+                }
+              </select>
+            </div>
+            <div class="sm:col-span-2 relative">
+              <input type="number" formControlName="monthly_salary" min="0" step="50" placeholder="e.g. 2000"
+                     class="w-full pl-4 pr-24 py-2.5 border rounded-2xl text-sm font-bold text-[#172B32] outline-none transition-all"
+                     [ngClass]="formSubmitted() && orderForm.get('monthly_salary')?.invalid ? 'border-rose-300 bg-rose-50/40 focus:ring-2 focus:ring-rose-200' : 'border-[#D5EDED] bg-white focus:ring-2 focus:ring-[#71C9CE]/20 focus:border-[#71C9CE]'">
+              <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-xs font-semibold text-[#4E6770]">
+                / month
+              </div>
+            </div>
+          </div>
+          @if (formSubmitted() && (orderForm.get('monthly_salary')?.invalid || orderForm.get('salary_currency')?.invalid)) {
+            <p class="text-xs text-rose-600 mt-1 font-medium">Monthly salary and currency are mandatory.</p>
+          }
+        </div>
+
+        <!-- Row 3: Regular Work Hours & Contract Period -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- 5. Regular Work Hours -->
+          <div>
+            <label class="block text-xs font-bold text-[#172B32] uppercase tracking-wider mb-1.5">
+              5. Regular Work Hours <span class="text-rose-500">*</span>
+            </label>
+            <input type="text" formControlName="regular_work_hours" placeholder="e.g. Maximum of 8 hours per day, and up to 48 hours per week."
+                   class="w-full px-4 py-2.5 border rounded-2xl text-sm font-medium text-[#172B32] outline-none transition-all"
+                   [ngClass]="formSubmitted() && orderForm.get('regular_work_hours')?.invalid ? 'border-rose-300 bg-rose-50/40 focus:ring-2 focus:ring-rose-200' : 'border-[#D5EDED] bg-white focus:ring-2 focus:ring-[#71C9CE]/20 focus:border-[#71C9CE]'">
+            @if (formSubmitted() && orderForm.get('regular_work_hours')?.invalid) {
+              <p class="text-xs text-rose-600 mt-1 font-medium">Regular Work Hours field is mandatory.</p>
+            }
+          </div>
+
+          <!-- 6. Contract Period -->
+          <div>
+            <label class="block text-xs font-bold text-[#172B32] uppercase tracking-wider mb-1.5">
+              6. Contract Period <span class="text-rose-500">*</span>
+            </label>
+            <input type="text" formControlName="contract_period" placeholder="e.g. Minimum of one(1) year, with annual renewal."
+                   class="w-full px-4 py-2.5 border rounded-2xl text-sm font-medium text-[#172B32] outline-none transition-all"
+                   [ngClass]="formSubmitted() && orderForm.get('contract_period')?.invalid ? 'border-rose-300 bg-rose-50/40 focus:ring-2 focus:ring-rose-200' : 'border-[#D5EDED] bg-white focus:ring-2 focus:ring-[#71C9CE]/20 focus:border-[#71C9CE]'">
+            @if (formSubmitted() && orderForm.get('contract_period')?.invalid) {
+              <p class="text-xs text-rose-600 mt-1 font-medium">Contract Period field is mandatory.</p>
+            }
+          </div>
+        </div>
+
+        <!-- 3. Minimum Qualifications (TEXTAREA) -->
+        <div>
+          <label class="block text-xs font-bold text-[#172B32] uppercase tracking-wider mb-1.5">
+            3. Minimum Qualifications <span class="text-rose-500">*</span>
+          </label>
+          <textarea formControlName="minimum_qualifications" rows="3" autoGrow
+                    placeholder="e.g. Not Applicable, since no technical expertise is required. If the candidate has working experience (in the above industries is an added advance). Employer will be conducting preliminary interviews of the selected candidates, if required."
+                    class="w-full px-4 py-3 border rounded-2xl text-xs sm:text-sm text-[#172B32] leading-relaxed outline-none transition-all"
+                    [ngClass]="formSubmitted() && orderForm.get('minimum_qualifications')?.invalid ? 'border-rose-300 bg-rose-50/40 focus:ring-2 focus:ring-rose-200' : 'border-[#D5EDED] bg-white focus:ring-2 focus:ring-[#71C9CE]/20 focus:border-[#71C9CE]'"></textarea>
+          @if (formSubmitted() && orderForm.get('minimum_qualifications')?.invalid) {
+            <p class="text-xs text-rose-600 mt-1 font-medium">Minimum Qualifications field is mandatory.</p>
+          }
+        </div>
+
+        <!-- 7. Other Employee Benefits (TEXTAREA) -->
+        <div>
+          <label class="block text-xs font-bold text-[#172B32] uppercase tracking-wider mb-1.5">
+            7. Other Employee Benefits <span class="text-rose-500">*</span>
+          </label>
+          <textarea formControlName="other_employee_benefits" rows="3" autoGrow
+                    placeholder="e.g. Insurance, Accommodation and Transportation will be provided by the Employer. If the quota is from the services industry (Example: Hotels, F&B, Restaurants), meals will be provided."
+                    class="w-full px-4 py-3 border rounded-2xl text-xs sm:text-sm text-[#172B32] leading-relaxed outline-none transition-all"
+                    [ngClass]="formSubmitted() && orderForm.get('other_employee_benefits')?.invalid ? 'border-rose-300 bg-rose-50/40 focus:ring-2 focus:ring-rose-200' : 'border-[#D5EDED] bg-white focus:ring-2 focus:ring-[#71C9CE]/20 focus:border-[#71C9CE]'"></textarea>
+          @if (formSubmitted() && orderForm.get('other_employee_benefits')?.invalid) {
+            <p class="text-xs text-rose-600 mt-1 font-medium">Other Employee Benefits field is mandatory.</p>
+          }
+        </div>
+
+        <!-- 1. Job Description (EXTRACT FROM JD) -->
+        <div>
+          <label class="block text-xs font-bold text-[#172B32] uppercase tracking-wider mb-1.5">
+            1. Job Description (Extracted from JD) <span class="text-rose-500">*</span>
+          </label>
+          <textarea formControlName="job_description" rows="5" autoGrow
+                    placeholder="Extracted job description text..."
+                    class="w-full px-4 py-3 border rounded-2xl text-xs sm:text-sm text-[#172B32] leading-relaxed outline-none transition-all"
+                    [ngClass]="formSubmitted() && orderForm.get('job_description')?.invalid ? 'border-rose-300 bg-rose-50/40 focus:ring-2 focus:ring-rose-200' : 'border-[#D5EDED] bg-white focus:ring-2 focus:ring-[#71C9CE]/20 focus:border-[#71C9CE]'"></textarea>
+          @if (formSubmitted() && orderForm.get('job_description')?.invalid) {
+            <p class="text-xs text-rose-600 mt-1 font-medium">Job Description is mandatory (at least 10 characters).</p>
+          }
+        </div>
+
+        <!-- Collapsible/Accordion: Extracted Skills & O*NET SJT Assessment Preview -->
+        <div class="border border-[#D5EDED] rounded-2xl p-5 bg-[#F8FBFA] space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-xs font-bold text-[#172B32] uppercase tracking-wider flex items-center gap-2">
+              <svg class="w-4 h-4 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Extracted Hiring Criteria & O*NET Assessment
+            </h3>
+            <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-[#E3FDFD] text-[#244653] border border-[#A6E3E9]">
+              {{ analyzedData()?.criteria?.seniority_level || 'Mid-Senior' }} • {{ analyzedData()?.criteria?.minimum_years_experience || 0 }}+ Yrs
+            </span>
+          </div>
+
+          <div>
+            <p class="text-xs font-bold text-[#4E6770] uppercase mb-2">Required Skills</p>
+            <div class="flex flex-wrap gap-1.5">
+              @for (skill of analyzedData()?.criteria?.required_skills; track skill) {
+                <span class="bg-white text-[#244653] px-2.5 py-1 rounded-xl text-xs font-semibold border border-[#D5EDED]">
+                  {{ skill }}
+                </span>
+              }
+            </div>
+          </div>
+
+          @if (analyzedData()?.assessment?.questions?.length) {
+            <div class="pt-2 border-t border-[#D5EDED]">
+              <p class="text-xs text-[#4E6770]">
+                Includes <strong>{{ analyzedData()?.assessment?.questions?.length }}</strong> Situational Judgment questions mapped to O*NET 28.0 work styles.
+              </p>
+            </div>
+          }
+        </div>
+
+        <!-- Form Actions Bar -->
+        <div class="pt-4 border-t border-[#D5EDED] flex flex-wrap items-center justify-between gap-4">
+          <button type="button" (click)="startOver()"
+                  class="px-5 py-2.5 rounded-xl text-[#4E6770] font-semibold hover:bg-[#F8FBFA] transition-colors text-xs cursor-pointer">
+            Cancel & Upload Another
+          </button>
+
+          <button type="button" (click)="saveJob()" [disabled]="isSaving()"
+                  class="bg-[#244653] hover:bg-[#1A343E] text-white px-8 py-3 rounded-2xl font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center shadow-xs cursor-pointer text-sm">
+            @if (isSaving()) {
+              <svg class="animate-spin -ml-1 mr-2.5 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Saving Job Order...
+            } @else {
+              <svg class="w-4 h-4 mr-2 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              Confirm & Save Job Requisition
             }
           </button>
         </div>
 
       </form>
     </div>
-  } @else {
-    <!-- Review Card -->
-    <div class="bg-white rounded-2xl shadow-xs border border-[#D5EDED] overflow-hidden">
-      <div class="bg-[#244653] px-6 py-4 flex items-center justify-between">
-        <h2 class="text-lg font-bold text-white flex items-center gap-2">
-          <svg class="w-5 h-5 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-          Extracted Requirements & Profile
-        </h2>
-        <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#CBF1F5] text-[#244653]">AI Parsed</span>
-      </div>
+  }
+
+  <!-- ======================================================== -->
+  <!-- STEP 3: SAVED JOB CONFIRMATION & OVERVIEW -->
+  <!-- ======================================================== -->
+  @else if (currentStep() === 'saved' && savedJob()) {
+    <div class="space-y-6">
       
-      <div class="p-6 space-y-6">
-        <div class="grid grid-cols-2 gap-6">
-          <div>
-            <p class="text-xs text-[#4E6770] uppercase font-bold tracking-wider">Job Title</p>
-            <p class="text-lg font-bold text-[#172B32] mt-1">{{ parsedCriteria()?.title }}</p>
-          </div>
-          <div>
-            <p class="text-xs text-[#4E6770] uppercase font-bold tracking-wider">Experience</p>
-            <p class="text-lg font-bold text-[#172B32] mt-1">
-              {{ parsedCriteria()?.seniority_level }} • {{ parsedCriteria()?.minimum_years_experience }}+ Years
-            </p>
-          </div>
+      <!-- Success Banner -->
+      <div class="bg-[#E3FDFD] border border-[#71C9CE] rounded-3xl p-6 sm:p-8 flex items-start gap-4">
+        <div class="w-12 h-12 rounded-2xl bg-[#244653] text-[#CBF1F5] flex items-center justify-center shrink-0">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <div class="flex-1">
+          <h2 class="text-xl font-extrabold text-[#172B32]">Job Requisition Saved Successfully!</h2>
+          <p class="text-sm text-[#244653] mt-1">
+            Preliminary Job Order Information and AI evaluation criteria have been verified and saved under Job ID:
+            <span class="font-mono font-bold">{{ savedJob()?.id }}</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Saved Requisition Summary Card -->
+      <div class="bg-white rounded-3xl shadow-xs border border-[#D5EDED] overflow-hidden">
+        <div class="bg-[#244653] px-6 py-4 flex items-center justify-between">
+          <h3 class="text-base font-bold text-white flex items-center gap-2">
+            <svg class="w-4 h-4 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Confirmed Preliminary Job Order
+          </h3>
+          <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#CBF1F5] text-[#244653]">Active</span>
         </div>
 
-        <hr class="border-[#D5EDED]">
+        <div class="p-6 sm:p-8 space-y-6">
+          <!-- Summary Key Figures Grid -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div class="bg-[#F8FBFA] p-4 rounded-2xl border border-[#D5EDED]">
+              <p class="text-xs text-[#4E6770] font-bold uppercase tracking-wider">Job Category</p>
+              <p class="text-sm font-extrabold text-[#172B32] mt-1 line-clamp-2">
+                {{ savedJob()?.preliminary_job_order?.job_category || savedJob()?.preliminaryJobOrder?.job_category }}
+              </p>
+            </div>
 
-        <div>
-          <p class="text-xs text-[#4E6770] uppercase font-bold tracking-wider mb-3">Required Skills</p>
-          <div class="flex flex-wrap gap-2">
-            @for (skill of parsedCriteria()?.required_skills; track skill) {
-              <span class="bg-[#E3FDFD] text-[#244653] px-3 py-1 rounded-xl text-xs font-semibold border border-[#A6E3E9]">
-                {{ skill }}
-              </span>
-            }
-          </div>
-        </div>
+            <div class="bg-[#F8FBFA] p-4 rounded-2xl border border-[#D5EDED]">
+              <p class="text-xs text-[#4E6770] font-bold uppercase tracking-wider">Approved Quantity</p>
+              <p class="text-lg font-extrabold text-[#244653] mt-1">
+                {{ savedJob()?.preliminary_job_order?.total_approved_quantity || savedJob()?.preliminaryJobOrder?.total_approved_quantity }} <span class="text-xs font-semibold">Headcount</span>
+              </p>
+            </div>
 
-        @if (parsedCriteria()?.nice_to_have_skills?.length) {
-          <div>
-            <p class="text-xs text-[#4E6770] uppercase font-bold tracking-wider mb-3">Nice to Have</p>
-            <div class="flex flex-wrap gap-2">
-              @for (skill of parsedCriteria()?.nice_to_have_skills; track skill) {
-                <span class="bg-[#F8FBFA] text-[#4E6770] px-3 py-1 rounded-xl text-xs font-semibold border border-[#D5EDED]">
-                  {{ skill }}
-                </span>
-              }
+            <div class="bg-[#F8FBFA] p-4 rounded-2xl border border-[#D5EDED]">
+              <p class="text-xs text-[#4E6770] font-bold uppercase tracking-wider">Monthly Salary</p>
+              <p class="text-lg font-extrabold text-[#244653] mt-1">
+                {{ savedJob()?.preliminary_job_order?.monthly_salary || savedJob()?.preliminaryJobOrder?.monthly_salary | number }} 
+                <span class="text-xs font-semibold">{{ savedJob()?.preliminary_job_order?.salary_currency || savedJob()?.preliminaryJobOrder?.salary_currency }}</span>
+              </p>
+            </div>
+
+            <div class="bg-[#F8FBFA] p-4 rounded-2xl border border-[#D5EDED]">
+              <p class="text-xs text-[#4E6770] font-bold uppercase tracking-wider">Work Hours</p>
+              <p class="text-xs font-bold text-[#172B32] mt-1">
+                {{ savedJob()?.preliminary_job_order?.regular_work_hours || savedJob()?.preliminaryJobOrder?.regular_work_hours }}
+              </p>
             </div>
           </div>
-        }
 
-        <hr class="border-[#D5EDED]">
-        
-        <div>
-           <p class="text-xs text-[#4E6770] uppercase font-bold tracking-wider mb-3">Core Responsibilities</p>
-           <ul class="list-disc pl-5 space-y-2 text-xs text-[#172B32]">
-             @for (resp of parsedCriteria()?.core_responsibilities; track resp) {
-               <li>{{ resp }}</li>
-             }
-           </ul>
-        </div>
-
-        @if (createdJob()?.assessment) {
           <hr class="border-[#D5EDED]">
 
-          <div>
-            <div class="flex items-center justify-between mb-3">
-              <div>
-                <p class="text-xs text-[#172B32] uppercase font-bold tracking-wider flex items-center gap-1.5">
-                  <svg class="w-4 h-4 text-[#71C9CE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                  </svg>
-                  Generated O*NET 28.0 Behavioral SJT Assessment
-                </p>
-                <p class="text-xs text-[#4E6770] mt-0.5">10 AI-generated Situational Judgment scenarios tailored for this role.</p>
-              </div>
-
-              <span class="px-2.5 py-1 bg-[#E3FDFD] border border-[#A6E3E9] text-[#244653] text-xs font-semibold rounded-full">
-                {{ createdJob()?.assessment?.questions?.length || 10 }} Questions
-              </span>
+          <!-- Detailed Information List -->
+          <div class="space-y-4 text-xs sm:text-sm">
+            <div>
+              <p class="text-xs text-[#4E6770] font-bold uppercase tracking-wider mb-1">Contract Period</p>
+              <p class="font-semibold text-[#172B32]">
+                {{ savedJob()?.preliminary_job_order?.contract_period || savedJob()?.preliminaryJobOrder?.contract_period }}
+              </p>
             </div>
 
-            <!-- Primary Assessed Traits -->
-            @if (createdJob()?.assessment?.assessment_metadata?.primary_traits?.length) {
-              <div class="mb-4 flex flex-wrap gap-1.5 items-center">
-                <span class="text-xs text-[#4E6770] font-medium">Assessed Work Styles:</span>
-                @for (trait of createdJob()?.assessment?.assessment_metadata?.primary_traits; track trait) {
-                  <span class="px-2.5 py-0.5 bg-[#F8FBFA] text-[#244653] rounded-md text-xs font-medium border border-[#D5EDED]">
-                    {{ trait }}
-                  </span>
-                }
-              </div>
-            }
+            <div>
+              <p class="text-xs text-[#4E6770] font-bold uppercase tracking-wider mb-1">Minimum Qualifications</p>
+              <p class="text-[#172B32] leading-relaxed bg-[#F8FBFA] p-3 rounded-xl border border-[#D5EDED]">
+                {{ savedJob()?.preliminary_job_order?.minimum_qualifications || savedJob()?.preliminaryJobOrder?.minimum_qualifications }}
+              </p>
+            </div>
 
-            <!-- SJT Questions Accordion/Cards -->
-            <div class="space-y-4">
-              @for (q of createdJob()?.assessment?.questions; track q.id; let i = $index) {
-                <div class="p-4 bg-[#F8FBFA] border border-[#D5EDED] rounded-2xl text-left space-y-2">
-                  <div class="flex items-start gap-2">
-                    <span class="w-6 h-6 rounded-lg bg-[#244653] text-[#CBF1F5] font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">
-                      {{ i + 1 }}
-                    </span>
-                    <p class="text-sm font-semibold text-[#172B32] leading-snug">
-                      {{ q.scenario }}
-                    </p>
-                  </div>
+            <div>
+              <p class="text-xs text-[#4E6770] font-bold uppercase tracking-wider mb-1">Other Employee Benefits</p>
+              <p class="text-[#172B32] leading-relaxed bg-[#F8FBFA] p-3 rounded-xl border border-[#D5EDED]">
+                {{ savedJob()?.preliminary_job_order?.other_employee_benefits || savedJob()?.preliminaryJobOrder?.other_employee_benefits }}
+              </p>
+            </div>
 
-                  <div class="pl-8 grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
-                    @for (opt of q.options; track opt.key) {
-                      <div class="p-2.5 bg-white border border-[#D5EDED] rounded-xl text-xs text-[#172B32] flex items-start gap-2">
-                        <span class="font-bold text-[#244653] shrink-0">{{ opt.key }}.</span>
-                        <span class="leading-relaxed">{{ opt.text }}</span>
-                      </div>
-                    }
-                  </div>
-                </div>
-              }
+            <div>
+              <p class="text-xs text-[#4E6770] font-bold uppercase tracking-wider mb-1">Job Description</p>
+              <p class="text-[#172B32] leading-relaxed bg-[#F8FBFA] p-3 rounded-xl border border-[#D5EDED] whitespace-pre-line">
+                {{ savedJob()?.preliminary_job_order?.job_description || savedJob()?.preliminaryJobOrder?.job_description }}
+              </p>
             </div>
           </div>
-        }
 
-        
-        <div class="pt-6 flex justify-end gap-3">
-          <button class="px-5 py-2.5 rounded-xl text-[#4E6770] font-semibold hover:bg-[#F8FBFA] transition-colors text-xs" (click)="parsedCriteria.set(null)">Start Over</button>
-          <button class="bg-white border border-[#D5EDED] text-[#244653] hover:bg-[#F8FBFA] px-6 py-2.5 rounded-xl font-semibold shadow-2xs transition-colors text-xs" (click)="publishJob()">View All Recruiter Jobs</button>
-          <button class="bg-[#244653] hover:bg-[#1A343E] text-white px-6 py-2.5 rounded-xl font-semibold shadow-xs transition-colors text-xs" (click)="viewJobCandidates()">Evaluate Candidates</button>
+          <!-- Bottom Actions -->
+          <div class="pt-6 border-t border-[#D5EDED] flex flex-wrap items-center justify-between gap-3">
+            <button class="px-5 py-2.5 rounded-xl text-[#4E6770] font-semibold hover:bg-[#F8FBFA] transition-colors text-xs cursor-pointer"
+                    (click)="editCurrentOrder()">
+              Edit Information
+            </button>
+
+            <div class="flex items-center gap-3">
+              <button class="bg-white border border-[#D5EDED] text-[#244653] hover:bg-[#F8FBFA] px-6 py-2.5 rounded-xl font-semibold shadow-2xs transition-colors text-xs cursor-pointer"
+                      (click)="publishJob()">
+                View All Recruiter Jobs
+              </button>
+              <button class="bg-[#244653] hover:bg-[#1A343E] text-white px-6 py-2.5 rounded-xl font-semibold shadow-xs transition-colors text-xs cursor-pointer"
+                      (click)="viewJobCandidates()">
+                Evaluate Candidates
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   }
+
 </div>

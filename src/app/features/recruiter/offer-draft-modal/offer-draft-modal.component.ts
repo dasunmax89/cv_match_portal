@@ -55,6 +55,7 @@ export class OfferDraftModalComponent implements OnChanges {
   submittingMode = signal<'draft' | 'dispatch' | null>(null);
   errorMessage = signal<string | null>(null);
   successMessage = signal<string | null>(null);
+  isDownloadingPdf = signal<boolean>(false);
 
   // Live Commission Calculation
   offerCommissionAmount = computed(() => {
@@ -252,5 +253,32 @@ export class OfferDraftModalComponent implements OnChanges {
 
   printContractPreview(): void {
     window.print();
+  }
+
+  downloadContractPdf(): void {
+    if (!this.jobId || !this.matchId) return;
+
+    this.isDownloadingPdf.set(true);
+    this.errorMessage.set(null);
+
+    this.apiService.downloadRecruiterContractPdf(this.jobId, this.matchId).subscribe({
+      next: (blob: Blob) => {
+        this.isDownloadingPdf.set(false);
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        const cleanName = (this.candidateName || 'Candidate').replace(/[^a-zA-Z0-9_-]/g, '_');
+        link.download = `Employment_Contract_${cleanName}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err) => {
+        this.isDownloadingPdf.set(false);
+        console.error('Failed to download contract PDF for recruiter:', err);
+        this.errorMessage.set(err?.error?.detail || 'Failed to download official contract PDF. Please verify offer details.');
+      }
+    });
   }
 }
